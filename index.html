@@ -186,10 +186,10 @@ body {
 /* ═══════ HEADER ═══════ */
 .header {
     grid-column: 1 / -1;
-    display: flex;
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 0;
     background: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
     border-bottom: 1px solid var(--border-primary);
     position: relative;
@@ -210,7 +210,8 @@ body {
     display: flex;
     align-items: center;
     gap: 15px;
-    flex-shrink: 0;
+    padding: 0 15px;
+    justify-content: center;
 }
 
 .logo-hex {
@@ -257,10 +258,9 @@ body {
 .header-center {
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex: 1;
+    justify-content: space-evenly;
     min-width: 0;
-    justify-content: center;
+    padding: 0 10px;
 }
 
 .header-status-group {
@@ -297,8 +297,10 @@ body {
 .header-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 6px 14px;
+    padding: 6px 16px;
+    min-width: 110px;
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     font-family: var(--font-he);
@@ -344,9 +346,10 @@ body {
 .header-right {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 20px;
     font-family: var(--font-mono);
-    flex-shrink: 0;
+    padding: 0 15px;
 }
 
 .clock {
@@ -1593,6 +1596,7 @@ body {
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width: 1200px) {
     .dashboard { grid-template-columns: 220px 1fr 260px; }
+    .header { grid-template-columns: 220px 1fr 260px; }
 }
 
 @media (max-width: 900px) {
@@ -1608,6 +1612,7 @@ body {
     }
 
     .header {
+        display: flex;
         flex-wrap: wrap;
         padding: 8px 12px;
         gap: 8px;
@@ -1625,7 +1630,7 @@ body {
     .system-title { font-size: 16px; letter-spacing: 2px; }
     .system-subtitle { font-size: 9px; display: none; }
     .logo-hex { width: 35px; height: 35px; }
-    .header-center { gap: 6px; flex-wrap: nowrap; justify-content: center; width: 100%; flex: unset; }
+    .header-center { gap: 6px; flex-wrap: nowrap; justify-content: center; width: 100%; }
     .header-status-group {
         position: absolute;
         top: 6px;
@@ -1636,7 +1641,7 @@ body {
     .header-status-group .status-badge { padding: 2px 6px; font-size: 9px; }
     .header-divider { display: none; }
     .header-actions-group { gap: 6px; justify-content: center; width: 100%; }
-    .header-actions-group .header-btn { padding: 5px 10px; font-size: 10px; }
+    .header-actions-group .header-btn { padding: 5px 10px; font-size: 10px; min-width: auto; }
     .header-right { display: none; }
 
     .map-panel {
@@ -1715,7 +1720,7 @@ body {
 
 @media (max-width: 480px) {
     .header-status-group .status-badge:nth-child(2) { display: none; }
-    .header-actions-group .header-btn { padding: 4px 6px; font-size: 9px; }
+    .header-actions-group .header-btn { padding: 4px 6px; font-size: 9px; min-width: auto; }
     .header-actions-group .header-btn .btn-icon { font-size: 11px; }
     .logo-section { gap: 8px; }
     .map-panel { height: 35vh; min-height: 220px; }
@@ -3364,7 +3369,7 @@ function renderAlerts() {
             <div style="font-size:28px;margin-bottom:10px;opacity:0.3;">&#x2714;</div>
             ${searchText || activeFilter !== 'all'
                 ? '<span>אין התראות תואמות</span><br><small style="color:var(--text-dim);">' + (searchText ? 'נסה חיפוש אחר' : 'נסה פילטר אחר') + '</small>'
-                : '<span style="color:var(--green);font-size:14px;font-weight:600;">הגזרה שקטה</span><br><small style="color:var(--text-dim);line-height:2;">המערכת סורקת 8 ערוצי טלגרם + Google News כל 10 דקות<br>סריקה אחרונה: ' + scanTime + '<br>לחץ <b style="color:var(--yellow);">הדגמה</b> לתצוגת נתונים לדוגמה</small>'
+                : '<span style="color:var(--green);font-size:14px;font-weight:600;">הגזרה שקטה</span><br><small style="color:var(--text-dim);line-height:2;">המערכת סורקת 25+ ערוצי טלגרם + Google News כל 10 דקות<br>סריקה אחרונה: ' + scanTime + '<br>לחץ <b style="color:var(--yellow);">הדגמה</b> לתצוגת נתונים לדוגמה</small>'
             }
         </div>`;
         return;
@@ -3932,7 +3937,27 @@ const DEFAULT_PROFILES = {
     palinfo: { name:"المركز الفلسطيني للإعلام - מרכז תקשורת", location:"פלסטין", notes:"מרכז תקשורת פלסטיני" },
     PalestineResist: { name:"Resistance News Network", location:"פלסטין", subscribers:"142,177", notes:"The pulse of the resistance. גיבוי: @RNN_Backup" },
     eyeonpal: { name:"عين على فلسطين - עין על פלסטין", location:"פלסטין", notes:"סיקור ומעקב אירועים בפלסטין" },
-    "google-news": { name:"Google News", location:"גלובלי", notes:"מנוע חדשות גוגל - חיפוש בערבית ועברית" }
+    "google-news": { name:"Google News", location:"גלובלי", notes:"מנוע חדשות גוגל - חיפוש בערבית ועברית" },
+    haitham_alsid: { name:"הית'ם אלסיד", location:"עזה, פלסטין", notes:"פרשן ומקור מקומי מרצועת עזה" },
+    ismail_abuamr: { name:"העיתנאי אסמאעיל אבו-עמר - דיונים", location:"עזה, פלסטין", notes:"עיתנאי מקומי, דיונים וניתוחים מעזה" },
+    hamza_almasr: { name:"דיונים - הפעיל חמזה אלמצר", location:"עזה, פלסטין", notes:"פעיל מקומי, דיונים מרצועת עזה" },
+    maman_miqdad: { name:"מא'מן מקדאד, תגובות", location:"עזה, פלסטין", notes:"תגובות ודיונים מקומיים" },
+    dopek_gaza: { name:"הדופק של הרחוב העזתי", location:"עזה, פלסטין", notes:"ערוץ קהילתי - דופק הרחוב בעזה" },
+    diyunim_gaza: { name:"דיונים בעזה #תפיסה_משת\"פ", location:"עזה, פלסטין", notes:"דיונים על אירועי ביטחון בעזה, תפיסות משתפים" },
+    solar_gaza: { name:"האנרגיה הסולארית ותחזוקתה ברצועת עזה", location:"עזה, פלסטין", notes:"קבוצה טכנית - תשתיות אנרגיה ברצועה" },
+    ihud_gaza: { name:"דיוני האיחוד בעזה", location:"עזה, פלסטין", notes:"דיונים פוליטיים ואיחוד פלגים" },
+    albayouk: { name:"התכנסות משפחת אלביוק", location:"ח'אן יונס, פלסטין", notes:"קבוצת משפחת אלביוק - ח'אן יונס" },
+    alqarara_news: { name:"חדשות אלקרארה - מדיניות מקומית בידור", location:"אל-קררה, פלסטין", notes:"חדשות מקומיות מאל-קררה, פוליטיקה ובידור" },
+    gaza_now2: { name:"עזה עכשיו 2", location:"עזה, פלסטין", notes:"ערוץ חדשות משני מרצועת עזה" },
+    thawra_neshama: { name:"תגובות מהפכת הנשמה", location:"עזה, פלסטין", notes:"קבוצת דיון ותגובות" },
+    mustafa_school: { name:"בית הספר היסודי מצטפא חאפט'", location:"ח'אן יונס, פלסטין", notes:"קבוצת בית ספר מקומי - חאן יונס" },
+    qarib_shana: { name:"קרוב לשנה של האזור", location:"עזה, פלסטין", notes:"קבוצת סקירה שנתית ואירועי אזור" },
+    masjid_saladin: { name:"משפחת מסגד צלאח אלדין", location:"ח'אן יונס, פלסטין", notes:"קבוצה קהילתית - מסגד צלאח א-דין בחאן יונס" },
+    death_tracker_ky: { name:"מעקב אחר מקר המוות בעיר ח'אן יונס", location:"ח'אן יונס, פלסטין", notes:"מעקב נפגעים ואירועים בח'אן יונס" },
+    had_albalad: { name:"הד אלבלד", location:"עזה, פלסטין", notes:"ערוץ חדשות מקומי - הד העיר" },
+    gas_tracker: { name:"חוליית מעקב אחר הגז - מחמד פרחאנה", location:"ח'אן יונס, פלסטין", notes:"מעקב הפצת גז בח'אן יונס" },
+    melek_hatzaot: { name:"מלך ההצעות", location:"עזה, פלסטין", notes:"קבוצת מסחר ושירותים מקומית" },
+    siua_news_gaza: { name:"דיווי חדשות הסיוע - עזה", location:"עזה, פלסטין", notes:"מעקב אחר חלוקת סיוע הומניטרי ברצועה" }
 };
 
 let publisherProfiles = {};
@@ -4509,6 +4534,26 @@ const mockTelegramChannels = [
         { text: 'ירי צלפים באזור אבסאן א-סע\'ירה', location: 'אבסאן א-סע\'ירה', urgency: 4 },
         { text: 'תנועת כלי רכב צבאיים לאורך הגדר', location: 'כיסופים', urgency: 3 },
         { text: 'בנייה מחודשת של מנהרה שנחשפה', location: null, urgency: 4 },
+    ]},
+    { name: 'הדופק של הרחוב העזתי', messages: [
+        { text: 'תושבים מדווחים על ירי כבד מכיוון מזרח', location: 'ח\'אן יונס', urgency: 4 },
+        { text: 'נפילות בשכונת אמל - נזק למבנים', location: 'ח\'אן יונס', urgency: 5 },
+        { text: 'שוק אל-קייסריה נפתח מחדש לאחר הפסקה', location: 'ח\'אן יונס', urgency: 1 },
+    ]},
+    { name: 'הד אלבלד', messages: [
+        { text: 'גלי הדף מפיצוצים הורגשו ברחבי העיר', location: 'ח\'אן יונס', urgency: 4 },
+        { text: 'פינוי פצועים ממזרח אל-קררה', location: 'אל-קררה', urgency: 5 },
+        { text: 'חזרה של תנועת אזרחים ברחובות המרכזיים', location: 'ח\'אן יונס', urgency: 1 },
+    ]},
+    { name: 'חדשות אלקרארה', messages: [
+        { text: 'כניסת כלים הנדסיים לצפון אל-קררה', location: 'אל-קררה', urgency: 4 },
+        { text: 'תושבים נמלטים דרומה מאל-קררה', location: 'אל-קררה', urgency: 3 },
+        { text: 'שקט יחסי באזור מאז הבוקר', location: 'אל-קררה', urgency: 1 },
+    ]},
+    { name: 'דיווי חדשות הסיוע - עזה', messages: [
+        { text: 'שיירת סיוע של UNRWA נכנסה דרך כרם שלום', location: 'כרם אבו סאלם', urgency: 2 },
+        { text: 'חלוקת מזון במחנה הפליטים אל-אמל', location: 'ח\'אן יונס', urgency: 1 },
+        { text: 'עיכוב בכניסת ציוד רפואי - מחסום צבאי', location: 'ציר פילדלפי', urgency: 3 },
     ]},
 ];
 

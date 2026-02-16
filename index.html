@@ -2118,19 +2118,8 @@ body {
     <div style="position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
     <div style="position:absolute;top:15px;left:50%;transform:translateX(-50%);font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:#ff0040;pointer-events:none;white-space:nowrap;">CLASSIFIED // RESTRICTED ACCESS</div>
     <div style="position:relative;z-index:10;text-align:center;padding:50px 60px;border:1px solid #0f3460;border-radius:8px;background:rgba(8,16,35,0.9);box-shadow:0 0 60px rgba(0,212,255,0.08);min-width:340px;">
-        <div style="width:80px;height:80px;margin:0 auto 25px;display:flex;align-items:center;justify-content:center;">
-            <svg viewBox="0 0 100 120" width="80" height="96" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 5 L90 25 L90 75 L50 115 L10 75 L10 25 Z" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.4"/>
-                <path d="M50 25 Q62 25 70 35 Q75 42 74 52 Q72 62 65 68 L50 80 L35 68 Q28 62 26 52 Q25 42 30 35 Q38 25 50 25Z" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" stroke-width="1.2"/>
-                <path d="M35 28 L30 15 L40 25" fill="#00d4ff" opacity="0.5"/><path d="M65 28 L70 15 L60 25" fill="#00d4ff" opacity="0.5"/>
-                <circle cx="39" cy="42" r="9" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
-                <circle cx="61" cy="42" r="9" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
-                <circle cx="39" cy="42" r="4" fill="#ffd000"/><circle cx="61" cy="42" r="4" fill="#ffd000"/>
-                <circle cx="39" cy="42" r="1.5" fill="#040810"/><circle cx="61" cy="42" r="1.5" fill="#040810"/>
-                <path d="M47 48 L50 54 L53 48" fill="#ff8800" opacity="0.6"/>
-                <line x1="50" y1="70" x2="50" y2="105" stroke="#00d4ff" stroke-width="1.8" opacity="0.7"/>
-                <path d="M45 72 L50 70 L55 72 L50 74 Z" fill="#00d4ff" opacity="0.5"/>
-            </svg>
+        <div style="width:100px;height:100px;margin:0 auto 25px;display:flex;align-items:center;justify-content:center;">
+            <img src="logo-188.jpg" alt="MABAT 188" width="100" height="100" style="border-radius:8px;filter:drop-shadow(0 0 15px rgba(0,212,255,0.4));"/>
         </div>
         <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:6px;margin-bottom:8px;white-space:nowrap;background:linear-gradient(90deg,#00d4ff,#fff,#00d4ff);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">MABAT 188</div>
         <div style="font-family:'Heebo',sans-serif;font-size:13px;font-weight:300;color:#7088a0;letter-spacing:2px;margin-bottom:35px;">פלטפורמת מודיעין גזרתית</div>
@@ -2482,8 +2471,15 @@ const SECTOR_CENTER = { lat: 31.346, lng: 34.306 };
 const SECTOR_FILTER_RADIUS_KM = 30;
 const REFRESH_INTERVAL = 30000;
 
+// Locations OUTSIDE the sector - filter these out
+const OUT_OF_SECTOR = ['בית ליקיה','בית לקיה','ביר זית','רמאללה','אל-בירה','נבי סאלח','בלעין','נעלין','קדום','בית אל','עופרה','שילה','חברון','ג\'נין','טולכרם','שכם','נאבלוס','קלקיליה','טובאס','סלפית','בית ג\'אלה','בית לחם','בית סאחור','דיר איביע','ספא','בית סירא','כוכב יעקב','עטרת','חלמיש','בודרוס','קביה','שקבא','דיר קדיס','ני עלין','כפר נעמה','אבו דיס','עזריה','ענאתא','ראס אל-עמוד','סילוואן','עיסוויה','שועפאט','בית חנינא','קלנדיה','א-רם','ביתוניא','ליפתא','עין יברוד'];
+
+// Locations INSIDE the sector - positive match
+const IN_SECTOR = ['חאן יונס','עזה','רפיח','דיר אל-בלח','בני סוהילה','עבסאן','אבסאן','אל-קררה','קררה','ח\'וזאעה','חוזאעה','אל-מוואסי','מוואסי','אל-פוח\'ארי','פוח\'ארי','כרם אבו סאלם','כרם שלום','פילדלפי','נצרים','ציר סלאח','מעאן','כיסופים','ניר עוז','נחל עוז','זיכים','סופה','רעים','עוטף עזה','שג\'אעיה','זייתון','תופאח','תל אל-הווא','בית חאנון','בית לאהיא','ג\'באליה','מע\'אזי','בורייג\'','נוסייראת','מגדלים','יבנה','רצועת עזה','Gaza','Khan Younis'];
+
 // Geographic filter - only show news relevant to this sector
 function isInSector(item) {
+    // Check coordinates first
     if (item.coordinates) {
         const lat = item.coordinates.lat || item.coordinates.latitude;
         const lon = item.coordinates.lon || item.coordinates.lng || item.coordinates.longitude;
@@ -2494,7 +2490,19 @@ function isInSector(item) {
             return dist <= SECTOR_FILTER_RADIUS_KM;
         }
     }
-    return true; // Keep items without coordinates (can't filter)
+    // Text-based filter for items without coordinates
+    const text = [item.title, item.locationHe, item.snippet, item.fullText, item.description].filter(Boolean).join(' ');
+    if (!text) return false;
+    // Reject if mentions out-of-sector location
+    for (const loc of OUT_OF_SECTOR) {
+        if (text.includes(loc)) return false;
+    }
+    // Accept if mentions in-sector location
+    for (const loc of IN_SECTOR) {
+        if (text.includes(loc)) return true;
+    }
+    // Default: reject unknown items
+    return false;
 }
 function filterSectorNews(news) {
     const filtered = {};

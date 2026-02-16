@@ -2145,7 +2145,7 @@ body {
 function doLogin() {
     var input = document.getElementById('loginInput');
     var err = document.getElementById('loginError');
-    if (input.value === '1875') {
+    if (input.value === '0188') {
         var ov = document.getElementById('loginOverlay');
         ov.style.transition = 'opacity 0.8s ease';
         ov.style.opacity = '0';
@@ -2847,6 +2847,36 @@ function initMap() {
         opacity: 0.5,
         pane: 'overlayPane'
     }).addTo(map);
+
+    // ═══════ GAZA-ISRAEL BORDER FENCE (OpenStreetMap data) ═══════
+    const GAZA_BORDER = [
+        [31.220150,34.267284],[31.221467,34.269362],[31.228808,34.279434],[31.234479,34.285794],
+        [31.240792,34.291732],[31.246656,34.304512],[31.249688,34.311562],[31.252567,34.318774],
+        [31.257569,34.325833],[31.267958,34.336489],[31.278456,34.342762],[31.289816,34.366117],
+        [31.294103,34.368990],[31.298317,34.370533],[31.306070,34.373570],[31.315257,34.372090],
+        [31.318527,34.371608],[31.327417,34.370283],[31.344953,34.367399],[31.355390,34.366036],
+        [31.362980,34.365187],[31.365235,34.365564],[31.367329,34.366136],[31.369851,34.368075],
+        [31.369127,34.370050],[31.370003,34.371809],[31.370907,34.372019],[31.371876,34.371528],
+        [31.373764,34.373180],[31.374181,34.373680],[31.375615,34.373232],[31.376621,34.373582],
+        [31.377109,34.374100],[31.377916,34.373928],[31.379142,34.374354],[31.380634,34.375323],
+        [31.382606,34.376774],[31.385641,34.379435],[31.386879,34.379869],[31.387521,34.380493],
+        [31.388001,34.380946],[31.388958,34.380258],[31.389645,34.380523],[31.393368,34.385026],
+        [31.395402,34.387307],[31.397152,34.389298],[31.398091,34.390447],[31.399456,34.391954],
+        [31.403661,34.394784],[31.404454,34.395325],[31.405235,34.396183],[31.406257,34.398068],
+        [31.409434,34.401088],[31.410674,34.401696],[31.412026,34.403875],[31.412733,34.405586],
+        [31.412663,34.406571],[31.413837,34.407757],[31.414478,34.408479],[31.415323,34.409214],
+        [31.415701,34.410854],[31.415824,34.411711],[31.416889,34.412748],[31.417205,34.413279],
+        [31.417920,34.413362],[31.419390,34.414676],[31.420801,34.417111],[31.423516,34.420768],
+        [31.424341,34.422465],[31.425987,34.423763],[31.426707,34.425029],[31.427189,34.426857],
+        [31.428251,34.427593],[31.431089,34.430307],[31.432603,34.432041],[31.438278,34.435804],
+        [31.442815,34.441886],[31.448417,34.450517],[31.453990,34.456129],[31.463497,34.466460],
+        [31.468533,34.471305],[31.471374,34.474368],[31.476381,34.478325],[31.478314,34.482008],
+        [31.482544,34.489096]
+    ];
+    L.polyline(GAZA_BORDER, {
+        color: '#ffd000', weight: 3, opacity: 0.85, dashArray: '10, 6',
+        className: 'route-line'
+    }).bindTooltip('גבול עזה-ישראל', { permanent: false, className: 'dark-tooltip', direction: 'center' }).addTo(map);
 
     // ═══════ SECTOR CIRCLE - 3D GLOW ═══════
     // Outer glow ring
@@ -3871,14 +3901,16 @@ function escapeHtml(text) {
 
 // ═══════ PUBLISHER PROFILE ═══════
 const DEFAULT_PROFILES = {
-    deiribzi: { name:"قرية دير إبزيع - כפר דיר איביע", photo:"https://cdn4.telesco.pe/file/Lf4x4EuQBrehvCfG6S7CFCVjc3ARbjiGcB12p5Rl3DE6cy8PTbCz3A0WT3aCnhpQQ5MShaXs1sPnQQACdcjREQNnHqTZQuSlQllhGKk8MCiBnm1scBlLO3EE3cSpPIV9NpAtePCgwWdy-ky9N8p3N2hwuu6QDA2wdXxQuadLLXOaQaZ0ABJkG0ifulnul-1axJYhBAqdKOybsf9S1CqH2n_ek4e5Wya7VzeDIpXC7tKPt0FIEtRFGM_Rkeds4kZEz_G2odhCELjf4CjC0xy8w8q-b-hNzf9D00WV50GstOWi8MHbxcn0hHNsH-RrPXq8wEkwUfrgz74orfLm_szIDA.jpg", location:"דיר איביע, פלסטין", subscribers:"223", notes:"ערוץ מקומי - חדשות כפר, תמונות וסרטונים, הודעות ואירועים" },
-    beit_liqya: { name:"أخبار بيت لقيا - חדשות בית ליקיא", photo:"https://cdn4.telesco.pe/file/j3rhtUkeyfeslJKedu5tQGunxlwKss2b6bksvkVBFqw2ynpN1iVO6dmQoLZBCtPRCK2hjXic-ohwE4hSvCRhXWQhjQANV3vQakxh0hNC1bB_iJGQd061k6-erAGw5GaOsXx8V3BU81qIgWUpuUIL7Fa3dU7T3beiTjVj7nFDpv93pqg8Omj2EiVZnqat45faRFHbaXuJm2m5CpmsLRTw--FUeykBGPXoHwQuDuLVXjhHuyjA6uXftEocudDmGKhqyECksx2_uMWiPVO3yjt0-wuuYqPXUMOdb-YVzbOKp-Fu4YhIm2mT8RrRKJOmDMO0unnXVM5EGL7ioyKU_E39ug.jpg", location:"בית ליקיא, פלסטין", subscribers:"2,408", notes:"ערוץ חדשות מקומי - מעקב ופרסום חדשות. בוט: @Liqya136854bot" },
-    beit_sira: { name:"بيت سيرا - בית סירא", photo:"https://cdn4.telesco.pe/file/BeI6Msb8Dq7fydrWxadoZ63seN4bXlpLHPiJea5Mhm7C0yLCKiKiHiqCDMBgaXH-KdbpBbR9I3jogfDMJ63lUW2En7XOY_pkwWokThMPWQGMwDgOS74SMzcinH_w4RaaKUI01mLeqKZ31NnZ2f7EPdRUBpucrXn9rOQBn5K2S_1RFS0_BMRNBCYWbdlfWXCybDJdTQMjUPHa43JWxrcZ-cnS2EDtTnm2lNPbMWYWJ7f1KekZNG5vykXJ52n93UBS5dUfhRn0CU16b0A1D3E5nB9B9XZSYk7jfdE85AVQHqqPNskcS-KKEy5xIT9F9IGYofmorWuwGFQE5kE729hXcg.jpg", location:"בית סירא, פלסטין", subscribers:"48", notes:"ערוץ מקומי - חדשות הכפר" },
-    ramallahnew: { name:"رام الله الاخباري - רמאללה חדשות", photo:"https://cdn4.telesco.pe/file/a0AchnUtvNk5Ualo6VpWgP-gwDQahikTK7FhwqzLOPNs3UpkwAPJEo7l6Flw3XSiQTq3mQPJoOaHdH7ABgRK2wCRTYzbwMtRFvM9zOQ5ET2yeG8La5C6Zf1Rx00aYDbHxnAmgOYJSjPCt_WmiNBuuo5yBnjVJ7jYkoQi0wsYV9txCYQ7ExWEuKt1TlsyPHm9F6HfQZ9pL3sHhLHPXKrcJXoxFYn8n71tU0AmyqrmPL7jRLdBoP3rpmnS87mlE67haVxPOIwn7Ax6kn9duHJ5dlUaJMG_6i4XO0p152nhhyKEIK4HuOCn1b1GSrF3ARLTbwdWnFDqnfhd7PRbzOyW0g.jpg", location:"רמאללה, פלסטין", subscribers:"211,854", notes:"ערוץ מאומת. הוקם 28/11/2014. מפרסם חדשות 24/7. מעל מיליון מבקרים חודשיים." },
-    ramallahmix1: { name:"Ramallah Mix - רמאללה מיקס", photo:"https://cdn4.telesco.pe/file/N2cQjmJto-Tm47JiSlkESPRmyQ-Os20O5fVj-Y0mNdywPAgxpIfG5B_n1mZ3dAiF9w_uv6cOUwbtOO-apFsQKyyvBD8rcaI5ZN-qF2NqcFx6aUuZ-53uMzs-UIUCfo2VN22T8oFRmdA8mUN4E10myc7RXKFP7DOYokqvGhb4D-_c3jHOnb0irkeYdVAnR9254cd0wz2oDKIQTPaWYhQwogBDuP6XhGqlIrAvWf3eacsYVninCNWmSBjiknqVqp_VJ2I6m-4PGztwmGTQ9-SdHVHrk5gx1I-0bRvlyMVo-GW_6cFZ_OjngSzsSMjhjE5Uv4zL7mhtyaY2HwGP3TNgag.jpg", location:"רמאללה, פלסטין", subscribers:"367,705", notes:"ערוץ מאומת. אתר: www.rmix.ps" },
-    QudsN: { name:"شبكة قدس الإخبارية - רשת קודס", photo:"https://cdn4.telesco.pe/file/iQMxjgSvEZedhB5reOIAnMa9OgpOzU2CK5pE88OP0ztUriKj2H-36sLyy2XWnQOU7jz2WetoHq9dJMT61xAeWKQDzcMkAE7zlQZp52VtVhp2vNIjVhUQjKbP3uOz58S91hQY2qPi2gzGtzEALauYQGgrzDfUhJWnzrltgomNj6zc8bD92Xi4I6wD8dJzZheNBBdxUilciH6RHqDJ6NqNWWl1TSwzEXbCTL2gSmqM3U4JUe03ap1zyHXBdNfcf-2KbJ6Wtbr8ndBJqop9rNNB2gSZb3CqDTrfwjswni-UfUA_IMfhDVO61cVNNJTpUibT-x1G7TE0ihIN8scIjJ74Iw.jpg", location:"פלסטין", subscribers:"699,392", notes:"רשת מדיה פלסטינית עצמאית. ערוצים: תרגום עברית, אנגלית, ארכיון, אסירים. בוט: @QudsNN_bot" },
-    palinfo: { name:"مركز الاعلام - מרכז תקשורת", location:"פלסטין", notes:"מרכז תקשורת פלסטיני. @palaborz" },
-    PalestineResist: { name:"Resistance News Network", location:"פלסטין", subscribers:"142,177", notes:"The pulse of the resistance. גיבוי: @RNN_Backup, @RNN_Prisoners, @RNN_Archive" },
+    gazaalannet: { name:"غزة الآن - עזה עכשיו", location:"עזה, פלסטין", notes:"ערוץ חדשות מקומי מרכזי מרצועת עזה. סיקור בזמן אמת." },
+    GazaNewsNow: { name:"أخبار غزة الحدث - חדשות עזה", location:"עזה, פלסטין", notes:"ערוץ חדשות מעודכן מרצועת עזה" },
+    gazala7zapal1: { name:"غزة الأحزاب - עזה מפלגות", location:"עזה, פלסטין", notes:"ערוץ חדשות פוליטי וביטחוני מעזה" },
+    akh_bar_gaza: { name:"أخبار غزة - חדשות עזה", location:"עזה, פלסטין", notes:"ערוץ חדשות כללי מרצועת עזה" },
+    mtqdmon: { name:"المتقدمون - המתקדמים", location:"עזה, פלסטין", notes:"ערוץ חדשות וניתוח מפלסטין" },
+    QudsN: { name:"شبكة قدس الإخبارية - רשת קודס", location:"פלסטין", subscribers:"699,392", notes:"רשת מדיה פלסטינית עצמאית. בוט: @QudsNN_bot" },
+    SamaNewsAgency: { name:"وكالة سما الإخبارية - סוכנות סמא", location:"עזה, פלסטין", notes:"סוכנות ידיעות פלסטינית מעזה" },
+    palinfo: { name:"المركز الفلسطيني للإعلام - מרכז תקשורת", location:"פלסטין", notes:"מרכז תקשורת פלסטיני" },
+    PalestineResist: { name:"Resistance News Network", location:"פלסטין", subscribers:"142,177", notes:"The pulse of the resistance. גיבוי: @RNN_Backup" },
+    eyeonpal: { name:"عين على فلسطين - עין על פלסטין", location:"פלסטין", notes:"סיקור ומעקב אירועים בפלסטין" },
     "google-news": { name:"Google News", location:"גלובלי", notes:"מנוע חדשות גוגל - חיפוש בערבית ועברית" }
 };
 

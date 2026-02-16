@@ -1,0 +1,4577 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>מבט 188 | פלטפורמת מודיעין גזרתית</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='100' height='100' rx='12' fill='%23040810'/%3E%3Cpath d='M50 15 Q65 15 73 27 Q78 35 77 47 Q75 57 68 63 L50 75 L32 63 Q25 57 23 47 Q22 35 27 27 Q35 15 50 15Z' fill='none' stroke='%2300d4ff' stroke-width='2'/%3E%3Cpath d='M33 20 L27 7 L38 17' fill='%2300d4ff' opacity='.6'/%3E%3Cpath d='M67 20 L73 7 L62 17' fill='%2300d4ff' opacity='.6'/%3E%3Ccircle cx='40' cy='37' r='9' fill='none' stroke='%2300d4ff' stroke-width='1.5'/%3E%3Ccircle cx='60' cy='37' r='9' fill='none' stroke='%2300d4ff' stroke-width='1.5'/%3E%3Ccircle cx='40' cy='37' r='4' fill='%23ffd000'/%3E%3Ccircle cx='60' cy='37' r='4' fill='%23ffd000'/%3E%3Ccircle cx='40' cy='37' r='1.5' fill='%23040810'/%3E%3Ccircle cx='60' cy='37' r='1.5' fill='%23040810'/%3E%3Cpath d='M47 43 L50 49 L53 43' fill='%23ff8800' opacity='.7'/%3E%3Cline x1='50' y1='65' x2='50' y2='93' stroke='%2300d4ff' stroke-width='2.5' opacity='.6'/%3E%3Cpath d='M44 67 L50 65 L56 67 L50 69Z' fill='%2300d4ff' opacity='.5'/%3E%3Cline x1='43' y1='68' x2='57' y2='68' stroke='%2300d4ff' stroke-width='1.5' opacity='.5'/%3E%3Cpath d='M48 91 L50 97 L52 91' fill='%2300d4ff' opacity='.5'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+/* ═══════════════════════════════════════
+   MABAT 188 - CYBER DEFENSE DASHBOARD
+   Futuristic Military Intelligence UI v2
+   ═══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg-primary: #040810;
+    --bg-secondary: #0a1020;
+    --bg-panel: rgba(8, 16, 35, 0.85);
+    --bg-card: rgba(12, 22, 45, 0.9);
+    --border-primary: #0f3460;
+    --border-glow: #00d4ff;
+    --cyan: #00d4ff;
+    --cyan-dim: #00d4ff44;
+    --green: #00ff88;
+    --green-dim: #00ff8844;
+    --red: #ff0040;
+    --red-dim: #ff004044;
+    --orange: #ff8800;
+    --orange-dim: #ff880044;
+    --yellow: #ffd000;
+    --yellow-dim: #ffd00044;
+    --blue: #4488ff;
+    --purple: #a855f7;
+    --purple-dim: #a855f744;
+    --text-primary: #e0e8f0;
+    --text-secondary: #9ab0c8;
+    --text-dim: #6880a0;
+    --font-display: 'Orbitron', 'Heebo', sans-serif;
+    --font-body: 'Heebo', 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', 'Heebo', monospace;
+    --font-he: 'Heebo', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-weight: 400;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 100vh;
+    width: 100vw;
+}
+
+/* ═══════ ANIMATED BACKGROUND ═══════ */
+.bg-grid {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: 0;
+    animation: gridPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes gridPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.scan-line {
+    display: none;
+}
+
+/* ═══════ RADAR SONAR SWEEP ═══════ */
+.radar-sweep {
+    position: absolute;
+    z-index: 999;
+    pointer-events: none;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.radar-sweep-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 5%, rgba(0, 212, 255, 0.5) 30%, rgba(0, 212, 255, 0.7) 50%, rgba(0, 212, 255, 0.5) 70%, transparent 95%);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.3), 0 0 25px rgba(0, 212, 255, 0.1);
+    animation: sonarScanDown 4s ease-in-out infinite;
+    z-index: 2;
+}
+
+.radar-sweep-trail {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
+    animation: sonarScanDown 4s ease-in-out infinite;
+    z-index: 1;
+}
+
+@keyframes sonarScanDown {
+    0% { top: 0%; }
+    50% { top: 100%; }
+    100% { top: 0%; }
+}
+
+.radar-crosshair {
+    position: absolute;
+    z-index: 998;
+    pointer-events: none;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 212, 255, 0.08);
+}
+
+.radar-ring-inner {
+    position: absolute;
+    z-index: 998;
+    pointer-events: none;
+    border-radius: 50%;
+    border: 1px dashed rgba(0, 212, 255, 0.06);
+}
+
+.radar-center-dot {
+    position: absolute;
+    z-index: 998;
+    pointer-events: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+}
+
+/* ═══════ CORNER DECORATIONS ═══════ */
+.corner-decor {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    z-index: 5;
+    pointer-events: none;
+}
+.corner-decor::before, .corner-decor::after {
+    content: '';
+    position: absolute;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+}
+.corner-tl { top: 10px; left: 10px; }
+.corner-tl::before { width: 30px; height: 2px; top: 0; left: 0; }
+.corner-tl::after { width: 2px; height: 30px; top: 0; left: 0; }
+.corner-tr { top: 10px; right: 10px; }
+.corner-tr::before { width: 30px; height: 2px; top: 0; right: 0; }
+.corner-tr::after { width: 2px; height: 30px; top: 0; right: 0; }
+.corner-bl { bottom: 10px; left: 10px; }
+.corner-bl::before { width: 30px; height: 2px; bottom: 0; left: 0; }
+.corner-bl::after { width: 2px; height: 30px; bottom: 0; left: 0; }
+.corner-br { bottom: 10px; right: 10px; }
+.corner-br::before { width: 30px; height: 2px; bottom: 0; right: 0; }
+.corner-br::after { width: 2px; height: 30px; bottom: 0; right: 0; }
+
+/* ═══════ MAIN LAYOUT ═══════ */
+.dashboard {
+    display: grid;
+    grid-template-rows: 70px 1fr 400px;
+    grid-template-columns: 280px 1fr 320px;
+    min-height: 100vh;
+    gap: 2px;
+    padding: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+/* ═══════ HEADER ═══════ */
+.header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
+    border-bottom: 1px solid var(--border-primary);
+    position: relative;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    box-shadow: 0 0 15px var(--cyan-dim);
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.logo-hex {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: hexPulse 3s ease-in-out infinite;
+    position: relative;
+    filter: drop-shadow(0 0 8px var(--cyan-dim));
+}
+
+@keyframes hexPulse {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.4) drop-shadow(0 0 10px var(--cyan)); }
+}
+
+.system-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 4px;
+    background: linear-gradient(90deg, var(--cyan), #fff, var(--cyan));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+.system-subtitle {
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+}
+
+.header-status-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border-primary);
+    flex-shrink: 0;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--cyan);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+
+.header-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--cyan);
+    box-shadow: 0 0 15px var(--cyan-dim);
+}
+
+.header-btn .btn-icon {
+    font-size: 14px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+.status-dot.offline {
+    background: var(--red);
+    box-shadow: 0 0 10px var(--red);
+}
+
+@keyframes dotPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+}
+
+.clock {
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    text-shadow: 0 0 10px var(--cyan-dim);
+}
+
+.date-display {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* ═══════ PANELS ═══════ */
+.panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(0, 212, 255, 0.03);
+}
+
+.panel-title {
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+}
+
+.panel-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: dotPulse 2s ease-in-out infinite;
+}
+
+.panel-body {
+    padding: 12px;
+    overflow-y: auto;
+    height: calc(100% - 42px);
+}
+
+.panel-body::-webkit-scrollbar { width: 4px; }
+.panel-body::-webkit-scrollbar-track { background: var(--bg-primary); }
+.panel-body::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 2px; }
+.panel-body::-webkit-scrollbar-thumb:hover { background: var(--cyan-dim); }
+
+/* ═══════ LEFT PANEL ═══════ */
+.left-panel {
+    grid-row: 2 / 4;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Threat Level */
+.threat-container { flex: 0 0 200px; }
+
+.threat-gauge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    gap: 10px;
+}
+
+.threat-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--border-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.5s ease;
+}
+
+.threat-circle::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-top-color: var(--cyan);
+    animation: rotate 3s linear infinite;
+}
+
+.threat-circle::after {
+    content: '';
+    position: absolute;
+    inset: -14px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-bottom-color: var(--cyan-dim);
+    animation: rotate 5s linear infinite reverse;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.threat-circle.level-green { border-color: var(--green); box-shadow: 0 0 30px rgba(0, 255, 136, 0.2); }
+.threat-circle.level-gray { border-color: #666; }
+.threat-circle.level-blue { border-color: var(--blue); box-shadow: 0 0 30px rgba(68, 136, 255, 0.2); }
+.threat-circle.level-yellow { border-color: var(--yellow); box-shadow: 0 0 30px rgba(255, 208, 0, 0.2); }
+.threat-circle.level-orange { border-color: var(--orange); box-shadow: 0 0 30px rgba(255, 136, 0, 0.3); }
+.threat-circle.level-red { border-color: var(--red); box-shadow: 0 0 40px rgba(255, 0, 64, 0.4); animation: threatPulse 1.5s ease-in-out infinite; }
+
+@keyframes threatPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 64, 0.3); }
+    50% { box-shadow: 0 0 60px rgba(255, 0, 64, 0.6); }
+}
+
+.threat-level-num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.threat-level-label {
+    font-family: var(--font-he);
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.threat-bars {
+    display: flex;
+    gap: 4px;
+    width: 100%;
+    height: 6px;
+}
+
+.threat-bar {
+    flex: 1;
+    border-radius: 2px;
+    background: var(--bg-primary);
+    transition: all 0.3s ease;
+}
+
+/* Stats */
+.stats-container { flex: 1; }
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.4);
+}
+
+.stat-label {
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+.stat-value {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cyan);
+}
+
+.stat-value.red { color: var(--red); }
+.stat-value.orange { color: var(--orange); }
+.stat-value.yellow { color: var(--yellow); }
+.stat-value.green { color: var(--green); }
+
+/* Sources */
+.sources-container { flex: 0 0 auto; }
+
+.source-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-family: var(--font-he);
+    font-size: 11px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+}
+
+.source-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.source-dot.active { background: var(--green); box-shadow: 0 0 6px var(--green); }
+.source-dot.inactive { background: #444; }
+
+.source-name {
+    flex: 1;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--font-he);
+    font-weight: 400;
+}
+
+.source-type {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 2px;
+    border: 1px solid var(--border-primary);
+}
+
+.source-type.local { color: var(--green); border-color: var(--green-dim); }
+.source-type.regional { color: var(--orange); border-color: var(--orange-dim); }
+.source-type.national { color: var(--cyan); border-color: var(--cyan-dim); }
+.source-type.news { color: var(--yellow); border-color: var(--yellow-dim); }
+
+.source-count {
+    color: var(--cyan);
+    font-size: 10px;
+}
+
+/* ═══════ CENTER - MAP ═══════ */
+.map-panel { position: relative; transition: all 0.4s ease; }
+
+.map-panel.fullscreen {
+    position: fixed !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9000;
+    border-radius: 0;
+    grid-row: auto;
+    grid-column: auto;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+}
+
+.leaflet-container {
+    background: var(--bg-primary) !important;
+    font-family: var(--font-mono) !important;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 1000;
+    border: 1px solid var(--border-primary);
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+.map-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, transparent, transparent 4px, var(--cyan-dim) 4px, var(--cyan-dim) 5px);
+}
+
+.map-coords {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    z-index: 1001;
+    pointer-events: none;
+}
+
+.map-label {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--cyan);
+    z-index: 1001;
+    pointer-events: none;
+    text-shadow: 0 0 10px var(--cyan-dim);
+}
+
+.map-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-primary);
+    color: var(--cyan);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-he);
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.map-btn:hover {
+    background: rgba(0, 212, 255, 0.15);
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan-dim);
+}
+
+/* ═══════ RIGHT PANEL - AI SUMMARY ═══════ */
+.right-panel {
+    grid-row: 3 / 4;
+    grid-column: 3 / 4;
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-text {
+    font-family: 'Heebo', var(--font-body);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    direction: rtl;
+    white-space: pre-wrap;
+    font-weight: 300;
+}
+
+.summary-meta {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-primary);
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+}
+
+.ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border: 1px solid var(--cyan-dim);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+}
+
+.ai-badge::before {
+    content: '\25C6';
+    font-size: 6px;
+    animation: dotPulse 1.5s ease-in-out infinite;
+}
+
+/* Config Panel */
+.config-panel {
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 400;
+}
+
+.config-key { color: var(--text-secondary); }
+.config-val { color: var(--cyan); }
+
+/* ═══════ BOTTOM - ALERT FEED ═══════ */
+.alert-feed { grid-column: 2 / 3; display: flex; flex-direction: column; }
+
+.alert-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.filter-chip {
+    padding: 3px 10px;
+    border: 1px solid var(--border-primary);
+    border-radius: 3px;
+    font-family: var(--font-he);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+}
+
+.filter-chip:hover { border-color: var(--cyan-dim); color: var(--text-secondary); }
+.filter-chip.active { border-color: var(--cyan); color: var(--cyan); background: rgba(0, 212, 255, 0.08); }
+.filter-chip.active.red { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+.filter-chip.active.orange { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+.filter-chip.active.yellow { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
+.filter-chip.active.blue { border-color: var(--blue); color: var(--blue); background: rgba(68,136,255,0.12); }
+.filter-chip.active.purple { border-color: var(--purple); color: var(--purple); background: var(--purple-dim); }
+.filter-chip.active.green { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+
+/* Anarchist toggle */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-he);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--purple);
+    padding: 0 8px;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 32px;
+    height: 16px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active {
+    background: var(--purple-dim);
+    border-color: var(--purple);
+}
+
+.toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: all 0.3s ease;
+}
+
+.toggle-switch.active::after {
+    left: 18px;
+    background: var(--purple);
+    box-shadow: 0 0 6px var(--purple);
+}
+
+.search-input {
+    flex: 1;
+    max-width: 220px;
+    padding: 4px 10px;
+    border: 1px solid var(--border-primary);
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 400;
+    outline: none;
+    direction: rtl;
+    transition: border-color 0.3s ease;
+}
+
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus { border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan-dim); }
+
+.alert-feed .panel-body {
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+    transition: background 0.3s ease;
+    direction: rtl;
+    cursor: pointer;
+}
+
+.alert-item:hover { background: rgba(0, 212, 255, 0.03); }
+
+.alert-item.expanded {
+    background: rgba(0, 212, 255, 0.05);
+    flex-direction: column;
+    gap: 8px;
+}
+
+.alert-item.new-alert { animation: alertFlash 2s ease; }
+.alert-item.keyword-hit { border-right: 3px solid var(--yellow); background: rgba(255,208,0,0.06); }
+
+@keyframes alertFlash {
+    0% { background: rgba(0, 212, 255, 0.2); }
+    100% { background: transparent; }
+}
+
+.alert-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.alert-time {
+    font-family: var(--font-he);
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-dim);
+    white-space: nowrap;
+    min-width: 45px;
+    padding-top: 2px;
+}
+
+.alert-urgency {
+    width: 8px; min-width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.alert-urgency.urgency-5 { background: var(--red); box-shadow: 0 0 10px var(--red); animation: dotPulse 1s ease-in-out infinite; }
+.alert-urgency.urgency-4 { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.alert-urgency.urgency-3 { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+.alert-urgency.urgency-2 { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+.alert-urgency.urgency-1 { background: #666; }
+.alert-urgency.urgency-anarchist { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+.alert-urgency.urgency-field { background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+.alert-content { flex: 1; min-width: 0; }
+
+.alert-title {
+    font-family: 'Heebo', var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+/* ═══════ ALERT CHECKMARK ═══════ */
+.alert-check {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 1.5px solid var(--border-primary);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: transparent;
+    transition: all 0.2s ease;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+.alert-check:hover {
+    border-color: var(--cyan);
+    background: rgba(0, 212, 255, 0.05);
+}
+.alert-check.checked {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0, 255, 136, 0.1);
+}
+.alert-item.alert-checked {
+    opacity: 0.5;
+}
+.alert-item.alert-checked .alert-title {
+    text-decoration: line-through;
+    text-decoration-color: var(--text-dim);
+}
+
+.alert-full-text {
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    white-space: pre-wrap;
+    direction: rtl;
+}
+
+.alert-meta-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--font-he);
+    font-size: 9px;
+    font-weight: 400;
+    color: var(--text-dim);
+}
+
+/* ═══════ VOTE BUTTONS ═══════ */
+.vote-buttons { display:flex; gap:6px; align-items:center; margin-right:auto; }
+.vote-btn { background:none; border:1px solid var(--border-primary); color:var(--text-dim); font-size:14px; width:28px; height:28px; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease; }
+.vote-btn:hover { border-color:var(--cyan); background:rgba(0,212,255,0.06); }
+.vote-btn.vote-like.active { border-color:var(--green); color:var(--green); background:rgba(0,255,136,0.1); }
+.vote-btn.vote-dislike.active { border-color:var(--red); color:var(--red); background:var(--red-dim); }
+.alert-item.alert-false { opacity:0.6; }
+.alert-item.alert-false .alert-title { text-decoration:line-through; text-decoration-color:var(--red); }
+.false-badge { display:inline-block; font-family:var(--font-he); font-size:9px; font-weight:700; color:var(--red); background:var(--red-dim); border:1px solid var(--red); border-radius:3px; padding:0px 5px; margin-left:6px; }
+.verified-badge { display:inline-block; font-family:var(--font-he); font-size:9px; font-weight:700; color:var(--green); background:rgba(0,255,136,0.1); border:1px solid var(--green); border-radius:3px; padding:0px 5px; margin-left:6px; }
+
+/* ═══════ PUBLISHER PROFILE OVERLAY ═══════ */
+.publisher-overlay { position:fixed; top:0; left:0; right:0; bottom:0; z-index:8001; background:rgba(4,8,16,0.8); display:none; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.publisher-overlay.visible { display:flex; }
+.publisher-card { background:linear-gradient(180deg, rgba(10,20,45,0.95), rgba(4,8,16,0.98)); border:1px solid var(--border-primary); padding:25px; width:90%; max-width:460px; max-height:85vh; overflow-y:auto; direction:rtl; border-radius:6px; box-shadow:0 0 30px rgba(0,212,255,0.1), 0 8px 40px rgba(0,0,0,0.8); }
+.publisher-card-header { display:flex; align-items:center; gap:15px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border-primary); }
+.publisher-photo { width:64px; height:64px; border-radius:50%; border:2px solid var(--cyan); object-fit:cover; background:var(--bg-secondary); flex-shrink:0; }
+.publisher-photo-placeholder { width:64px; height:64px; border-radius:50%; border:2px solid var(--border-primary); background:var(--bg-secondary); display:flex; align-items:center; justify-content:center; font-size:24px; color:var(--text-dim); flex-shrink:0; }
+.publisher-name { font-family:var(--font-he); font-size:18px; font-weight:700; color:var(--text-primary); }
+.publisher-subtitle { font-family:var(--font-he); font-size:11px; color:var(--text-secondary); margin-top:2px; }
+.publisher-info-grid { display:grid; grid-template-columns:auto 1fr; gap:8px 12px; margin-bottom:15px; }
+.publisher-info-label { font-family:var(--font-he); font-size:11px; font-weight:500; color:var(--text-dim); white-space:nowrap; }
+.publisher-info-value { font-family:var(--font-he); font-size:12px; color:var(--text-primary); }
+.publisher-stats { display:flex; gap:12px; padding:10px 0; border-top:1px solid var(--border-primary); border-bottom:1px solid var(--border-primary); margin-bottom:12px; }
+.publisher-stat-box { text-align:center; flex:1; }
+.publisher-stat-value { font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--cyan); }
+.publisher-stat-label { font-family:var(--font-he); font-size:9px; color:var(--text-dim); margin-top:2px; }
+.publisher-actions { display:flex; gap:8px; justify-content:center; margin-top:12px; }
+.publisher-btn { background:linear-gradient(180deg, rgba(10,20,50,0.6), rgba(4,8,20,0.8)); border:1px solid var(--border-primary); color:var(--text-secondary); font-family:var(--font-he); font-size:11px; padding:6px 14px; border-radius:4px; cursor:pointer; transition:all 0.2s ease; }
+.publisher-btn:hover { border-color:var(--cyan); color:var(--cyan); }
+.publisher-btn.primary { border-color:var(--cyan); color:var(--cyan); }
+.publisher-edit-field { margin-bottom:8px; }
+.publisher-edit-field label { display:block; font-family:var(--font-he); font-size:10px; color:var(--text-dim); margin-bottom:3px; }
+.publisher-edit-field input, .publisher-edit-field textarea { width:100%; padding:6px 10px; border:1px solid var(--border-primary); background:rgba(0,0,0,0.3); color:var(--text-primary); font-family:var(--font-he); font-size:11px; border-radius:3px; outline:none; direction:rtl; }
+.publisher-edit-field textarea { min-height:50px; resize:vertical; }
+.source-link-clickable { cursor:pointer; transition:color 0.2s ease; }
+.source-link-clickable:hover { color:var(--cyan) !important; text-decoration:underline; }
+
+/* ═══════ KEYWORDS OVERLAY ═══════ */
+.keywords-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(4,8,16,0.97); z-index:8000; display:none; flex-direction:column; }
+.keywords-overlay.visible { display:flex; }
+.keywords-header { display:flex; align-items:center; justify-content:space-between; padding:15px 25px; background:linear-gradient(180deg, rgba(10,20,50,0.5), rgba(4,8,16,0.95)); border-bottom:1px solid var(--border-primary); }
+.keywords-title { font-family:var(--font-he); font-size:18px; font-weight:700; color:var(--cyan); }
+.keywords-body { flex:1; overflow-y:auto; padding:20px; }
+.keyword-category { margin-bottom:12px; padding:12px; background:var(--bg-card); border:1px solid var(--border-primary); border-radius:4px; }
+.keyword-category-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.keyword-category-name { font-family:var(--font-he); font-size:14px; font-weight:600; color:var(--text-primary); }
+.keyword-category-count { font-family:var(--font-mono); font-size:10px; color:var(--text-dim); padding:2px 8px; border:1px solid var(--border-primary); border-radius:3px; }
+.keyword-tags { display:flex; flex-wrap:wrap; gap:5px; direction:rtl; }
+.keyword-tag { font-family:var(--font-he); font-size:11px; padding:3px 8px; background:rgba(0,212,255,0.05); border:1px solid var(--border-primary); border-radius:3px; color:var(--text-secondary); }
+.keyword-urgency-badge { display:inline-block; font-family:var(--font-mono); font-size:8px; padding:0 4px; border-radius:2px; }
+.keywords-stat-bar { display:flex; gap:12px; padding:8px 25px; flex-wrap:wrap; border-bottom:1px solid var(--border-primary); }
+.keywords-stat { font-family:var(--font-he); font-size:11px; color:var(--text-secondary); }
+.keywords-stat strong { font-family:var(--font-mono); font-size:13px; }
+
+.alert-source {
+    font-family: var(--font-he);
+    font-size: 9px;
+    font-weight: 400;
+    color: var(--text-dim);
+    white-space: nowrap;
+    padding: 2px 6px;
+    border: 1px solid var(--border-primary);
+    border-radius: 3px;
+    margin-top: 2px;
+}
+
+/* ═══════ TIMELINE GRAPH ═══════ */
+.timeline-graph {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.timeline-label {
+    font-family: var(--font-he);
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    font-weight: 400;
+}
+
+.timeline-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 35px;
+}
+
+.timeline-bar {
+    flex: 1;
+    min-width: 2px;
+    background: var(--cyan-dim);
+    border-radius: 1px 1px 0 0;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.timeline-bar:hover {
+    opacity: 0.8;
+}
+
+.timeline-bar.has-red { background: var(--red); box-shadow: 0 0 4px var(--red-dim); }
+.timeline-bar.has-orange { background: var(--orange); }
+.timeline-bar.has-yellow { background: var(--yellow); }
+.timeline-bar.has-blue { background: var(--blue); }
+
+.timeline-hours {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+/* ═══════ HISTORY OVERLAY ═══════ */
+.history-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(4, 8, 16, 0.95);
+    z-index: 8000;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+}
+
+.history-overlay.visible {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 25px;
+    border-bottom: 1px solid var(--border-primary);
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.06), transparent);
+}
+
+.history-title {
+    font-family: var(--font-he);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+}
+
+.history-close {
+    background: transparent;
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.history-close:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.history-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 25px;
+    border-bottom: 1px solid var(--border-primary);
+    flex-wrap: wrap;
+}
+
+.history-search {
+    flex: 1;
+    max-width: 300px;
+    padding: 6px 14px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 400;
+    outline: none;
+    direction: rtl;
+}
+
+.history-search:focus { border-color: var(--cyan); }
+
+.history-date-filter {
+    padding: 5px 10px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 11px;
+}
+
+.history-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px 25px;
+}
+
+.history-body::-webkit-scrollbar { width: 6px; }
+.history-body::-webkit-scrollbar-track { background: var(--bg-primary); }
+.history-body::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 3px; }
+
+.history-date-group {
+    margin-bottom: 20px;
+}
+
+.history-date-header {
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--cyan);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-primary);
+    margin-bottom: 8px;
+    position: sticky;
+    top: 0;
+    background: rgba(4, 8, 16, 0.95);
+    z-index: 1;
+}
+
+.history-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.2);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+    direction: rtl;
+}
+
+.history-item:hover {
+    background: rgba(0, 212, 255, 0.03);
+}
+
+.history-item-time {
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    min-width: 50px;
+    padding-top: 2px;
+}
+
+.history-item-urgency {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.history-item-content {
+    flex: 1;
+}
+
+.history-item-title {
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.history-item-text {
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.history-item-source {
+    font-family: var(--font-he);
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-top: 4px;
+}
+
+/* Journal notes */
+.journal-note-btn {
+    background: none;
+    border: 1px solid var(--border-primary);
+    color: var(--cyan);
+    font-family: var(--font-he);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.journal-note-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--cyan);
+}
+.journal-note-form {
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.journal-note-form input,
+.journal-note-form textarea {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-primary);
+    border-radius: 3px;
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 11px;
+    padding: 6px 8px;
+    outline: none;
+    direction: rtl;
+}
+.journal-note-form input:focus,
+.journal-note-form textarea:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 5px var(--cyan-dim);
+}
+.journal-note-form textarea {
+    resize: vertical;
+    min-height: 40px;
+}
+.journal-note-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+}
+.journal-note-save {
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: var(--font-he);
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.journal-note-cancel {
+    background: none;
+    border: 1px solid var(--border-primary);
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 10px;
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.journal-saved-note {
+    margin-top: 6px;
+    padding: 6px 8px;
+    background: rgba(0, 212, 255, 0.05);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-secondary);
+    direction: rtl;
+}
+.journal-saved-note strong {
+    color: var(--cyan);
+    font-weight: 500;
+}
+
+/* ═══════ FIELD REPORT FORM ═══════ */
+.report-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 8000;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+.report-overlay.visible { display: flex; }
+.report-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glow);
+    border-radius: 8px;
+    padding: 25px;
+    width: 90%;
+    max-width: 420px;
+    direction: rtl;
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.15);
+}
+.report-form-title {
+    font-family: var(--font-he);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green);
+    margin-bottom: 15px;
+    text-align: center;
+}
+.report-field {
+    margin-bottom: 10px;
+}
+.report-field label {
+    display: block;
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+.report-field input,
+.report-field textarea,
+.report-field select {
+    width: 100%;
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 12px;
+    outline: none;
+    direction: rtl;
+    box-sizing: border-box;
+}
+.report-field input:focus,
+.report-field textarea:focus,
+.report-field select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 8px var(--green-dim);
+}
+.report-field textarea { resize: vertical; min-height: 60px; }
+.report-field select { cursor: pointer; }
+.report-field select option { background: #0a1020; color: var(--text-primary); }
+.report-urgency-row {
+    display: flex;
+    gap: 8px;
+}
+.report-urgency-btn {
+    flex: 1;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border-primary);
+    background: none;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.report-urgency-btn.selected { font-weight: 700; }
+.report-urgency-btn[data-urg="5"].selected { border-color: var(--red); color: var(--red); background: var(--red-dim); }
+.report-urgency-btn[data-urg="4"].selected { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+.report-urgency-btn[data-urg="3"].selected { border-color: var(--yellow); color: var(--yellow); background: var(--yellow-dim); }
+.report-urgency-btn[data-urg="2"].selected { border-color: var(--blue); color: var(--blue); background: rgba(68,136,255,0.15); }
+.report-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.report-submit {
+    flex: 1;
+    padding: 10px;
+    background: rgba(0, 255, 136, 0.12);
+    border: 1px solid var(--green);
+    border-radius: 4px;
+    color: var(--green);
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.report-cancel {
+    padding: 10px 20px;
+    background: none;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.history-stat-bar {
+    display: flex;
+    gap: 15px;
+    padding: 10px 25px;
+    border-bottom: 1px solid var(--border-primary);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.history-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+}
+
+.history-stat strong {
+    color: var(--cyan);
+    font-family: var(--font-he);
+    font-weight: 700;
+}
+
+/* ═══════ RED ALERT FLASH ═══════ */
+.red-alert-flash {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.red-alert-flash.active {
+    animation: redFlash 3s ease-out;
+}
+
+@keyframes redFlash {
+    0% { opacity: 1; background: rgba(255, 0, 64, 0.3); }
+    10% { opacity: 0.8; background: rgba(255, 0, 64, 0.15); }
+    20% { opacity: 1; background: rgba(255, 0, 64, 0.25); }
+    30% { opacity: 0.5; background: rgba(255, 0, 64, 0.1); }
+    100% { opacity: 0; }
+}
+
+/* ═══════ LOADING / EMPTY ═══════ */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 15px;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 12px;
+}
+
+.loading-spinner {
+    width: 40px; height: 40px;
+    border: 2px solid var(--border-primary);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 12px;
+}
+
+/* ═══════ REFRESH BAR ═══════ */
+.refresh-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 2px;
+    background: var(--cyan);
+    z-index: 1001;
+    transition: width 1s linear;
+    box-shadow: 0 0 10px var(--cyan);
+}
+
+/* ═══════ URGENCY TAG ═══════ */
+.urgency-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: var(--font-he);
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.urgency-tag.red { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+.urgency-tag.orange { background: var(--orange-dim); color: var(--orange); border: 1px solid var(--orange); }
+.urgency-tag.yellow { background: var(--yellow-dim); color: var(--yellow); border: 1px solid var(--yellow); }
+.urgency-tag.blue { background: rgba(68,136,255,0.15); color: var(--blue); border: 1px solid var(--blue); }
+
+/* ═══════ RESPONSIVE ═══════ */
+@media (max-width: 1200px) {
+    .dashboard { grid-template-columns: 220px 1fr 260px; }
+}
+
+@media (max-width: 900px) {
+    body { overflow-y: auto; overflow-x: hidden; }
+
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding: 4px;
+        gap: 4px;
+    }
+
+    .header {
+        flex-wrap: wrap;
+        padding: 8px 12px;
+        gap: 8px;
+        min-height: 60px;
+        height: auto;
+        justify-content: center;
+        position: relative;
+    }
+
+    .logo-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .system-title { font-size: 16px; letter-spacing: 2px; }
+    .system-subtitle { font-size: 9px; display: none; }
+    .logo-hex { width: 35px; height: 35px; }
+    .header-center { gap: 6px; flex-wrap: nowrap; justify-content: center; width: 100%; flex: unset; }
+    .header-status-group {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        gap: 6px;
+        z-index: 5;
+    }
+    .header-status-group .status-badge { padding: 2px 6px; font-size: 9px; }
+    .header-divider { display: none; }
+    .header-actions-group { gap: 6px; justify-content: center; width: 100%; }
+    .header-actions-group .header-btn { padding: 5px 10px; font-size: 10px; }
+    .header-right { display: none; }
+
+    .map-panel {
+        height: 45vh;
+        min-height: 280px;
+        order: 1;
+    }
+
+    .alert-feed {
+        min-height: 300px;
+        max-height: none;
+        order: 2;
+        flex: 1;
+    }
+
+    .alert-toolbar { flex-wrap: wrap; gap: 4px; padding: 4px 8px; }
+    .filter-chip { padding: 4px 8px; font-size: 9px; }
+    .search-input { max-width: 100%; min-width: 120px; }
+
+    .timeline-graph { padding: 4px 8px; }
+    .timeline-bars { height: 25px; }
+
+    .alert-item { padding: 8px 10px; gap: 8px; }
+    .alert-title { font-size: 12px; -webkit-line-clamp: 2; }
+    .alert-source { font-size: 8px; padding: 1px 4px; }
+
+    .left-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+        order: 3;
+    }
+
+    .threat-container {
+        flex: 1 1 160px;
+        max-width: 50%;
+    }
+
+    .threat-gauge { padding: 10px; }
+    .threat-circle { width: 90px; height: 90px; }
+    .threat-level-num { font-size: 28px; }
+
+    .stats-container {
+        flex: 1 1 160px;
+        max-width: 50%;
+    }
+
+    .sources-container {
+        flex: 1 1 100%;
+    }
+
+    .right-panel {
+        order: 4;
+        min-height: 200px;
+    }
+
+    .config-panel {
+        order: 5;
+    }
+
+    .panel-title { font-size: 9px; letter-spacing: 2px; }
+    .stat-label { font-size: 10px; }
+    .stat-value { font-size: 14px; }
+
+    .map-btn { font-size: 10px; padding: 4px 8px; }
+
+    .history-header { padding: 10px 15px; }
+    .history-title { font-size: 14px; }
+    .history-filters { padding: 8px 15px; gap: 6px; }
+    .history-body { padding: 10px 15px; }
+    .history-item { padding: 8px; }
+    .history-stat-bar { padding: 8px 15px; gap: 8px; font-size: 10px; flex-wrap: wrap; }
+
+    .corner-decor { display: none; }
+}
+
+@media (max-width: 480px) {
+    .header-status-group .status-badge:nth-child(2) { display: none; }
+    .header-actions-group .header-btn { padding: 4px 6px; font-size: 9px; }
+    .header-actions-group .header-btn .btn-icon { font-size: 11px; }
+    .logo-section { gap: 8px; }
+    .map-panel { height: 35vh; min-height: 220px; }
+    .threat-container, .stats-container { max-width: 100%; flex: 1 1 100%; }
+    .alert-toolbar .toggle-container span:last-child { display: none; }
+}
+
+/* Dark tooltip */
+.dark-tooltip {
+    background: rgba(8, 16, 35, 0.95) !important;
+    color: #e0e8f0 !important;
+    border: 1px solid #0f3460 !important;
+    border-radius: 4px !important;
+    font-family: 'Rajdhani', 'Share Tech Mono', monospace !important;
+    font-size: 11px !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.25) !important;
+    max-width: 280px !important;
+}
+/* Tooltip arrows for all directions */
+.dark-tooltip::before { border-top-color: #0f3460 !important; }
+.leaflet-tooltip-right.dark-tooltip::before { border-right-color: #0f3460 !important; border-top-color: transparent !important; }
+.leaflet-tooltip-left.dark-tooltip::before { border-left-color: #0f3460 !important; border-top-color: transparent !important; }
+.leaflet-tooltip-bottom.dark-tooltip::before { border-bottom-color: #0f3460 !important; border-top-color: transparent !important; }
+
+/* ═══════ MAP LEGEND ═══════ */
+.map-legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 1001;
+    background: rgba(4, 8, 16, 0.95);
+    border: 1px solid var(--cyan-dim);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    direction: rtl;
+    pointer-events: auto;
+    max-width: 160px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+.legend-title {
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cyan);
+    margin-bottom: 8px;
+    text-align: center;
+}
+.legend-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    color: var(--text-primary);
+    font-size: 12px;
+    font-weight: 400;
+}
+.legend-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.legend-ring {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid;
+    background: transparent;
+    flex-shrink: 0;
+}
+.legend-divider {
+    height: 1px;
+    background: var(--border-primary);
+    margin: 5px 0;
+}
+
+.threat-ring-pulse {
+    animation: ringPulse 2s ease-in-out infinite;
+}
+@keyframes ringPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
+}
+
+.leaflet-popup-content-wrapper {
+    background: rgba(8, 16, 35, 0.95) !important;
+    color: #e0e8f0 !important;
+    border: 1px solid #0f3460 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2) !important;
+}
+.leaflet-popup-tip { background: rgba(8, 16, 35, 0.95) !important; }
+
+/* ═══════ ROUTE LINES ═══════ */
+.route-line {
+    filter: drop-shadow(0 0 4px currentColor);
+}
+
+/* ═══════ 3D SECTOR CIRCLE ═══════ */
+.sector-ring {
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5)) drop-shadow(0 0 20px rgba(0, 212, 255, 0.2));
+    animation: sectorPulse 3s ease-in-out infinite;
+}
+.sector-outer-glow {
+    filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.3));
+}
+.sector-center-glow {
+    filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+    animation: centerGlow 2s ease-in-out infinite;
+}
+.sector-center-dot {
+    filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.8));
+}
+@keyframes sectorPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+@keyframes centerGlow {
+    0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6)); }
+    50% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.9)); }
+}
+
+/* ═══════ 3D MARKERS ═══════ */
+.marker-3d {
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 6px currentColor);
+    transition: filter 0.2s ease, opacity 0.2s ease;
+}
+.marker-3d:hover {
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 14px currentColor) brightness(1.4);
+}
+.marker-glow-ring {
+    animation: markerGlowPulse 2.5s ease-in-out infinite;
+}
+@keyframes markerGlowPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+.marker-key {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 8px rgba(255, 136, 0, 0.5));
+}
+.marker-outside {
+    opacity: 0.6;
+}
+.marker-outside:hover {
+    opacity: 1;
+}
+.marker-city {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 10px currentColor);
+}
+
+/* ═══════ LOGIN SCREEN ═══════ */
+.login-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.login-overlay .bg-grid-login {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridPulse 4s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.login-overlay .scan-line-login {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: scanDown 5s linear infinite;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.login-box {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 50px 60px;
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    background: rgba(8, 16, 35, 0.9);
+    box-shadow: 0 0 60px rgba(0, 212, 255, 0.08), inset 0 0 40px rgba(0, 0, 0, 0.3);
+    min-width: 380px;
+    max-width: 450px;
+}
+
+.login-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px; right: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+.login-box::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: -1px; right: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+}
+
+.login-hex {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: hexPulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px var(--cyan-dim));
+}
+
+.login-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(90deg, var(--cyan), #fff, var(--cyan));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    letter-spacing: 3px;
+    margin-bottom: 35px;
+}
+
+.login-field {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.login-field label {
+    display: block;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    text-align: right;
+    margin-bottom: 6px;
+    font-weight: 400;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--cyan);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    letter-spacing: 8px;
+    text-align: center;
+    outline: none;
+    transition: all 0.3s ease;
+    direction: ltr;
+}
+
+.login-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px var(--cyan-dim);
+}
+
+.login-input.error {
+    border-color: var(--red);
+    box-shadow: 0 0 20px var(--red-dim);
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(68, 136, 255, 0.15));
+    border: 1px solid var(--cyan-dim);
+    border-radius: 4px;
+    color: var(--cyan);
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(68, 136, 255, 0.25));
+    border-color: var(--cyan);
+    box-shadow: 0 0 25px var(--cyan-dim);
+}
+
+.login-error {
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--red);
+    height: 16px;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+.login-classification {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--red);
+    z-index: 2;
+    text-shadow: 0 0 10px var(--red-dim);
+    pointer-events: none;
+}
+
+.login-footer {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    z-index: 2;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ═══════ CREDIT FOOTER ═══════ */
+.credit-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    text-align: center;
+    padding: 4px 10px;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    background: linear-gradient(0deg, rgba(4, 8, 16, 0.9), transparent);
+    letter-spacing: 1px;
+    pointer-events: auto;
+}
+
+.credit-footer a {
+    color: var(--green);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.credit-footer a:hover {
+    color: var(--cyan);
+    text-shadow: 0 0 8px var(--cyan-dim);
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:#040810;display:flex;align-items:center;justify-content:center;flex-direction:column;">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(0,212,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
+    <div style="position:absolute;top:15px;left:50%;transform:translateX(-50%);font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:#ff0040;pointer-events:none;white-space:nowrap;">CLASSIFIED // RESTRICTED ACCESS</div>
+    <div style="position:relative;z-index:10;text-align:center;padding:50px 60px;border:1px solid #0f3460;border-radius:8px;background:rgba(8,16,35,0.9);box-shadow:0 0 60px rgba(0,212,255,0.08);min-width:340px;">
+        <div style="width:80px;height:80px;margin:0 auto 25px;display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 100 120" width="80" height="96" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 5 L90 25 L90 75 L50 115 L10 75 L10 25 Z" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.4"/>
+                <path d="M50 25 Q62 25 70 35 Q75 42 74 52 Q72 62 65 68 L50 80 L35 68 Q28 62 26 52 Q25 42 30 35 Q38 25 50 25Z" fill="rgba(0,212,255,0.08)" stroke="#00d4ff" stroke-width="1.2"/>
+                <path d="M35 28 L30 15 L40 25" fill="#00d4ff" opacity="0.5"/><path d="M65 28 L70 15 L60 25" fill="#00d4ff" opacity="0.5"/>
+                <circle cx="39" cy="42" r="9" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+                <circle cx="61" cy="42" r="9" fill="none" stroke="#00d4ff" stroke-width="1.2"/>
+                <circle cx="39" cy="42" r="4" fill="#ffd000"/><circle cx="61" cy="42" r="4" fill="#ffd000"/>
+                <circle cx="39" cy="42" r="1.5" fill="#040810"/><circle cx="61" cy="42" r="1.5" fill="#040810"/>
+                <path d="M47 48 L50 54 L53 48" fill="#ff8800" opacity="0.6"/>
+                <line x1="50" y1="70" x2="50" y2="105" stroke="#00d4ff" stroke-width="1.8" opacity="0.7"/>
+                <path d="M45 72 L50 70 L55 72 L50 74 Z" fill="#00d4ff" opacity="0.5"/>
+            </svg>
+        </div>
+        <div style="font-family:'Orbitron',monospace;font-size:28px;font-weight:900;letter-spacing:6px;margin-bottom:8px;white-space:nowrap;background:linear-gradient(90deg,#00d4ff,#fff,#00d4ff);background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">MABAT 188</div>
+        <div style="font-family:'Heebo',sans-serif;font-size:13px;font-weight:300;color:#7088a0;letter-spacing:2px;margin-bottom:35px;">פלטפורמת מודיעין גזרתית</div>
+        <div style="margin-bottom:20px;text-align:right;">
+            <label style="display:block;font-family:'Heebo',sans-serif;font-size:11px;font-weight:400;color:#3a4a5c;margin-bottom:6px;">קוד גישה</label>
+            <input id="loginInput" type="text" autocomplete="off" data-lpignore="true" data-1p-ignore maxlength="10" placeholder="••••"
+                style="width:100%;padding:12px 16px;background:rgba(0,0,0,0.4);border:1px solid #0f3460;border-radius:4px;color:#00d4ff;font-family:'Share Tech Mono',monospace;font-size:18px;letter-spacing:8px;text-align:center;outline:none;box-sizing:border-box;-webkit-text-security:disc;-moz-text-security:disc;text-security:disc;"
+                onfocus="this.style.borderColor='#00d4ff';this.style.boxShadow='0 0 20px rgba(0,212,255,0.15)'"
+                onblur="this.style.borderColor='#0f3460';this.style.boxShadow='none'">
+        </div>
+        <button onclick="doLogin()" style="width:100%;padding:12px;background:linear-gradient(135deg,rgba(0,212,255,0.15),rgba(68,136,255,0.15));border:1px solid rgba(0,212,255,0.3);border-radius:4px;color:#00d4ff;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;">כניסה למערכת</button>
+        <div id="loginError" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#ff0040;height:16px;margin-top:10px;letter-spacing:1px;"></div>
+    </div>
+    <div style="position:absolute;bottom:15px;font-family:'Heebo',sans-serif;font-size:11px;color:#6880a0;pointer-events:auto;"><a href="https://wa.me/972542012000" target="_blank" style="color:#00ff88;text-decoration:none;">נבנה ע"י אלחי פיין | 054-201-2000</a></div>
+</div>
+<script>
+function doLogin() {
+    var input = document.getElementById('loginInput');
+    var err = document.getElementById('loginError');
+    if (input.value === '1875') {
+        var ov = document.getElementById('loginOverlay');
+        ov.style.transition = 'opacity 0.8s ease';
+        ov.style.opacity = '0';
+        setTimeout(function() { ov.style.display = 'none'; }, 800);
+    } else {
+        err.textContent = 'קוד גישה שגוי // ACCESS DENIED';
+        input.style.borderColor = '#ff0040';
+        input.style.boxShadow = '0 0 20px rgba(255,0,64,0.15)';
+        input.value = '';
+        setTimeout(function() { err.textContent = ''; input.style.borderColor = '#0f3460'; input.style.boxShadow = 'none'; }, 2000);
+    }
+}
+document.getElementById('loginInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') doLogin();
+});
+</script>
+
+<!-- Background Effects -->
+<div class="bg-grid"></div>
+<div class="scan-line"></div>
+<div class="corner-decor corner-tl"></div>
+<div class="corner-decor corner-tr"></div>
+<div class="corner-decor corner-bl"></div>
+<div class="corner-decor corner-br"></div>
+
+<!-- Red Alert Flash -->
+<div class="red-alert-flash" id="redAlertFlash"></div>
+
+<!-- Dashboard Grid -->
+<div class="dashboard" id="mainDashboard">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo-hex"><img src="logo-188.jpg" alt="MABAT 188" width="48" height="48" style="border-radius: 6px; filter: drop-shadow(0 0 6px rgba(0,212,255,0.4));"/></div>
+            <div>
+                <div class="system-title">MABAT 188</div>
+                <div class="system-subtitle">פלטפורמת מודיעין גזרתית</div>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="header-status-group">
+                <div class="status-badge">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">ONLINE</span>
+                </div>
+                <div class="status-badge">
+                    <span>סריקה</span>
+                    <span id="lastScan" style="color: var(--cyan);">--:--</span>
+                </div>
+            </div>
+            <div class="header-divider"></div>
+            <div class="header-actions-group">
+                <button class="header-btn" onclick="loadDemoData()" style="color:var(--yellow);border-color:var(--yellow);">
+                    <span class="btn-icon">&#9881;</span>
+                    <span>הדגמה</span>
+                </button>
+                <button class="header-btn" onclick="toggleReportForm()" style="color:var(--green);border-color:var(--green);">
+                    <span class="btn-icon">&#x2795;</span>
+                    <span>דיווח שטח</span>
+                </button>
+                <button class="header-btn" onclick="toggleHistory()" style="color:var(--orange);border-color:var(--orange);">
+                    <span class="btn-icon" id="alertCount" style="background:var(--orange);color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">0</span>
+                    <span>יומן מבצעים</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div>
+                <div class="clock" id="clock">00:00:00</div>
+                <div class="date-display" id="dateDisplay"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="panel threat-container">
+            <div class="panel-header">
+                <span class="panel-title">רמת איום</span>
+                <div class="panel-indicator"></div>
+            </div>
+            <div class="threat-gauge">
+                <div class="threat-circle level-gray" id="threatCircle">
+                    <div class="threat-level-num" id="threatNum">0</div>
+                    <div class="threat-level-label" id="threatLabel">CLEAR</div>
+                </div>
+                <div class="threat-bars" id="threatBars">
+                    <div class="threat-bar"></div>
+                    <div class="threat-bar"></div>
+                    <div class="threat-bar"></div>
+                    <div class="threat-bar"></div>
+                    <div class="threat-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel stats-container">
+            <div class="panel-header">
+                <span class="panel-title">נתונים</span>
+                <div class="panel-indicator"></div>
+            </div>
+            <div class="panel-body">
+                <div class="stat-row">
+                    <span class="stat-label">סה"כ</span>
+                    <span class="stat-value" id="statTotal">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">ודאי</span>
+                    <span class="stat-value red" id="statRed">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">חזק</span>
+                    <span class="stat-value orange" id="statOrange">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">בינוני</span>
+                    <span class="stat-value yellow" id="statYellow">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">חלש</span>
+                    <span class="stat-value" id="statBlue">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">מקורות</span>
+                    <span class="stat-value green" id="statSources">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel sources-container">
+            <div class="panel-header">
+                <span class="panel-title">מקורות</span>
+                <div class="panel-indicator"></div>
+            </div>
+            <div class="panel-body" id="sourcesList">
+                <div class="loading-state"><div class="loading-spinner"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CENTER - MAP -->
+    <div class="panel map-panel" id="mapPanel">
+        <div id="map"></div>
+        <div class="map-overlay"></div>
+        <div class="map-coords">31.346N  34.306E</div>
+        <div class="map-label">גזרה 188</div>
+        <button class="map-btn" onclick="toggleMapFullscreen()" id="mapBtn" title="F = Fullscreen">&#x26F6; הרחב</button>
+        <div class="map-legend" id="mapLegend">
+            <div class="legend-title">מקרא</div>
+            <div class="legend-item"><span class="legend-circle" style="background:#ff8800;"></span> כפר ערבי</div>
+            <div class="legend-item"><span class="legend-circle" style="background:#4488ff;"></span> ישוב ישראלי</div>
+            <div class="legend-item"><span class="legend-circle" style="background:#00ff88;"></span> ציר / מחסום</div>
+            <div class="legend-divider"></div>
+            <div class="legend-subtitle">טבעת איום:</div>
+            <div class="legend-item"><span class="legend-ring" style="border-color:#ff0040;"></span> ודאי</div>
+            <div class="legend-item"><span class="legend-ring" style="border-color:#ff8800;"></span> חזק</div>
+            <div class="legend-item"><span class="legend-ring" style="border-color:#ffd000;"></span> בינוני</div>
+            <div class="legend-item"><span class="legend-ring" style="border-color:#4488ff;"></span> חלש</div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL - AI SUMMARY -->
+    <div class="panel right-panel">
+        <div class="panel-header">
+            <span class="panel-title">סקירה כללית</span>
+            <span class="ai-badge">AI NEWS</span>
+        </div>
+        <div class="panel-body" id="summaryBody">
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <span>ממתין לניתוח AI...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM - ALERT FEED -->
+    <div class="panel alert-feed" id="alertFeedPanel">
+        <div class="panel-header">
+            <span class="panel-title">פיד חי</span>
+        </div>
+        <div class="alert-toolbar">
+            <button class="filter-chip active" data-filter="all" onclick="setFilter('all', this)">הכל</button>
+            <button class="filter-chip red" data-filter="5" onclick="setFilter(5, this)">ודאי</button>
+            <button class="filter-chip orange" data-filter="4" onclick="setFilter(4, this)">חזק</button>
+            <button class="filter-chip yellow" data-filter="3" onclick="setFilter(3, this)">בינוני</button>
+            <button class="filter-chip blue" data-filter="2" onclick="setFilter(2, this)">חלש</button>
+            <button class="filter-chip purple" data-filter="anarchist" onclick="setFilter('anarchist', this)">אנרכיסטים</button>
+            <button class="filter-chip green" data-filter="field" onclick="setFilter('field', this)">שטח</button>
+            <button class="filter-chip" data-filter="false" onclick="setFilter('false', this)" style="border-color:#888;color:#888;">שגוי</button>
+            <input type="text" class="search-input" id="searchInput" placeholder="חיפוש..." oninput="applyFilters()">
+        </div>
+        <div class="timeline-graph">
+            <div class="timeline-label">פעילות 24 שעות</div>
+            <div class="timeline-bars" id="timelineBars"></div>
+            <div class="timeline-hours" id="timelineHours"></div>
+        </div>
+        <div class="panel-body" id="alertFeed">
+            <div class="loading-state">
+                <div class="loading-spinner"></div>
+                <span>סורק ערוצים...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIG PANEL -->
+    <div class="panel config-panel">
+        <div class="panel-header">
+            <span class="panel-title">מערכת</span>
+            <div class="panel-indicator"></div>
+        </div>
+        <div class="panel-body">
+            <div class="config-item"><span class="config-key">גזרה</span><span class="config-val">חאן יונס</span></div>
+            <div class="config-item"><span class="config-key">רדיוס</span><span class="config-val">10 ק"מ</span></div>
+            <div class="config-item"><span class="config-key">מרכז</span><span class="config-val">31.35N 34.31E</span></div>
+            <div class="config-item"><span class="config-key">סריקה</span><span class="config-val">10 דק'</span></div>
+            <div class="config-item"><span class="config-key">AI</span><span class="config-val">GEMINI 2.0</span></div>
+            <div class="config-item"><span class="config-key">שמירה</span><span class="config-val">72 שעות</span></div>
+            <div class="config-item"><span class="config-key">רענון</span><span class="config-val" id="nextRefresh">30s</span></div>
+            <div class="config-item" style="cursor:pointer;" onclick="toggleKeywords()"><span class="config-key">מילות מפתח</span><span class="config-val" style="color:var(--cyan);">הצג &#9660;</span></div>
+            <div style="border-top:1px solid var(--border-primary);margin-top:6px;padding-top:6px;">
+                <div class="config-item"><span class="config-key" style="font-size:10px;letter-spacing:2px;color:var(--cyan);">INTEL LAYERS</span><span class="config-val" style="font-size:9px;">LIVE</span></div>
+                <div class="config-item" id="weatherRow"><span class="config-key">מזג אוויר</span><span class="config-val" id="weatherVal">--</span></div>
+                <div class="config-item" id="calendarRow"><span class="config-key">לוח תאריכים</span><span class="config-val" id="calendarVal" style="color:var(--green);">רגיל</span></div>
+                <div class="config-item" id="sentimentRow"><span class="config-key">סנטימנט</span><span class="config-val" id="sentimentVal">--</span></div>
+                <div class="config-item" id="trendsRow"><span class="config-key">מגמות</span><span class="config-val" id="trendsVal" style="color:var(--green);">0</span></div>
+                <div class="config-item"><span class="config-key">מקורות</span><span class="config-val" style="font-size:9px;">TG+RSS+ACLED+OCHA+Waze</span></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FIELD REPORT OVERLAY -->
+<div class="report-overlay" id="reportOverlay" onclick="if(event.target===this)toggleReportForm()">
+    <div class="report-form">
+        <div class="report-form-title">➕ דיווח שטח חדש</div>
+        <div class="report-field">
+            <label>כותרת</label>
+            <input type="text" id="reportTitle" placeholder="תיאור קצר של האירוע">
+        </div>
+        <div class="report-field">
+            <label>פרטים</label>
+            <textarea id="reportDetails" placeholder="פרטים נוספים ואופן טיפול..."></textarea>
+        </div>
+        <div class="report-field">
+            <label>רמת דחיפות</label>
+            <div class="report-urgency-row">
+                <button class="report-urgency-btn" data-urg="5" onclick="selectReportUrgency(this)">ודאי</button>
+                <button class="report-urgency-btn" data-urg="4" onclick="selectReportUrgency(this)">חזק</button>
+                <button class="report-urgency-btn selected" data-urg="3" onclick="selectReportUrgency(this)">בינוני</button>
+                <button class="report-urgency-btn" data-urg="2" onclick="selectReportUrgency(this)">חלש</button>
+            </div>
+        </div>
+        <div class="report-field">
+            <label>מיקום</label>
+            <select id="reportLocation">
+                <option value="">-- בחר מיקום --</option>
+            </select>
+        </div>
+        <div class="report-field">
+            <label>שם מדווח</label>
+            <input type="text" id="reportReporter" placeholder="שם המדווח">
+        </div>
+        <div class="report-actions">
+            <button class="report-submit" onclick="submitFieldReport()">שלח דיווח</button>
+            <button class="report-cancel" onclick="toggleReportForm()">ביטול</button>
+        </div>
+    </div>
+</div>
+
+<!-- KEYWORDS OVERLAY -->
+<div class="keywords-overlay" id="keywordsOverlay">
+    <div class="keywords-header">
+        <div class="keywords-title">מילות מפתח סריקה</div>
+        <button class="history-close" onclick="toggleKeywords()">סגור ESC</button>
+    </div>
+    <div class="keywords-stat-bar" id="keywordsStats"></div>
+    <div class="keywords-body" id="keywordsBody">
+        <div class="loading-state"><div class="loading-spinner"></div><span>טוען מילות מפתח...</span></div>
+    </div>
+</div>
+
+<!-- PUBLISHER PROFILE OVERLAY -->
+<div class="publisher-overlay" id="publisherOverlay" onclick="if(event.target===this)closePublisherProfile()">
+    <div class="publisher-card" id="publisherCard"></div>
+</div>
+
+<!-- HISTORY OVERLAY -->
+<div class="history-overlay" id="historyOverlay">
+    <div class="history-header">
+        <div class="history-title">יומן מבצעים</div>
+        <button class="history-close" onclick="toggleHistory()">סגור ESC</button>
+    </div>
+    <div class="history-stat-bar" id="historyStats"></div>
+    <div class="history-filters">
+        <input type="text" class="history-search" id="historySearch" placeholder="חיפוש ביומן..." oninput="renderHistory()">
+        <button class="filter-chip active" data-hfilter="all" onclick="setHistoryFilter('all', this)">הכל</button>
+        <button class="filter-chip red" data-hfilter="5" onclick="setHistoryFilter(5, this)">ודאי</button>
+        <button class="filter-chip orange" data-hfilter="4" onclick="setHistoryFilter(4, this)">חזק</button>
+        <button class="filter-chip yellow" data-hfilter="3" onclick="setHistoryFilter(3, this)">בינוני</button>
+        <button class="filter-chip blue" data-hfilter="2" onclick="setHistoryFilter(2, this)">חלש</button>
+        <button class="filter-chip" data-hfilter="false" onclick="setHistoryFilter('false', this)" style="border-color:#888;color:#888;">שגוי</button>
+    </div>
+    <div class="history-body" id="historyBody">
+        <div class="loading-state"><div class="loading-spinner"></div><span>טוען יומן מבצעים...</span></div>
+    </div>
+</div>
+
+<!-- Refresh Bar -->
+<div class="refresh-bar" id="refreshBar"></div>
+
+<!-- Credit Footer -->
+<div class="credit-footer" id="creditFooter">
+    <a href="https://wa.me/972542012000" target="_blank">נבנה ע"י אלחי פיין | 054-201-2000</a>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// ═══════════════════════════════════════
+// MABAT 188 - DASHBOARD ENGINE v2
+// ═══════════════════════════════════════
+
+const FIREBASE_URL = 'https://project-8874611670473210078-default-rtdb.europe-west1.firebasedatabase.app';
+const SECTOR_CENTER = { lat: 31.346, lng: 34.306 };
+const REFRESH_INTERVAL = 30000;
+
+// KEY VILLAGES - highlighted on map with larger markers + sector history
+const KEY_VILLAGES = [
+    { he: "חאן יונס", lat: 31.346, lng: 34.306, priority: 'P1', pop: '~400,000',
+      history: 'העיר הגדולה בדרום הרצועה. מרכז פיקודי של חמאס בדרום. אזור לחימה אינטנסיבית.',
+      threats: ['לחימה', 'מנהרות', 'נ"ט'] },
+    { he: "בני סוהילה", lat: 31.347, lng: 34.338, priority: 'P1', pop: '~45,000',
+      history: 'מזרחית לחאן יונס. אזור לחימה קשה. מרכז תשתיות מנהרות.',
+      threats: ['מנהרות', 'מטענים', 'צלפים'] },
+    { he: "עבסאן אל-כביר", lat: 31.327, lng: 34.348, priority: 'P1', pop: '~25,000',
+      history: 'כפר מזרחי סמוך לגדר. נקודת חדירה מרכזית. לחימה קרקעית אינטנסיבית.',
+      threats: ['חדירה', 'נ"ט', 'מטענים'] },
+    { he: "אל-קררה", lat: 31.363, lng: 34.345, priority: 'P1', pop: '~30,000',
+      history: 'צפונית-מזרחית לחאן יונס. סמוכה לגדר. אזור חדירות ופעילות צבאית.',
+      threats: ['חדירה', 'ירי', 'רקטות'] },
+    { he: "חוזעה", lat: 31.335, lng: 34.365, priority: 'P1', pop: '~12,000',
+      history: 'סמוכה מאוד לגדר. נקודת מפתח בלחימה. מרכז תשתיות תת-קרקעיות.',
+      threats: ['מנהרות', 'חדירה', 'צלפים'] },
+    { he: "אל-מוואסי", lat: 31.370, lng: 34.265, priority: 'P2', pop: 'משתנה',
+      history: 'אזור חוף מערבי. הוכרז כאזור הומניטרי. ריכוז אוכלוסייה ומאהלים.',
+      threats: ['הומניטרי', 'עקורים'] },
+    { he: "מען", lat: 31.310, lng: 34.290, priority: 'P2', pop: '~5,000',
+      history: 'דרומית לחאן יונס. אזור לחימה פעיל.',
+      threats: ['לחימה', 'מטענים'] },
+    { he: "אל-פוח\'ארי", lat: 31.310, lng: 34.335, priority: 'P2', pop: '~8,000',
+      history: 'דרומית-מזרחית. סמוך לגדר. אזור תצפיות ופעילות צבאית.',
+      threats: ['תצפיות', 'חדירה'] },
+];
+
+const P1_LOCATIONS = [
+    { name: "Khan Younis", he: "חאן יונס", lat: 31.346, lng: 34.306 },
+    { name: "Bani Suheila", he: "בני סוהילה", lat: 31.347, lng: 34.338 },
+    { name: "Abasan al-Kabira", he: "עבסאן אל-כביר", lat: 31.327, lng: 34.348 },
+    { name: "Abasan al-Saghira", he: "עבסאן א-סגירה", lat: 31.335, lng: 34.355 },
+    { name: "Al Qarara", he: "אל-קררה", lat: 31.363, lng: 34.345 },
+    { name: "Khuza'a", he: "חוזעה", lat: 31.335, lng: 34.365 },
+    { name: "Al Mawasi", he: "אל-מוואסי", lat: 31.370, lng: 34.265 },
+    { name: "Ma'an", he: "מען", lat: 31.310, lng: 34.290 },
+];
+
+const P2_LOCATIONS = [
+    { name: "Al Fukhari", he: "אל-פוח'ארי", lat: 31.310, lng: 34.335 },
+    { name: "Hamad City", he: "חמד (חאן יונס)", lat: 31.358, lng: 34.290 },
+    { name: "Juhr al-Dik", he: "ג'וחר א-דיכ", lat: 31.380, lng: 34.355 },
+    { name: "Rafah North", he: "רפיח צפון", lat: 31.305, lng: 34.260 },
+    { name: "Deir al-Balah", he: "דיר אל-בלח", lat: 31.418, lng: 34.350 },
+];
+
+const P3_LOCATIONS = [
+    { name: "Salah ad-Din Road", he: "כביש סלאח א-דין", lat: 31.346, lng: 34.340, type: 'route' },
+    { name: "Netzarim Corridor", he: "ציר נצרים", lat: 31.430, lng: 34.380, type: 'route' },
+    { name: "Philadelphi Corridor", he: "ציר פילדלפי", lat: 31.250, lng: 34.270, type: 'route' },
+    { name: "Kerem Abu Salem", he: "מעבר כרם אבו סאלם", lat: 31.228, lng: 34.288, type: 'checkpoint' },
+];
+
+const ISRAELI_LOCATIONS = [
+    // ישובי עוטף עזה
+    { name: "Nir Oz", he: "ניר עוז", lat: 31.382, lng: 34.396 },
+    { name: "Nirim", he: "נירים", lat: 31.385, lng: 34.390 },
+    { name: "Ein HaShlosha", he: "עין השלושה", lat: 31.400, lng: 34.415 },
+    { name: "Kissufim", he: "כיסופים", lat: 31.375, lng: 34.400 },
+    { name: "Magen", he: "מגן", lat: 31.350, lng: 34.405 },
+    { name: "Tkuma", he: "תקומה", lat: 31.403, lng: 34.428 },
+    // מחוץ לגזרה
+    { name: "Sderot", he: "שדרות", lat: 31.525, lng: 34.596, outside: true },
+    { name: "Netivot", he: "נתיבות", lat: 31.422, lng: 34.587, outside: true },
+    { name: "Ofakim", he: "אופקים", lat: 31.312, lng: 34.622, outside: true },
+    { name: "Be'eri", he: "בארי", lat: 31.430, lng: 34.485, outside: true },
+    { name: "Re'im", he: "רעים", lat: 31.378, lng: 34.451, outside: true },
+    { name: "Kerem Shalom", he: "כרם שלום", lat: 31.228, lng: 34.288, outside: true },
+];
+
+// ערים מחוץ לגזרה
+const CITIES_OUTSIDE = [
+    { name: "Gaza City", he: "עיר עזה", lat: 31.502, lng: 34.467, type: 'city' },
+    { name: "Rafah", he: "רפיח", lat: 31.295, lng: 34.255, type: 'city' },
+    { name: "Deir al-Balah", he: "דיר אל-בלח", lat: 31.418, lng: 34.350, type: 'city' },
+];
+
+// ישובים/שכונות ברצועה מחוץ לגזרה
+const ARAB_OUTSIDE = [
+    { name: "Nuseirat", he: "א-נוצייראת", lat: 31.441, lng: 34.395 },
+    { name: "Bureij", he: "אל-בורייג'", lat: 31.457, lng: 34.410 },
+    { name: "Maghazi", he: "מע'אזי", lat: 31.435, lng: 34.388 },
+    { name: "Zawayda", he: "א-זוואידה", lat: 31.423, lng: 34.368 },
+];
+
+const מקורות = [
+    { id: 'gazaalannet', name: 'Gaza Now', type: 'local', tg: 'gazaalannet' },
+    { id: 'GazaNewsNow', name: 'أخبار غزة', type: 'local', tg: 'GazaNewsNow' },
+    { id: 'gazala7zapal1', name: 'עזה רגע ברגע', type: 'local', tg: 'gazala7zapal1' },
+    { id: 'akh_bar_gaza', name: 'חדשות עזה', type: 'regional', tg: 'akh_bar_gaza' },
+    { id: 'QudsN', name: 'רשת קודס', type: 'national', tg: 'QudsN' },
+    { id: 'palinfo', name: 'מרכז תקשורת', type: 'national', tg: 'palinfo' },
+    { id: 'PalestineResist', name: 'Resistance News', type: 'national', tg: 'PalestineResist' },
+    { id: 'eyeonpal', name: 'Eye on Palestine', type: 'national', tg: 'eyeonpal' },
+    { id: 'google-news', name: 'Google News', type: 'news', url: 'https://news.google.com' },
+];
+
+// ═══════ STATE ═══════
+let map;
+let alertMarkers = [];
+let newsData = {};
+let allNewsData = {};
+let summaryData = null;
+let metaData = null;
+let activeFilter = 'all';
+let historyFilter = 'all';
+let knownIds = new Set();
+let isFirstLoad = true;
+let mapIsFullscreen = false;
+let showAnarchists = true;
+let checkedAlerts = new Set(JSON.parse(localStorage.getItem('mabat188-checked') || '[]'));
+let journalNotes = {};
+let alertVotes = {};
+
+// Load alert votes from Firebase
+async function loadAlertVotes() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/alert-votes.json`);
+        const data = await res.json();
+        if (data && !data.error) alertVotes = data;
+    } catch (e) {
+        console.error('Error loading alert votes:', e);
+    }
+}
+
+// Toggle vote on an alert
+async function toggleVote(alertId, voteType, event) {
+    event.stopPropagation();
+    const current = alertVotes[alertId];
+    if (current && current.vote === voteType) {
+        delete alertVotes[alertId];
+        try { await fetch(`${FIREBASE_URL}/alert-votes/${alertId}.json`, { method: 'DELETE' }); } catch (e) { console.error('Error removing vote:', e); }
+    } else {
+        const voteData = { vote: voteType, votedAt: Date.now() };
+        alertVotes[alertId] = voteData;
+        try { await fetch(`${FIREBASE_URL}/alert-votes/${alertId}.json`, { method: 'PUT', body: JSON.stringify(voteData) }); } catch (e) { console.error('Error saving vote:', e); }
+    }
+    renderAlerts();
+}
+
+// Load journal notes from Firebase
+async function loadJournalNotes() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/journal-notes.json`);
+        const data = await res.json();
+        if (data && !data.error) journalNotes = data;
+    } catch (e) {
+        console.error('Error loading journal notes:', e);
+    }
+}
+
+async function saveJournalNote(itemId) {
+    const form = document.getElementById('note-form-' + itemId);
+    if (!form) return;
+    const reporter = form.querySelector('[name="reporter"]').value.trim();
+    const details = form.querySelector('[name="details"]').value.trim();
+    if (!reporter && !details) return;
+    const note = { reporter, details, savedAt: Date.now() };
+    journalNotes[itemId] = note;
+    try {
+        await fetch(`${FIREBASE_URL}/journal-notes/${itemId}.json`, {
+            method: 'PUT',
+            body: JSON.stringify(note)
+        });
+    } catch (e) { console.error('Error saving note:', e); }
+    renderHistory();
+}
+
+async function deleteJournalNote(itemId) {
+    delete journalNotes[itemId];
+    try {
+        await fetch(`${FIREBASE_URL}/journal-notes/${itemId}.json`, { method: 'DELETE' });
+    } catch (e) { console.error('Error deleting note:', e); }
+    renderHistory();
+}
+
+function toggleNoteForm(itemId) {
+    const form = document.getElementById('note-form-' + itemId);
+    if (form) { form.style.display = form.style.display === 'none' ? 'flex' : 'none'; }
+}
+
+// ═══════ FIELD REPORT ═══════
+let reportUrgency = 3;
+
+function toggleReportForm() {
+    const overlay = document.getElementById('reportOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible')) {
+        populateLocationDropdown();
+    }
+}
+
+function populateLocationDropdown() {
+    const sel = document.getElementById('reportLocation');
+    if (sel.options.length > 1) return; // already populated
+    const allLocs = [...KEY_VILLAGES, ...P1_LOCATIONS, ...P2_LOCATIONS, ...P3_LOCATIONS, ...ISRAELI_LOCATIONS];
+    const seen = new Set();
+    allLocs.forEach(loc => {
+        if (seen.has(loc.he)) return;
+        seen.add(loc.he);
+        const opt = document.createElement('option');
+        opt.value = JSON.stringify({ he: loc.he, lat: loc.lat, lng: loc.lng });
+        opt.textContent = loc.he;
+        sel.appendChild(opt);
+    });
+}
+
+function selectReportUrgency(btn) {
+    document.querySelectorAll('.report-urgency-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    reportUrgency = parseInt(btn.dataset.urg);
+}
+
+async function submitFieldReport() {
+    const title = document.getElementById('reportTitle').value.trim();
+    const details = document.getElementById('reportDetails').value.trim();
+    const locVal = document.getElementById('reportLocation').value;
+    const reporter = document.getElementById('reportReporter').value.trim();
+
+    if (!title) { alert('נא להזין כותרת'); return; }
+
+    let locationHe = '';
+    let coordinates = null;
+    if (locVal) {
+        const loc = JSON.parse(locVal);
+        locationHe = loc.he;
+        coordinates = { lat: loc.lat, lng: loc.lng };
+    }
+
+    const report = {
+        title: title,
+        fullText: details,
+        snippet: details,
+        source: 'דיווח שטח',
+        sourceUrl: '',
+        urgencyScore: reportUrgency,
+        urgency: reportUrgency,
+        locationHe: locationHe,
+        coordinates: coordinates,
+        publishedAt: Date.now(),
+        fetchedAt: Date.now(),
+        timestamp: Date.now(),
+        isFieldReport: true,
+        reporter: reporter || 'לא צוין'
+    };
+
+    const reportId = 'field_' + Date.now();
+
+    try {
+        await fetch(`${FIREBASE_URL}/auto-news/${reportId}.json`, {
+            method: 'PUT',
+            body: JSON.stringify(report)
+        });
+
+        // Add to local data immediately
+        newsData[reportId] = report;
+        allNewsData[reportId] = report;
+        renderAll();
+
+        // Reset form
+        document.getElementById('reportTitle').value = '';
+        document.getElementById('reportDetails').value = '';
+        document.getElementById('reportLocation').value = '';
+        document.getElementById('reportReporter').value = '';
+        reportUrgency = 3;
+        document.querySelectorAll('.report-urgency-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelector('.report-urgency-btn[data-urg="3"]').classList.add('selected');
+
+        toggleReportForm();
+    } catch (e) {
+        console.error('Error submitting field report:', e);
+        alert('שגיאה בשליחת הדיווח');
+    }
+}
+
+// Anarchist/activist keywords
+const ANARCHIST_KEYWORDS = [
+    'anarchist', 'activist', 'solidarity', 'protest',
+    'ISM', 'B\'Tselem', 'breaking the silence',
+    'international', 'demonstration', 'confrontation',
+    'left-wing', 'peace now',
+    'ناشط', 'ناشطين', 'تضامن', 'متظاهرين', 'اجانب',
+    'اسرائيليين ضد', 'سلام الان',
+    'פעיל', 'פעילי', 'אנרכיסט', 'אנרכיסטים',
+    'שוברים שתיקה', 'בצלם', 'שמאל',
+    'פעילי שמאל', 'מפגינים', 'סולידריות',
+    'ISM', 'בינלאומיים', 'שלום עכשיו',
+    'מחאה', 'הפגנה', 'פעילות מחאה',
+];
+
+// ═══════ CLOCK ═══════
+function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    document.getElementById('clock').textContent = `${h}:${m}:${s}`;
+
+    const days = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+    const months = ['ינואר', 'פברואר', 'מרץ', 'אפריל', 'מאי', 'יוני', 'יולי', 'אוגוסט', 'ספטמבר', 'אוקטובר', 'נובמבר', 'דצמבר'];
+    document.getElementById('dateDisplay').textContent = `יום ${days[now.getDay()]} | ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+// ═══════ LOCATION COORDS LOOKUP ═══════
+function lookupCoords(item) {
+    // If item already has coordinates, use them
+    if (item.coordinates && (item.coordinates.lat)) {
+        return { lat: item.coordinates.lat, lng: item.coordinates.lon || item.coordinates.lng };
+    }
+    // Lookup by locationHe or matchedLocations
+    const locName = (item.locationHe || '').toLowerCase();
+    const matchedLocs = (item.matchedLocations || []).map(l => l.toLowerCase());
+    const allLocs = [...KEY_VILLAGES, ...P1_LOCATIONS, ...P2_LOCATIONS, ...ISRAELI_LOCATIONS, ...P3_LOCATIONS];
+    for (const loc of allLocs) {
+        const names = [loc.he, loc.name, loc.altHe].filter(Boolean).map(n => n.toLowerCase());
+        if (names.some(n => locName.includes(n) || n.includes(locName)) && locName) {
+            return { lat: loc.lat, lng: loc.lng };
+        }
+        if (matchedLocs.some(ml => names.some(n => ml.includes(n) || n.includes(ml)))) {
+            return { lat: loc.lat, lng: loc.lng };
+        }
+    }
+    return null;
+}
+
+// ═══════ SOURCE URL HELPER ═══════
+function getSourceUrl(sourceName) {
+    if (!sourceName) return '';
+    const sourceMap = {};
+    מקורות.forEach(src => {
+        sourceMap[src.id] = src.tg ? `https://t.me/${src.tg}` : (src.url || '');
+        sourceMap[src.name] = src.tg ? `https://t.me/${src.tg}` : (src.url || '');
+    });
+    return sourceMap[sourceName] || '';
+}
+
+// ═══════ LOCATION POPUP BUILDER ═══════
+function buildLocationPopup(loc, priority, color) {
+    const mapsLink = `https://www.google.com/maps?q=${loc.lat},${loc.lng}`;
+    return `<div style="direction:rtl;text-align:right;min-width:160px;">` +
+        `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">` +
+            `<b style="color:${color};font-size:13px;">${loc.he}</b>` +
+            `<span style="font-size:9px;padding:1px 6px;border:1px solid ${color};border-radius:3px;color:${color};letter-spacing:1px;">${priority}</span>` +
+        `</div>` +
+        `<div style="color:#9ab0c8;font-size:10px;margin-bottom:4px;">${loc.lat.toFixed(3)}N, ${loc.lng.toFixed(3)}E</div>` +
+        `<div style="text-align:center;margin-top:4px;">` +
+            `<a href="${mapsLink}" target="_blank" style="color:#00d4ff;font-size:10px;text-decoration:none;">📍 פתח במפות Google</a>` +
+        `</div>` +
+    `</div>`;
+}
+
+// ═══════ MAP ═══════
+function initMap() {
+    map = L.map('map', {
+        center: [SECTOR_CENTER.lat, SECTOR_CENTER.lng],
+        zoom: 12,
+        zoomControl: false,
+        attributionControl: false
+    });
+
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19
+    }).addTo(map);
+
+    // Roads overlay - transparent road names on top of satellite
+    L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        opacity: 0.5,
+        pane: 'overlayPane'
+    }).addTo(map);
+
+    // ═══════ SECTOR CIRCLE - 3D GLOW ═══════
+    // Outer glow ring
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 10500, color: '#00d4ff', fillColor: 'transparent',
+        fillOpacity: 0, weight: 1, opacity: 0.15, className: 'sector-outer-glow'
+    }).addTo(map);
+    // Main sector boundary
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 10000, color: '#00d4ff', fillColor: '#00d4ff',
+        fillOpacity: 0.06, weight: 2.5, dashArray: '12, 6', opacity: 0.7,
+        className: 'sector-ring'
+    }).addTo(map);
+    // Inner glow ring
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 9500, color: '#00d4ff', fillColor: 'transparent',
+        fillOpacity: 0, weight: 1, dashArray: '4, 8', opacity: 0.2
+    }).addTo(map);
+    // Mid-range ring for depth
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 5000, color: '#00d4ff', fillColor: 'transparent',
+        fillOpacity: 0, weight: 0.5, dashArray: '3, 12', opacity: 0.15
+    }).addTo(map);
+    // Center marker with glow
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 400, color: '#00d4ff', fillColor: '#00d4ff',
+        fillOpacity: 0.15, weight: 1.5, className: 'sector-center-glow'
+    }).addTo(map);
+    L.circle([SECTOR_CENTER.lat, SECTOR_CENTER.lng], {
+        radius: 150, color: '#00d4ff', fillColor: '#00d4ff',
+        fillOpacity: 0.5, weight: 2, className: 'sector-center-dot'
+    }).addTo(map);
+
+    // ═══════ OUTSIDE SECTOR - CITIES ═══════
+    CITIES_OUTSIDE.forEach(loc => {
+        const isArab = ['עזה', 'רפיח', 'דיר אל-בלח'].includes(loc.he);
+        const color = isArab ? '#ff6644' : '#ffffff';
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 9, color: color, fillColor: color, fillOpacity: 0.2, weight: 2,
+            className: 'marker-3d marker-city'
+        }).bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] })
+          .addTo(map);
+    });
+
+    // ═══════ OUTSIDE SECTOR - ARAB VILLAGES ═══════
+    ARAB_OUTSIDE.forEach(loc => {
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 5, color: '#ff6644', fillColor: '#ff6644', fillOpacity: 0.25, weight: 1,
+            className: 'marker-3d marker-outside'
+        }).bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] })
+          .bindPopup(buildLocationPopup(loc, 'כפר (מחוץ לגזרה)', '#ff6644'), { className: 'dark-tooltip', maxWidth: 280 })
+          .addTo(map);
+    });
+
+    // Collect all KEY_VILLAGE coords to avoid duplicates from P1/P2
+    const keyVillageCoords = new Set(KEY_VILLAGES.map(v => `${v.lat},${v.lng}`));
+
+    // ═══════ IN-SECTOR ARAB VILLAGES (P1/P2) - orange with 3D ═══════
+    [...P1_LOCATIONS, ...P2_LOCATIONS].forEach(loc => {
+        if (keyVillageCoords.has(`${loc.lat},${loc.lng}`)) return;
+        // Outer glow ring
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 10, color: '#ff8800', fillColor: '#ff8800', fillOpacity: 0.08, weight: 0,
+            className: 'marker-glow-ring', interactive: false
+        }).addTo(map);
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 6, color: '#ff8800', fillColor: '#ff8800', fillOpacity: 0.5, weight: 2,
+            className: 'marker-3d'
+        }).bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] })
+          .bindPopup(buildLocationPopup(loc, 'כפר', '#ff8800'), { className: 'dark-tooltip', maxWidth: 280 })
+          .addTo(map);
+    });
+
+    // ═══════ ROUTES & CHECKPOINTS - green with 3D ═══════
+    P3_LOCATIONS.forEach(loc => {
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 5, color: '#00ff88', fillColor: '#00ff88', fillOpacity: 0.4, weight: 1.5,
+            className: 'marker-3d'
+        }).bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] })
+          .bindPopup(buildLocationPopup(loc, 'ציר', '#00ff88'), { className: 'dark-tooltip', maxWidth: 280 })
+          .addTo(map);
+    });
+
+    // ═══════ ISRAELI SETTLEMENTS - blue with 3D ═══════
+    ISRAELI_LOCATIONS.forEach(loc => {
+        const isOutside = loc.outside;
+        const opacity = isOutside ? 0.25 : 0.5;
+        const radius = isOutside ? 5 : 6;
+        const weight = isOutside ? 1 : 2;
+        // Glow ring for in-sector
+        if (!isOutside) {
+            L.circleMarker([loc.lat, loc.lng], {
+                radius: 10, color: '#4488ff', fillColor: '#4488ff', fillOpacity: 0.08, weight: 0,
+                className: 'marker-glow-ring', interactive: false
+            }).addTo(map);
+        }
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: radius, color: '#4488ff', fillColor: '#4488ff', fillOpacity: opacity, weight: weight,
+            className: isOutside ? 'marker-3d marker-outside' : 'marker-3d'
+        }).bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] })
+          .bindPopup(buildLocationPopup(loc, isOutside ? 'ישוב (מחוץ לגזרה)' : 'ישוב', '#4488ff'), { className: 'dark-tooltip', maxWidth: 280 })
+          .addTo(map);
+    });
+
+    // KEY VILLAGES - orange with 3D glow, rich popups on click
+    KEY_VILLAGES.forEach(loc => {
+        const pColor = '#ff8800';
+        // Outer glow ring
+        L.circleMarker([loc.lat, loc.lng], {
+            radius: 12, color: pColor, fillColor: pColor, fillOpacity: 0.1, weight: 0,
+            className: 'marker-glow-ring', interactive: false
+        }).addTo(map);
+        const marker = L.circleMarker([loc.lat, loc.lng], {
+            radius: 7,
+            color: pColor,
+            fillColor: pColor,
+            fillOpacity: 0.55,
+            weight: 2,
+            className: 'marker-3d marker-key'
+        }).addTo(map);
+
+        marker.bindTooltip(loc.he, { className: 'dark-tooltip', direction: 'right', offset: [8, 0] });
+
+        // Rich popup on click with sector history + live data
+        marker.on('click', function() {
+            const count24h = getVillageReportCount(loc, 24);
+            const count72h = getVillageReportCount(loc, 72);
+            const lastEvent = getVillageLastEvent(loc);
+            const threatTags = (loc.threats || []).map(t =>
+                `<span style="display:inline-block;padding:1px 5px;margin:1px;border-radius:3px;background:rgba(255,0,64,0.15);border:1px solid rgba(255,0,64,0.3);font-size:9px;color:#ff8800;">${t}</span>`
+            ).join('');
+            const mapsLink = `https://www.google.com/maps?q=${loc.lat},${loc.lng}`;
+
+            const popupHtml = `<div style="direction:rtl;text-align:right;min-width:200px;max-width:260px;">` +
+                `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">` +
+                    `<b style="color:${pColor};font-size:14px;">${loc.he}</b>` +
+                    `<span style="font-size:9px;padding:1px 6px;border:1px solid ${pColor};border-radius:3px;color:${pColor};letter-spacing:1px;">${loc.priority}</span>` +
+                `</div>` +
+                (loc.pop ? `<div style="color:#9ab0c8;font-size:10px;margin-bottom:4px;">אוכלוסייה: ${loc.pop}</div>` : '') +
+                `<div style="color:#e0e8f0;font-size:11px;line-height:1.4;margin-bottom:6px;border-right:2px solid ${pColor};padding-right:6px;">${loc.history || ''}</div>` +
+                `<div style="margin-bottom:5px;">${threatTags}</div>` +
+                `<div style="border-top:1px solid #0f3460;padding-top:4px;display:flex;gap:12px;">` +
+                    `<div style="text-align:center;">` +
+                        `<div style="font-size:9px;color:#9ab0c8;">24 שע'</div>` +
+                        `<b style="color:${count24h > 0 ? '#ff8800' : '#00ff88'};font-size:14px;">${count24h}</b>` +
+                    `</div>` +
+                    `<div style="text-align:center;">` +
+                        `<div style="font-size:9px;color:#9ab0c8;">72 שע'</div>` +
+                        `<b style="color:${count72h > 0 ? '#ffd000' : '#00ff88'};font-size:14px;">${count72h}</b>` +
+                    `</div>` +
+                    `<div style="flex:1;text-align:center;">` +
+                        `<div style="font-size:9px;color:#9ab0c8;">אחרון</div>` +
+                        `<span style="color:#e0e8f0;font-size:10px;">${lastEvent}</span>` +
+                    `</div>` +
+                `</div>` +
+                `<div style="border-top:1px solid #0f3460;margin-top:6px;padding-top:6px;text-align:center;">` +
+                    `<a href="${mapsLink}" target="_blank" style="color:#00d4ff;font-size:10px;text-decoration:none;">📍 פתח במפות Google</a>` +
+                `</div>` +
+            `</div>`;
+            this.unbindPopup();
+            this.bindPopup(popupHtml, { className: 'dark-tooltip', maxWidth: 280 }).openPopup();
+        });
+
+    });
+
+
+    // ═══════ RADAR SONAR SWEEP (vertical scan) ═══════
+    const mapContainer = document.getElementById('map');
+
+    const radarSweep = document.createElement('div');
+    radarSweep.className = 'radar-sweep';
+    mapContainer.appendChild(radarSweep);
+
+    const scanLine = document.createElement('div');
+    scanLine.className = 'radar-sweep-line';
+    radarSweep.appendChild(scanLine);
+
+    const scanTrail = document.createElement('div');
+    scanTrail.className = 'radar-sweep-trail';
+    radarSweep.appendChild(scanTrail);
+
+    const radarCrosshair = document.createElement('div');
+    radarCrosshair.className = 'radar-crosshair';
+    mapContainer.appendChild(radarCrosshair);
+
+    const radarRingInner = document.createElement('div');
+    radarRingInner.className = 'radar-ring-inner';
+    mapContainer.appendChild(radarRingInner);
+
+    const radarDot = document.createElement('div');
+    radarDot.className = 'radar-center-dot';
+    mapContainer.appendChild(radarDot);
+
+    function updateRadarPosition() {
+        const center = map.latLngToContainerPoint([SECTOR_CENTER.lat, SECTOR_CENTER.lng]);
+        const metersPerDeg = 111320;
+        const edgeLat = SECTOR_CENTER.lat + (10000 / metersPerDeg);
+        const edgePoint = map.latLngToContainerPoint([edgeLat, SECTOR_CENTER.lng]);
+        const radiusPx = Math.abs(center.y - edgePoint.y);
+
+        radarSweep.style.width = radiusPx * 2 + 'px';
+        radarSweep.style.height = radiusPx * 2 + 'px';
+        radarSweep.style.left = (center.x - radiusPx) + 'px';
+        radarSweep.style.top = (center.y - radiusPx) + 'px';
+
+        const r2 = radiusPx * 0.66;
+        radarCrosshair.style.width = r2 * 2 + 'px';
+        radarCrosshair.style.height = r2 * 2 + 'px';
+        radarCrosshair.style.left = (center.x - r2) + 'px';
+        radarCrosshair.style.top = (center.y - r2) + 'px';
+
+        const r3 = radiusPx * 0.33;
+        radarRingInner.style.width = r3 * 2 + 'px';
+        radarRingInner.style.height = r3 * 2 + 'px';
+        radarRingInner.style.left = (center.x - r3) + 'px';
+        radarRingInner.style.top = (center.y - r3) + 'px';
+
+        radarDot.style.left = (center.x - 3) + 'px';
+        radarDot.style.top = (center.y - 3) + 'px';
+    }
+
+    map.on('move zoom moveend zoomend resize', updateRadarPosition);
+    updateRadarPosition();
+}
+
+function toggleMapFullscreen() {
+    const panel = document.getElementById('mapPanel');
+    const btn = document.getElementById('mapBtn');
+    mapIsFullscreen = !mapIsFullscreen;
+
+    if (mapIsFullscreen) {
+        panel.classList.add('fullscreen');
+        btn.innerHTML = '&#x26F6; מזער';
+    } else {
+        panel.classList.remove('fullscreen');
+        btn.innerHTML = '&#x26F6; הרחב';
+    }
+    setTimeout(() => map.invalidateSize(), 400);
+}
+
+function updateMapMarkers(news) {
+    alertMarkers.forEach(m => map.removeLayer(m));
+    alertMarkers = [];
+
+    // Build threat level per village (highest urgency near each village)
+    const allVillages = [...KEY_VILLAGES, ...P1_LOCATIONS.map(l => ({...l, he: l.he})), ...P2_LOCATIONS.map(l => ({...l, he: l.he}))];
+    const villageThreat = {};
+    Object.values(news).forEach(item => {
+        if (!item.coordinates) return;
+        allVillages.forEach(v => {
+            const dlat = Math.abs((item.coordinates.lat || 0) - v.lat);
+            const dlng = Math.abs((item.coordinates.lon || item.coordinates.lng || 0) - v.lng);
+            if (dlat < 0.015 && dlng < 0.015) {
+                const key = `${v.lat},${v.lng}`;
+                if (!villageThreat[key] || item.urgency > villageThreat[key]) {
+                    villageThreat[key] = item.urgency;
+                }
+            }
+        });
+    });
+
+    // Add threat rings around villages
+    Object.entries(villageThreat).forEach(([key, urgency]) => {
+        const [lat, lng] = key.split(',').map(Number);
+        const threatColors = { 5: '#ff0040', 4: '#ff8800', 3: '#ffd000', 2: '#4488ff', 1: '#666' };
+        const ringColor = threatColors[urgency] || '#666';
+        const ring = L.circleMarker([lat, lng], {
+            radius: 16, color: ringColor, fillColor: 'transparent',
+            fillOpacity: 0, weight: 2.5, opacity: 0.7,
+            dashArray: urgency >= 4 ? '' : '6,4',
+            className: urgency >= 4 ? 'threat-ring-pulse' : ''
+        }).addTo(map);
+        alertMarkers.push(ring);
+    });
+
+    Object.values(news).forEach(item => {
+        if (!item.coordinates) return;
+        const colors = { 5: '#ff0040', 4: '#ff8800', 3: '#ffd000', 2: '#4488ff', 1: '#666' };
+        const color = colors[item.urgency] || '#666';
+        const size = item.urgency >= 4 ? 12 : item.urgency >= 3 ? 9 : 7;
+
+        const marker = L.circleMarker(
+            [item.coordinates.lat, item.coordinates.lon || item.coordinates.lng],
+            { radius: size, color, fillColor: color, fillOpacity: 0.6, weight: 2 }
+        ).bindPopup(`
+            <div style="direction:rtl; font-family: 'Rajdhani', sans-serif; max-width: 250px;">
+                <b style="color:${color};">[${item.urgencyLabel || 'ALERT'}]</b><br>
+                <b>${escapeHtml(item.title || '')}</b><br>
+                <small>${escapeHtml(item.snippet || '')}</small><br>
+                <small style="color:#888;">${escapeHtml(item.source)} | ${formatTime(item.timestamp)}</small>
+            </div>
+        `, { className: 'dark-tooltip', maxWidth: 280 }).addTo(map);
+
+        alertMarkers.push(marker);
+    });
+}
+
+// ═══════ FETCH DATA ═══════
+async function fetchData() {
+    if (isDemoMode) return; // Don't overwrite demo data
+    try {
+        const [newsRes, summaryRes, metaRes, weatherRes, calendarRes, sentimentRes, trendsRes] = await Promise.all([
+            fetch(`${FIREBASE_URL}/auto-news.json`),
+            fetch(`${FIREBASE_URL}/world-news-summary/current.json`),
+            fetch(`${FIREBASE_URL}/metadata.json`),
+            fetch(`${FIREBASE_URL}/weather/current.json`).catch(() => ({ json: () => null })),
+            fetch(`${FIREBASE_URL}/calendar/current.json`).catch(() => ({ json: () => null })),
+            fetch(`${FIREBASE_URL}/sentiment/current.json`).catch(() => ({ json: () => null })),
+            fetch(`${FIREBASE_URL}/trends/current.json`).catch(() => ({ json: () => null })),
+        ]);
+
+        const news = await newsRes.json();
+        const summary = await summaryRes.json();
+        const meta = await metaRes.json();
+        const weather = await weatherRes.json();
+        const calendar = await calendarRes.json();
+        const sentimentData = await sentimentRes.json();
+        const trendsData = await trendsRes.json();
+
+        // Update intel layers
+        updateIntelLayers(weather, calendar, sentimentData, trendsData);
+
+        // Skip Firebase error responses
+        if (news && !news.error) {
+            // Normalize urgencyScore → urgency, and ensure timestamp
+            Object.values(news).forEach(item => {
+                if (!item.urgency && item.urgencyScore) item.urgency = item.urgencyScore;
+                if (!item.timestamp) {
+                    if (item.publishedAt) item.timestamp = typeof item.publishedAt === 'number' ? item.publishedAt : new Date(item.publishedAt).getTime();
+                    else if (item.date) item.timestamp = new Date(item.date).getTime();
+                    else if (item.fetchedAt) item.timestamp = typeof item.fetchedAt === 'number' ? item.fetchedAt : new Date(item.fetchedAt).getTime();
+                }
+                if (item.timestamp && item.timestamp < 1000000000000) item.timestamp = item.timestamp * 1000;
+                if (!item.locationHe && item.matchedLocations) item.locationHe = item.matchedLocations.join(', ');
+            });
+            // Detect new alerts for flash
+            if (!isFirstLoad) {
+                const newIds = Object.keys(news);
+                let hasNewRed = false;
+                newIds.forEach(id => {
+                    if (!knownIds.has(id) && news[id].urgency >= 5) hasNewRed = true;
+                });
+                if (hasNewRed) triggerRedAlert();
+            }
+            newsData = news;
+            allNewsData = { ...allNewsData, ...news };
+            Object.keys(news).forEach(id => knownIds.add(id));
+        }
+        if (summary && !summary.error) summaryData = summary;
+        if (meta && !meta.error) metaData = meta;
+
+        isFirstLoad = false;
+        document.getElementById('statusDot').className = 'status-dot';
+        document.getElementById('statusText').textContent = 'ONLINE';
+        renderAll();
+    } catch (error) {
+        console.error('Fetch error:', error);
+        document.getElementById('statusDot').className = 'status-dot offline';
+        document.getElementById('statusText').textContent = 'שגיאה';
+    }
+}
+
+// ═══════ RED ALERT ═══════
+function triggerRedAlert() {
+    const flash = document.getElementById('redAlertFlash');
+    flash.classList.remove('active');
+    void flash.offsetWidth; // reflow
+    flash.classList.add('active');
+
+    // Audio beep
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        osc.type = 'square';
+        gain.gain.value = 0.15;
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.stop(ctx.currentTime + 0.5);
+    } catch (e) {}
+}
+
+// ═══════ RENDER ALL ═══════
+function renderAll() {
+    renderAlerts();
+    renderSummary();
+    renderStats();
+    renderSources();
+    renderThreatLevel();
+    renderMeta();
+    renderTimeline();
+    updateMapMarkers(newsData);
+}
+
+// ═══════ FILTERS ═══════
+function setFilter(level, btn) {
+    activeFilter = level;
+    document.querySelectorAll('.alert-toolbar .filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    renderAlerts();
+}
+
+function applyFilters() {
+    renderAlerts();
+}
+
+function toggleAnarchist() {
+    showAnarchists = !showAnarchists;
+    const toggle = document.getElementById('anarchistToggle');
+    toggle.classList.toggle('active', showAnarchists);
+    renderAlerts();
+}
+
+function isAnarchistEvent(item) {
+    const text = ((item.title || '') + ' ' + (item.snippet || '') + ' ' + (item.fullText || '')).toLowerCase();
+    return ANARCHIST_KEYWORDS.some(kw => text.includes(kw.toLowerCase()));
+}
+
+function setHistoryFilter(level, btn) {
+    historyFilter = level;
+    document.querySelectorAll('.history-filters .filter-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    renderHistory();
+}
+
+// ═══════ RENDER ALERTS ═══════
+function renderAlerts() {
+    const feed = document.getElementById('alertFeed');
+    let items = Object.values(newsData);
+    const searchText = (document.getElementById('searchInput').value || '').toLowerCase();
+
+    // Tag anarchist events
+    items.forEach(i => { i._isAnarchist = isAnarchistEvent(i); });
+
+    // Filter by anarchist toggle
+    if (!showAnarchists) {
+        items = items.filter(i => !i._isAnarchist);
+    }
+
+    if (activeFilter === 'anarchist') {
+        items = items.filter(i => i._isAnarchist);
+    } else if (activeFilter === 'field') {
+        items = items.filter(i => i.isFieldReport);
+    } else if (activeFilter === 'false') {
+        items = items.filter(i => { const aid = i.id || i.timestamp; return aid && alertVotes[aid] && alertVotes[aid].vote === 'dislike'; });
+    } else if (activeFilter !== 'all') {
+        items = items.filter(i => i.urgency === activeFilter);
+    }
+    if (searchText) {
+        items = items.filter(i =>
+            (i.title || '').toLowerCase().includes(searchText) ||
+            (i.snippet || '').toLowerCase().includes(searchText) ||
+            (i.fullText || '').toLowerCase().includes(searchText) ||
+            (i.source || '').toLowerCase().includes(searchText)
+        );
+    }
+
+    if (items.length === 0) {
+        const scanTime = metaData && metaData.lastRun ? formatTime(metaData.lastRun) : '--:--';
+        feed.innerHTML = `<div class="empty-state" style="padding:40px;">
+            <div style="font-size:28px;margin-bottom:10px;opacity:0.3;">&#x2714;</div>
+            ${searchText || activeFilter !== 'all'
+                ? '<span>אין התראות תואמות</span><br><small style="color:var(--text-dim);">' + (searchText ? 'נסה חיפוש אחר' : 'נסה פילטר אחר') + '</small>'
+                : '<span style="color:var(--green);font-size:14px;font-weight:600;">הגזרה שקטה</span><br><small style="color:var(--text-dim);line-height:2;">המערכת סורקת 8 ערוצי טלגרם + Google News כל 10 דקות<br>סריקה אחרונה: ' + scanTime + '<br>לחץ <b style="color:var(--yellow);">הדגמה</b> לתצוגת נתונים לדוגמה</small>'
+            }
+        </div>`;
+        return;
+    }
+
+    items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    feed.innerHTML = items.map((item, idx) => {
+        const locationName = item.locationHe || (item.matchedLocations ? item.matchedLocations.join(', ') : '') || '';
+        const coords = lookupCoords(item);
+        const locationTag = locationName
+            ? (coords
+                ? `<a href="javascript:void(0)" onclick="flyToAlertLocation(${coords.lat},${coords.lng},event)" style="color:#00d4ff;font-size:10px;text-decoration:none;display:inline-flex;align-items:center;gap:3px;margin-top:2px;cursor:pointer;">📍 ${escapeHtml(locationName)}</a>`
+                : `<span style="color:#00d4ff;font-size:10px;display:inline-flex;align-items:center;gap:3px;margin-top:2px;">📍 ${escapeHtml(locationName)}</span>`)
+            : '';
+        const sourceUrl = item.sourceUrl || getSourceUrl(item.source);
+        const srcObj = מקורות.find(s => s.id === item.source || s.name === item.source);
+        const srcIdForProfile = srcObj ? srcObj.id : (item.source || '');
+        const alertId = item.id || item.timestamp || idx;
+        const isChecked = checkedAlerts.has(String(alertId));
+        const vote = alertVotes[alertId];
+        const isDisliked = vote && vote.vote === 'dislike';
+        const isLiked = vote && vote.vote === 'like';
+        return `
+        <div class="alert-item${isChecked ? ' alert-checked' : ''}${isDisliked ? ' alert-false' : ''}${item.keywordHit ? ' keyword-hit' : ''}" onclick="toggleAlertExpand(this)">
+            <div class="alert-row">
+                <div class="alert-check${isChecked ? ' checked' : ''}" onclick="toggleAlertCheck(this,'${alertId}',event)" title="סמן כנקרא">
+                    ${isChecked ? '✓' : ''}
+                </div>
+                <span class="alert-time">${formatTimeWithDate(item.timestamp)}</span>
+                <div class="alert-urgency ${item.isFieldReport ? 'urgency-field' : item._isAnarchist ? 'urgency-anarchist' : 'urgency-' + (item.urgency || 1)}"></div>
+                <div class="alert-content">
+                    <div class="alert-title">${isDisliked ? '<span class="false-badge">שגוי</span>' : ''}${isLiked ? '<span class="verified-badge">אומת</span>' : ''}${escapeHtml(item.title || 'N/A')}</div>
+                    ${locationTag}
+                </div>
+            </div>
+            ${(item.fullText || item.snippet) ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(item.fullText || item.snippet) + '</div>' : ''}
+            <div class="alert-meta-row" style="display:none;">
+                <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeHtml(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>
+                ${sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" onclick="event.stopPropagation();" style="color:var(--text-dim);font-size:10px;text-decoration:none;">&#128279; מקור</a>' : ''}
+                ${item.matchedKeywords ? '<span>KW: ' + escapeHtml(item.matchedKeywords.join(', ')) + '</span>' : ''}
+                <div class="vote-buttons">
+                    <button class="vote-btn vote-like${isLiked ? ' active' : ''}" onclick="toggleVote('${alertId}','like',event)" title="אמין" style="opacity:${isLiked ? '1' : '0.4'};">&#128077;</button>
+                    <button class="vote-btn vote-dislike${isDisliked ? ' active' : ''}" onclick="toggleVote('${alertId}','dislike',event)" title="שגוי" style="opacity:${isDisliked ? '1' : '0.4'};">&#128078;</button>
+                </div>
+            </div>
+        </div>
+    `}).join('');
+}
+
+function toggleAlertExpand(el) {
+    const fullText = el.querySelector('.alert-full-text');
+    const metaRow = el.querySelector('.alert-meta-row');
+    const isExpanded = el.classList.contains('expanded');
+
+    // Close all others
+    document.querySelectorAll('.alert-item.expanded').forEach(item => {
+        if (item !== el) {
+            item.classList.remove('expanded');
+            const ft = item.querySelector('.alert-full-text');
+            if (ft) ft.style.display = 'none';
+            const mr = item.querySelector('.alert-meta-row');
+            if (mr) mr.style.display = 'none';
+        }
+    });
+
+    if (isExpanded) {
+        el.classList.remove('expanded');
+        if (fullText) fullText.style.display = 'none';
+        metaRow.style.display = 'none';
+    } else {
+        el.classList.add('expanded');
+        if (fullText) fullText.style.display = 'block';
+        metaRow.style.display = 'flex';
+    }
+}
+
+function toggleAlertCheck(el, alertId, event) {
+    event.stopPropagation();
+    const item = el.closest('.alert-item');
+    if (checkedAlerts.has(String(alertId))) {
+        checkedAlerts.delete(String(alertId));
+        el.classList.remove('checked');
+        el.textContent = '';
+        item.classList.remove('alert-checked');
+    } else {
+        checkedAlerts.add(String(alertId));
+        el.classList.add('checked');
+        el.textContent = '✓';
+        item.classList.add('alert-checked');
+    }
+    localStorage.setItem('mabat188-checked', JSON.stringify([...checkedAlerts]));
+}
+
+function flyToAlertLocation(lat, lng, event) {
+    event.stopPropagation();
+    if (mapIsFullscreen) toggleMapFullscreen();
+    const mapEl = document.getElementById('mapPanel');
+    mapEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => {
+        map.flyTo([lat, lng], 15, { duration: 1 });
+        // Flash a temporary marker
+        const pulse = L.circleMarker([lat, lng], {
+            radius: 20, color: '#00d4ff', fillColor: '#00d4ff',
+            fillOpacity: 0.3, weight: 2
+        }).addTo(map);
+        setTimeout(() => map.removeLayer(pulse), 3000);
+    }, 400);
+}
+
+// ═══════ RENDER TIMELINE ═══════
+function renderTimeline() {
+    const container = document.getElementById('timelineBars');
+    const hoursContainer = document.getElementById('timelineHours');
+    const items = Object.values(newsData);
+    const now = Date.now();
+    const hours = 24;
+    const buckets = Array.from({ length: hours }, () => ({ count: 0, maxUrg: 0 }));
+
+    items.forEach(item => {
+        const age = (now - (item.timestamp || 0)) / (1000 * 60 * 60);
+        const bucket = Math.min(hours - 1, Math.max(0, Math.floor(age)));
+        buckets[bucket].count++;
+        buckets[bucket].maxUrg = Math.max(buckets[bucket].maxUrg, item.urgency || 1);
+    });
+
+    const maxCount = Math.max(1, ...buckets.map(b => b.count));
+
+    // Reverse so newest is on the right
+    const reversed = [...buckets].reverse();
+
+    container.innerHTML = reversed.map((b, i) => {
+        const h = Math.max(2, (b.count / maxCount) * 35);
+        const urgClass = b.maxUrg >= 5 ? 'has-red' : b.maxUrg >= 4 ? 'has-orange' : b.maxUrg >= 3 ? 'has-yellow' : b.count > 0 ? 'has-blue' : '';
+        return `<div class="timeline-bar ${urgClass}" style="height:${h}px;" title="${b.count} alerts"></div>`;
+    }).join('');
+
+    // Hour labels
+    const nowHour = new Date().getHours();
+    hoursContainer.innerHTML = '';
+    for (let i = 0; i < hours; i += 6) {
+        const label = String((nowHour - hours + 1 + i + 24) % 24).padStart(2, '0') + ':00';
+        const span = document.createElement('span');
+        span.textContent = label;
+        hoursContainer.appendChild(span);
+    }
+}
+
+// ═══════ RENDER SUMMARY ═══════
+function renderSummary() {
+    const body = document.getElementById('summaryBody');
+    if (!summaryData || !summaryData.summary) {
+        body.innerHTML = '<div class="empty-state">ממתין לניתוח AI<br><small>מתעדכן כל שעה</small></div>';
+        return;
+    }
+    body.innerHTML = `
+        <div class="summary-text">${escapeHtml(summaryData.summary)}</div>
+        <div class="summary-meta">
+            <span>${summaryData.aiProvider || 'Gemini'} AI</span>
+            <span>${formatDateTime(summaryData.generatedAt)}</span>
+        </div>
+    `;
+}
+
+// ═══════ RENDER STATS ═══════
+function renderStats() {
+    const items = Object.values(newsData);
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    const sources = new Set();
+
+    items.forEach(item => {
+        counts[item.urgency || 1]++;
+        if (item.source) sources.add(item.source);
+    });
+
+    document.getElementById('statTotal').textContent = items.length;
+    document.getElementById('statRed').textContent = counts[5];
+    document.getElementById('statOrange').textContent = counts[4];
+    document.getElementById('statYellow').textContent = counts[3];
+    document.getElementById('statBlue').textContent = counts[2] + counts[1];
+    document.getElementById('statSources').textContent = sources.size;
+    document.getElementById('alertCount').textContent = items.length;
+}
+
+// ═══════ RENDER רמת איום ═══════
+function renderThreatLevel() {
+    const items = Object.values(newsData);
+    let maxUrgency = 0;
+    const recentCutoff = Date.now() - (6 * 60 * 60 * 1000);
+
+    items.forEach(item => {
+        if (item.timestamp > recentCutoff && item.urgency > maxUrgency) {
+            maxUrgency = item.urgency;
+        }
+    });
+
+    const circle = document.getElementById('threatCircle');
+    const num = document.getElementById('threatNum');
+    const label = document.getElementById('threatLabel');
+
+    const levels = {
+        0: { class: 'level-green', label: 'תקין', color: '#00ff88' },
+        1: { class: 'level-gray', label: 'מינימלי', color: '#666' },
+        2: { class: 'level-blue', label: 'חלש', color: '#4488ff' },
+        3: { class: 'level-yellow', label: 'בינוני', color: '#ffd000' },
+        4: { class: 'level-orange', label: 'חזק', color: '#ff8800' },
+        5: { class: 'level-red', label: 'ודאי', color: '#ff0040' }
+    };
+
+    const level = levels[maxUrgency] || levels[0];
+    circle.className = `threat-circle ${level.class}`;
+    num.textContent = maxUrgency;
+    num.style.color = level.color;
+    label.textContent = level.label;
+    label.style.color = level.color;
+
+    const bars = document.querySelectorAll('.threat-bar');
+    bars.forEach((bar, i) => {
+        if (i < maxUrgency) {
+            bar.style.background = level.color;
+            bar.style.boxShadow = `0 0 8px ${level.color}`;
+        } else {
+            bar.style.background = 'var(--bg-primary)';
+            bar.style.boxShadow = 'none';
+        }
+    });
+}
+
+// ═══════ RENDER מקורות ═══════
+function renderSources() {
+    const items = Object.values(newsData);
+    const sourceCounts = {};
+    items.forEach(item => {
+        if (item.source) sourceCounts[item.source] = (sourceCounts[item.source] || 0) + 1;
+    });
+
+    const list = document.getElementById('sourcesList');
+    list.innerHTML = מקורות.map(src => {
+        const count = sourceCounts[src.id] || sourceCounts[src.name] || 0;
+        const isActive = count > 0;
+        const typeLabels = { local: 'LOCAL', regional: 'AREA', national: 'NATL', news: 'NEWS' };
+        return `
+            <div class="source-item" style="cursor:pointer;" onclick="openPublisherProfile('${escapeHtml(src.id)}',event)">
+                <div class="source-dot ${isActive ? 'active' : 'inactive'}"></div>
+                <span class="source-name source-link-clickable">${src.name}</span>
+                <span class="source-type ${src.type}">${typeLabels[src.type]}</span>
+                <span class="source-count">${count > 0 ? count : ''}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderMeta() {
+    if (metaData && metaData.lastRun) {
+        document.getElementById('lastScan').textContent = formatTime(metaData.lastRun);
+    }
+}
+
+// ═══════ INTEL LAYERS ═══════
+async function fetchWeatherDirect() {
+    try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${SECTOR_CENTER.lat}&lon=${SECTOR_CENTER.lng}&appid=4a4f2b3c8e9d4f6a8b2c1d0e3f5a7b9c&units=metric&lang=he`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.main) {
+            const wEl = document.getElementById('weatherVal');
+            if (wEl) wEl.textContent = `${Math.round(data.main.temp)}°C ${data.weather?.[0]?.description || ''}`;
+        }
+    } catch (e) { /* silent */ }
+}
+
+function checkCalendarLocal() {
+    const now = new Date();
+    const m = now.getMonth() + 1, d = now.getDate();
+    const md = `${m}-${d}`;
+    const dates = { '1-1': 'יום פתח', '3-30': 'יום האדמה', '4-17': 'יום האסיר', '5-15': 'יום הנכבה', '6-5': 'יום הנכסה', '11-15': 'יום עצמאות פלסטיני', '11-29': 'יום סולידריות' };
+    const isFriday = now.getDay() === 5;
+    const cEl = document.getElementById('calendarVal');
+    if (!cEl) return;
+    const parts = [];
+    if (dates[md]) parts.push(dates[md]);
+    if (isFriday) parts.push('יום שישי');
+    if (parts.length > 0) {
+        cEl.textContent = parts.join(' | ');
+        cEl.style.color = dates[md] ? 'var(--orange)' : 'var(--yellow)';
+    }
+}
+
+function updateIntelLayers(weather, calendar, sentiment, trends) {
+    // Weather - from Firebase (backend), fallback handled by fetchWeatherDirect
+    const wEl = document.getElementById('weatherVal');
+    if (wEl && weather && !weather.error && weather.temp) {
+        wEl.textContent = `${weather.temp}°C ${weather.description}`;
+    }
+
+    // Calendar
+    const cEl = document.getElementById('calendarVal');
+    if (cEl && calendar && !calendar.error) {
+        if (calendar.urgencyBoost > 0) {
+            const parts = [];
+            if (calendar.specificEvent) parts.push(calendar.specificEvent.name);
+            if (calendar.isRamadan) parts.push('רמדאן');
+            if (calendar.isFriday) parts.push('יום שישי');
+            cEl.textContent = parts.join(' | ') + ` (+${calendar.urgencyBoost})`;
+            cEl.style.color = calendar.urgencyBoost >= 3 ? 'var(--red)' : calendar.urgencyBoost >= 2 ? 'var(--orange)' : 'var(--yellow)';
+        } else {
+            cEl.textContent = 'רגיל';
+            cEl.style.color = 'var(--green)';
+        }
+    }
+
+    // Sentiment
+    const sEl = document.getElementById('sentimentVal');
+    if (sEl && sentiment && !sentiment.error && sentiment.level) {
+        const colors = { low: 'var(--green)', moderate: 'var(--yellow)', high: 'var(--orange)', critical: 'var(--red)' };
+        const labels = { low: 'נמוך', moderate: 'בינוני', high: 'גבוה', critical: 'קריטי' };
+        sEl.textContent = `${labels[sentiment.level] || sentiment.level} (${sentiment.score}/10)`;
+        sEl.style.color = colors[sentiment.level] || 'var(--cyan)';
+    }
+
+    // Trends
+    const tEl = document.getElementById('trendsVal');
+    if (tEl && trends && !trends.error) {
+        const count = Array.isArray(trends) ? trends.length : 0;
+        tEl.textContent = count > 0 ? `${count} פעילות` : '0';
+        tEl.style.color = count > 0 ? 'var(--orange)' : 'var(--green)';
+        if (count > 0) tEl.title = trends.map(t => `${t.location}: ${t.reportCount} דיווחים`).join('\n');
+    }
+}
+
+// ═══════ HISTORY ═══════
+function toggleHistory() {
+    const overlay = document.getElementById('historyOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible')) {
+        loadJournalNotes().then(() => fetchHistory());
+    }
+}
+
+async function fetchHistory() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/auto-news.json`);
+        const data = await res.json();
+        if (data) {
+            // Normalize all items
+            Object.values(data).forEach(item => {
+                if (!item.urgency && item.urgencyScore) item.urgency = item.urgencyScore;
+                if (!item.timestamp) {
+                    if (item.publishedAt) item.timestamp = typeof item.publishedAt === 'number' ? item.publishedAt : new Date(item.publishedAt).getTime();
+                    else if (item.date) item.timestamp = new Date(item.date).getTime();
+                    else if (item.fetchedAt) item.timestamp = typeof item.fetchedAt === 'number' ? item.fetchedAt : new Date(item.fetchedAt).getTime();
+                }
+                // Handle seconds vs milliseconds (if timestamp < year 2000 in ms, it's probably seconds)
+                if (item.timestamp && item.timestamp < 1000000000000) item.timestamp = item.timestamp * 1000;
+                if (!item.locationHe && item.matchedLocations) item.locationHe = item.matchedLocations.join(', ');
+            });
+            allNewsData = data;
+        }
+        renderHistory();
+    } catch (e) {
+        document.getElementById('historyBody').innerHTML = '<div class="empty-state">שגיאה בטעינת יומן</div>';
+    }
+}
+
+function renderHistory() {
+    const body = document.getElementById('historyBody');
+    const searchText = (document.getElementById('historySearch').value || '').toLowerCase();
+    let items = Object.values(allNewsData);
+
+    if (historyFilter === 'false') {
+        items = items.filter(i => { const aid = i.id || i.timestamp; return aid && alertVotes[aid] && alertVotes[aid].vote === 'dislike'; });
+    } else if (historyFilter !== 'all') {
+        items = items.filter(i => i.urgency === historyFilter);
+    }
+    if (searchText) {
+        items = items.filter(i =>
+            (i.title || '').toLowerCase().includes(searchText) ||
+            (i.snippet || '').toLowerCase().includes(searchText) ||
+            (i.fullText || '').toLowerCase().includes(searchText) ||
+            (i.source || '').toLowerCase().includes(searchText)
+        );
+    }
+
+    items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    // Stats
+    const counts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    items.forEach(i => counts[i.urgency || 1]++);
+    document.getElementById('historyStats').innerHTML = `
+        <div class="history-stat"><strong>${items.length}</strong> סה"כ</div>
+        <div class="history-stat"><strong style="color:var(--red)">${counts[5]}</strong> ודאי</div>
+        <div class="history-stat"><strong style="color:var(--orange)">${counts[4]}</strong> חזק</div>
+        <div class="history-stat"><strong style="color:var(--yellow)">${counts[3]}</strong> בינוני</div>
+        <div class="history-stat"><strong style="color:var(--blue)">${counts[2] + counts[1]}</strong> חלש</div>
+    `;
+
+    // Group by date
+    const groups = {};
+    items.forEach(item => {
+        const d = new Date(item.timestamp || 0);
+        const key = d.toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(item);
+    });
+
+    if (Object.keys(groups).length === 0) {
+        body.innerHTML = '<div class="empty-state">אין רשומות תואמות</div>';
+        return;
+    }
+
+    const colors = { 5: 'var(--red)', 4: 'var(--orange)', 3: 'var(--yellow)', 2: 'var(--blue)', 1: '#666' };
+
+    const urgLabels = { 5: 'ודאי', 4: 'חזק', 3: 'בינוני', 2: 'חלש', 1: 'מידע' };
+
+    body.innerHTML = Object.entries(groups).map(([date, dateItems]) => `
+        <div class="history-date-group">
+            <div class="history-date-header">${date} <span style="color:var(--text-dim);">(${dateItems.length} דיווחים)</span></div>
+            ${dateItems.map(item => {
+                const hLocName = item.locationHe || (item.matchedLocations ? item.matchedLocations.join(', ') : '') || '';
+                const hCoords = lookupCoords(item);
+                const urgColor = colors[item.urgency] || '#666';
+                const urgLabel = urgLabels[item.urgency] || '';
+                const sourceUrl = item.sourceUrl || getSourceUrl(item.source);
+                const hSrcObj = מקורות.find(s => s.id === item.source || s.name === item.source);
+                const hSrcId = hSrcObj ? hSrcObj.id : (item.source || '');
+                const sourceTag = `<a href="javascript:void(0)" onclick="event.stopPropagation();openPublisherProfile('${escapeHtml(hSrcId)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">📡 ${escapeHtml(item.source || '')}</a>`;
+                const locTag = hLocName
+                    ? (hCoords
+                        ? `<a href="javascript:void(0)" onclick="toggleHistory();setTimeout(()=>{map.flyTo([${hCoords.lat},${hCoords.lng}],15,{duration:1})},300)" style="color:#00d4ff;font-size:10px;text-decoration:none;cursor:pointer;">📍 ${escapeHtml(hLocName)}</a>`
+                        : `<span style="color:#00d4ff;font-size:10px;">📍 ${escapeHtml(hLocName)}</span>`)
+                    : '';
+                const noteId = item.id || item.timestamp || '';
+                const note = journalNotes[noteId];
+                const hVote = alertVotes[noteId];
+                const hIsDisliked = hVote && hVote.vote === 'dislike';
+                const hIsLiked = hVote && hVote.vote === 'like';
+                const voteBadge = hIsDisliked ? '<span class="false-badge">שגוי</span>' : hIsLiked ? '<span class="verified-badge">אומת</span>' : '';
+                const noteHtml = note
+                    ? `<div class="journal-saved-note">
+                        <div><strong>מדווח:</strong> ${escapeHtml(note.reporter || '-')}</div>
+                        ${note.details ? '<div><strong>פרטים:</strong> ' + escapeHtml(note.details) + '</div>' : ''}
+                        <div style="display:flex;gap:6px;margin-top:4px;">
+                            <button class="journal-note-btn" onclick="toggleNoteForm('${noteId}')">ערוך</button>
+                            <button class="journal-note-btn" style="color:var(--red);border-color:var(--red-dim);" onclick="deleteJournalNote('${noteId}')">מחק</button>
+                        </div>
+                       </div>`
+                    : '';
+                return `
+                <div class="history-item${hIsDisliked ? ' alert-false' : ''}" style="border-right:3px solid ${urgColor};">
+                    <span class="history-item-time">${formatTime(item.timestamp)}</span>
+                    <div class="history-item-urgency" style="background:${urgColor}; box-shadow: 0 0 6px ${urgColor};"></div>
+                    <div class="history-item-content">
+                        <div class="history-item-title">${voteBadge}${escapeHtml(item.title || 'N/A')}</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px;">
+                            <span style="font-size:9px;padding:1px 6px;border-radius:3px;background:${urgColor}22;border:1px solid ${urgColor};color:${urgColor};">${urgLabel}</span>
+                            ${locTag}
+                            ${sourceTag}
+                            <div class="vote-buttons" style="margin-right:4px;">
+                                <button class="vote-btn vote-like${hIsLiked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','like',event).then(()=>renderHistory())" title="אמין" style="opacity:${hIsLiked ? '1' : '0.4'};width:24px;height:24px;font-size:12px;">&#128077;</button>
+                                <button class="vote-btn vote-dislike${hIsDisliked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','dislike',event).then(()=>renderHistory())" title="שגוי" style="opacity:${hIsDisliked ? '1' : '0.4'};width:24px;height:24px;font-size:12px;">&#128078;</button>
+                            </div>
+                            <button class="journal-note-btn" onclick="event.stopPropagation();toggleNoteForm('${noteId}')">${note ? '📝' : '➕ הוסף מידע'}</button>
+                        </div>
+                        ${noteHtml}
+                        <div class="journal-note-form" id="note-form-${noteId}" style="display:none;">
+                            <input name="reporter" placeholder="שם המדווח" value="${note ? escapeHtml(note.reporter || '') : ''}">
+                            <textarea name="details" placeholder="פרטים ואופן טיפול">${note ? escapeHtml(note.details || '') : ''}</textarea>
+                            <div class="journal-note-actions">
+                                <button class="journal-note-cancel" onclick="event.stopPropagation();toggleNoteForm('${noteId}')">ביטול</button>
+                                <button class="journal-note-save" onclick="event.stopPropagation();saveJournalNote('${noteId}')">שמור</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('')}
+        </div>
+    `).join('');
+}
+
+// ═══════ VILLAGE REPORT COUNT ═══════
+function getVillageReportCount(village, hours) {
+    const cutoff = Date.now() - (hours * 60 * 60 * 1000);
+    const items = Object.values(newsData);
+    let count = 0;
+    items.forEach(item => {
+        if ((item.timestamp || 0) < cutoff) return;
+        // Check by coordinates proximity (within ~2km)
+        if (item.coordinates) {
+            const dlat = Math.abs((item.coordinates.lat || 0) - village.lat);
+            const dlng = Math.abs((item.coordinates.lon || item.coordinates.lng || 0) - village.lng);
+            if (dlat < 0.02 && dlng < 0.02) { count++; return; }
+        }
+        // Check by matched location name
+        if (item.matchedLocations) {
+            const names = item.matchedLocations.join(' ').toLowerCase();
+            const heName = village.he.toLowerCase();
+            if (names.includes(heName)) { count++; }
+        }
+    });
+    return count;
+}
+
+// ═══════ VILLAGE LAST EVENT ═══════
+function getVillageLastEvent(village) {
+    const items = Object.values(newsData);
+    let latest = null;
+    items.forEach(item => {
+        let match = false;
+        if (item.coordinates) {
+            const dlat = Math.abs((item.coordinates.lat || 0) - village.lat);
+            const dlng = Math.abs((item.coordinates.lon || item.coordinates.lng || 0) - village.lng);
+            if (dlat < 0.02 && dlng < 0.02) match = true;
+        }
+        if (!match && item.matchedLocations) {
+            const names = item.matchedLocations.join(' ').toLowerCase();
+            if (names.includes(village.he.toLowerCase())) match = true;
+        }
+        if (match && (!latest || (item.timestamp || 0) > (latest.timestamp || 0))) {
+            latest = item;
+        }
+    });
+    if (!latest) return 'אין';
+    return formatTime(latest.timestamp);
+}
+
+// ═══════ UTILITIES ═══════
+function formatTime(ts) {
+    if (!ts) return '--:--';
+    const d = new Date(ts);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+}
+
+function formatTimeWithDate(ts) {
+    if (!ts) return '--:--';
+    const d = new Date(ts);
+    const now = new Date();
+    const isToday = d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    const time = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    if (isToday) return time;
+    return d.toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric' }) + ' ' + time;
+}
+
+function formatDateTime(ts) {
+    if (!ts) return '--';
+    const d = new Date(ts);
+    return d.toLocaleDateString('he-IL') + ' ' + formatTime(ts);
+}
+
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ═══════ PUBLISHER PROFILE ═══════
+const DEFAULT_PROFILES = {
+    deiribzi: { name:"قرية دير إبزيع - כפר דיר איביע", photo:"https://cdn4.telesco.pe/file/Lf4x4EuQBrehvCfG6S7CFCVjc3ARbjiGcB12p5Rl3DE6cy8PTbCz3A0WT3aCnhpQQ5MShaXs1sPnQQACdcjREQNnHqTZQuSlQllhGKk8MCiBnm1scBlLO3EE3cSpPIV9NpAtePCgwWdy-ky9N8p3N2hwuu6QDA2wdXxQuadLLXOaQaZ0ABJkG0ifulnul-1axJYhBAqdKOybsf9S1CqH2n_ek4e5Wya7VzeDIpXC7tKPt0FIEtRFGM_Rkeds4kZEz_G2odhCELjf4CjC0xy8w8q-b-hNzf9D00WV50GstOWi8MHbxcn0hHNsH-RrPXq8wEkwUfrgz74orfLm_szIDA.jpg", location:"דיר איביע, פלסטין", subscribers:"223", notes:"ערוץ מקומי - חדשות כפר, תמונות וסרטונים, הודעות ואירועים" },
+    beit_liqya: { name:"أخبار بيت لقيا - חדשות בית ליקיא", photo:"https://cdn4.telesco.pe/file/j3rhtUkeyfeslJKedu5tQGunxlwKss2b6bksvkVBFqw2ynpN1iVO6dmQoLZBCtPRCK2hjXic-ohwE4hSvCRhXWQhjQANV3vQakxh0hNC1bB_iJGQd061k6-erAGw5GaOsXx8V3BU81qIgWUpuUIL7Fa3dU7T3beiTjVj7nFDpv93pqg8Omj2EiVZnqat45faRFHbaXuJm2m5CpmsLRTw--FUeykBGPXoHwQuDuLVXjhHuyjA6uXftEocudDmGKhqyECksx2_uMWiPVO3yjt0-wuuYqPXUMOdb-YVzbOKp-Fu4YhIm2mT8RrRKJOmDMO0unnXVM5EGL7ioyKU_E39ug.jpg", location:"בית ליקיא, פלסטין", subscribers:"2,408", notes:"ערוץ חדשות מקומי - מעקב ופרסום חדשות. בוט: @Liqya136854bot" },
+    beit_sira: { name:"بيت سيرا - בית סירא", photo:"https://cdn4.telesco.pe/file/BeI6Msb8Dq7fydrWxadoZ63seN4bXlpLHPiJea5Mhm7C0yLCKiKiHiqCDMBgaXH-KdbpBbR9I3jogfDMJ63lUW2En7XOY_pkwWokThMPWQGMwDgOS74SMzcinH_w4RaaKUI01mLeqKZ31NnZ2f7EPdRUBpucrXn9rOQBn5K2S_1RFS0_BMRNBCYWbdlfWXCybDJdTQMjUPHa43JWxrcZ-cnS2EDtTnm2lNPbMWYWJ7f1KekZNG5vykXJ52n93UBS5dUfhRn0CU16b0A1D3E5nB9B9XZSYk7jfdE85AVQHqqPNskcS-KKEy5xIT9F9IGYofmorWuwGFQE5kE729hXcg.jpg", location:"בית סירא, פלסטין", subscribers:"48", notes:"ערוץ מקומי - חדשות הכפר" },
+    ramallahnew: { name:"رام الله الاخباري - רמאללה חדשות", photo:"https://cdn4.telesco.pe/file/a0AchnUtvNk5Ualo6VpWgP-gwDQahikTK7FhwqzLOPNs3UpkwAPJEo7l6Flw3XSiQTq3mQPJoOaHdH7ABgRK2wCRTYzbwMtRFvM9zOQ5ET2yeG8La5C6Zf1Rx00aYDbHxnAmgOYJSjPCt_WmiNBuuo5yBnjVJ7jYkoQi0wsYV9txCYQ7ExWEuKt1TlsyPHm9F6HfQZ9pL3sHhLHPXKrcJXoxFYn8n71tU0AmyqrmPL7jRLdBoP3rpmnS87mlE67haVxPOIwn7Ax6kn9duHJ5dlUaJMG_6i4XO0p152nhhyKEIK4HuOCn1b1GSrF3ARLTbwdWnFDqnfhd7PRbzOyW0g.jpg", location:"רמאללה, פלסטין", subscribers:"211,854", notes:"ערוץ מאומת. הוקם 28/11/2014. מפרסם חדשות 24/7. מעל מיליון מבקרים חודשיים." },
+    ramallahmix1: { name:"Ramallah Mix - רמאללה מיקס", photo:"https://cdn4.telesco.pe/file/N2cQjmJto-Tm47JiSlkESPRmyQ-Os20O5fVj-Y0mNdywPAgxpIfG5B_n1mZ3dAiF9w_uv6cOUwbtOO-apFsQKyyvBD8rcaI5ZN-qF2NqcFx6aUuZ-53uMzs-UIUCfo2VN22T8oFRmdA8mUN4E10myc7RXKFP7DOYokqvGhb4D-_c3jHOnb0irkeYdVAnR9254cd0wz2oDKIQTPaWYhQwogBDuP6XhGqlIrAvWf3eacsYVninCNWmSBjiknqVqp_VJ2I6m-4PGztwmGTQ9-SdHVHrk5gx1I-0bRvlyMVo-GW_6cFZ_OjngSzsSMjhjE5Uv4zL7mhtyaY2HwGP3TNgag.jpg", location:"רמאללה, פלסטין", subscribers:"367,705", notes:"ערוץ מאומת. אתר: www.rmix.ps" },
+    QudsN: { name:"شبكة قدس الإخبارية - רשת קודס", photo:"https://cdn4.telesco.pe/file/iQMxjgSvEZedhB5reOIAnMa9OgpOzU2CK5pE88OP0ztUriKj2H-36sLyy2XWnQOU7jz2WetoHq9dJMT61xAeWKQDzcMkAE7zlQZp52VtVhp2vNIjVhUQjKbP3uOz58S91hQY2qPi2gzGtzEALauYQGgrzDfUhJWnzrltgomNj6zc8bD92Xi4I6wD8dJzZheNBBdxUilciH6RHqDJ6NqNWWl1TSwzEXbCTL2gSmqM3U4JUe03ap1zyHXBdNfcf-2KbJ6Wtbr8ndBJqop9rNNB2gSZb3CqDTrfwjswni-UfUA_IMfhDVO61cVNNJTpUibT-x1G7TE0ihIN8scIjJ74Iw.jpg", location:"פלסטין", subscribers:"699,392", notes:"רשת מדיה פלסטינית עצמאית. ערוצים: תרגום עברית, אנגלית, ארכיון, אסירים. בוט: @QudsNN_bot" },
+    palinfo: { name:"مركز الاعلام - מרכז תקשורת", location:"פלסטין", notes:"מרכז תקשורת פלסטיני. @palaborz" },
+    PalestineResist: { name:"Resistance News Network", location:"פלסטין", subscribers:"142,177", notes:"The pulse of the resistance. גיבוי: @RNN_Backup, @RNN_Prisoners, @RNN_Archive" },
+    "google-news": { name:"Google News", location:"גלובלי", notes:"מנוע חדשות גוגל - חיפוש בערבית ועברית" }
+};
+
+let publisherProfiles = {};
+let currentPublisherId = null;
+
+async function loadPublisherProfiles() {
+    // Start with defaults
+    publisherProfiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
+    try {
+        const res = await fetch(`${FIREBASE_URL}/publisher-profiles.json`);
+        const data = await res.json();
+        if (data && !data.error) {
+            // Merge Firebase data over defaults
+            Object.keys(data).forEach(k => { publisherProfiles[k] = { ...publisherProfiles[k], ...data[k] }; });
+        }
+    } catch (e) {
+        console.error('Error loading publisher profiles:', e);
+    }
+}
+
+function openPublisherProfile(sourceId, event) {
+    if (event) event.stopPropagation();
+    currentPublisherId = sourceId;
+    const srcObj = מקורות.find(s => s.id === sourceId);
+    const profile = publisherProfiles[sourceId] || {};
+    const card = document.getElementById('publisherCard');
+
+    // Compute stats from allNewsData
+    const allItems = Object.values(allNewsData);
+    const srcItems = allItems.filter(i => i.source === sourceId || i.source === (srcObj ? srcObj.name : ''));
+    const totalReports = srcItems.length;
+    const lastReport = srcItems.length > 0 ? Math.max(...srcItems.map(i => i.timestamp || 0)) : 0;
+    const locCounts = {};
+    srcItems.forEach(i => {
+        const loc = i.locationHe || (i.matchedLocations ? i.matchedLocations.join(', ') : '');
+        if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+    });
+    const topLocations = Object.entries(locCounts).sort((a,b) => b[1]-a[1]).slice(0,3).map(e => e[0]);
+
+    const srcName = profile.name || (srcObj ? srcObj.name : sourceId);
+    const srcType = srcObj ? ({ local:'מקומי', regional:'אזורי', national:'ארצי', news:'חדשות' }[srcObj.type] || srcObj.type) : '';
+    const tgLink = srcObj && srcObj.tg ? `https://t.me/${srcObj.tg}` : '';
+
+    card.innerHTML = `
+        <div class="publisher-card-header">
+            ${profile.photo
+                ? `<img src="${escapeHtml(profile.photo)}" class="publisher-photo" onerror="this.outerHTML='<div class=\\'publisher-photo-placeholder\\'>📡</div>'">`
+                : '<div class="publisher-photo-placeholder">📡</div>'}
+            <div>
+                <div class="publisher-name">${escapeHtml(srcName)}</div>
+                <div class="publisher-subtitle">${escapeHtml(srcType)}${tgLink ? ' | <a href="' + escapeHtml(tgLink) + '" target="_blank" style="color:var(--cyan);text-decoration:none;" onclick="event.stopPropagation();">Telegram ↗</a>' : ''}</div>
+            </div>
+        </div>
+        <div class="publisher-stats">
+            <div class="publisher-stat-box">
+                <div class="publisher-stat-value">${totalReports}</div>
+                <div class="publisher-stat-label">דיווחים</div>
+            </div>
+            <div class="publisher-stat-box">
+                <div class="publisher-stat-value">${lastReport ? formatTimeWithDate(lastReport) : '--'}</div>
+                <div class="publisher-stat-label">דיווח אחרון</div>
+            </div>
+            <div class="publisher-stat-box">
+                <div class="publisher-stat-value">${profile.subscribers || '--'}</div>
+                <div class="publisher-stat-label">מנויים</div>
+            </div>
+        </div>
+        ${topLocations.length > 0 ? `<div style="margin-bottom:12px;"><span style="font-family:var(--font-he);font-size:10px;color:var(--text-dim);">מיקומים עיקריים:</span> <span style="font-family:var(--font-he);font-size:11px;color:var(--cyan);">${topLocations.map(l => escapeHtml(l)).join(' | ')}</span></div>` : ''}
+        <div class="publisher-info-grid" id="publisherInfoGrid">
+            <span class="publisher-info-label">מיקום</span><span class="publisher-info-value">${escapeHtml(profile.location || '--')}</span>
+            <span class="publisher-info-label">גיל</span><span class="publisher-info-value">${escapeHtml(profile.age || '--')}</span>
+            <span class="publisher-info-label">עיסוק</span><span class="publisher-info-value">${escapeHtml(profile.occupation || '--')}</span>
+            <span class="publisher-info-label">בן/בת זוג</span><span class="publisher-info-value">${escapeHtml(profile.partner || '--')}</span>
+            <span class="publisher-info-label">תחביבים</span><span class="publisher-info-value">${escapeHtml(profile.hobbies || '--')}</span>
+            <span class="publisher-info-label">הערות</span><span class="publisher-info-value">${escapeHtml(profile.notes || '--')}</span>
+        </div>
+        <div id="publisherEditForm" style="display:none;">
+            <div class="publisher-edit-field"><label>שם</label><input id="pe_name" value="${escapeHtml(profile.name || srcName)}"></div>
+            <div class="publisher-edit-field"><label>תמונה</label><div style="display:flex;gap:6px;align-items:center;"><input id="pe_photo" value="${escapeHtml(profile.photo || '')}" placeholder="URL תמונה" style="flex:1;"><label style="cursor:pointer;padding:5px 10px;border:1px solid var(--cyan);border-radius:3px;color:var(--cyan);font-size:10px;white-space:nowrap;">📷 העלה<input type="file" id="pe_photo_file" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)"></label></div></div>
+            <div class="publisher-edit-field"><label>מיקום</label><input id="pe_location" value="${escapeHtml(profile.location || '')}"></div>
+            <div class="publisher-edit-field"><label>גיל</label><input id="pe_age" value="${escapeHtml(profile.age || '')}"></div>
+            <div class="publisher-edit-field"><label>עיסוק</label><input id="pe_occupation" value="${escapeHtml(profile.occupation || '')}"></div>
+            <div class="publisher-edit-field"><label>בן/בת זוג</label><input id="pe_partner" value="${escapeHtml(profile.partner || '')}"></div>
+            <div class="publisher-edit-field"><label>תחביבים</label><input id="pe_hobbies" value="${escapeHtml(profile.hobbies || '')}"></div>
+            <div class="publisher-edit-field"><label>מנויים</label><input id="pe_subscribers" value="${escapeHtml(profile.subscribers || '')}"></div>
+            <div class="publisher-edit-field"><label>הערות</label><textarea id="pe_notes">${escapeHtml(profile.notes || '')}</textarea></div>
+        </div>
+        <div class="publisher-actions">
+            <button class="publisher-btn" id="publisherEditBtn" onclick="togglePublisherEdit()">✏️ עריכה</button>
+            <button class="publisher-btn primary" id="publisherSaveBtn" onclick="savePublisherProfile()" style="display:none;">💾 שמור</button>
+            <button class="publisher-btn" onclick="closePublisherProfile()">סגור</button>
+        </div>
+    `;
+
+    document.getElementById('publisherOverlay').classList.add('visible');
+}
+
+function togglePublisherEdit() {
+    const form = document.getElementById('publisherEditForm');
+    const grid = document.getElementById('publisherInfoGrid');
+    const editBtn = document.getElementById('publisherEditBtn');
+    const saveBtn = document.getElementById('publisherSaveBtn');
+    const isEditing = form.style.display !== 'none';
+    form.style.display = isEditing ? 'none' : 'block';
+    grid.style.display = isEditing ? 'grid' : 'none';
+    editBtn.textContent = isEditing ? '✏️ עריכה' : '❌ ביטול';
+    saveBtn.style.display = isEditing ? 'none' : 'inline-block';
+}
+
+async function savePublisherProfile() {
+    if (!currentPublisherId) return;
+    const profileData = {
+        name: document.getElementById('pe_name').value.trim(),
+        photo: document.getElementById('pe_photo').value.trim(),
+        location: document.getElementById('pe_location').value.trim(),
+        age: document.getElementById('pe_age').value.trim(),
+        occupation: document.getElementById('pe_occupation').value.trim(),
+        partner: document.getElementById('pe_partner').value.trim(),
+        hobbies: document.getElementById('pe_hobbies').value.trim(),
+        subscribers: document.getElementById('pe_subscribers').value.trim(),
+        notes: document.getElementById('pe_notes').value.trim(),
+        lastUpdated: Date.now()
+    };
+    publisherProfiles[currentPublisherId] = profileData;
+    try {
+        await fetch(`${FIREBASE_URL}/publisher-profiles/${currentPublisherId}.json`, {
+            method: 'PUT',
+            body: JSON.stringify(profileData)
+        });
+    } catch (e) { console.error('Error saving publisher profile:', e); }
+    // Refresh the card
+    openPublisherProfile(currentPublisherId);
+}
+
+function handlePhotoUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 500000) { alert('תמונה גדולה מדי (מקסימום 500KB)'); return; }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('pe_photo').value = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function closePublisherProfile() {
+    document.getElementById('publisherOverlay').classList.remove('visible');
+    currentPublisherId = null;
+}
+
+// ═══════ KEYWORDS OVERLAY ═══════
+let systemKeywords = null;
+
+async function loadSystemKeywords() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/system-keywords.json`);
+        const data = await res.json();
+        if (data && !data.error) systemKeywords = data;
+    } catch (e) {
+        console.error('Error loading system keywords:', e);
+    }
+}
+
+function toggleKeywords() {
+    const overlay = document.getElementById('keywordsOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible') && !systemKeywords) {
+        loadSystemKeywords().then(() => renderKeywords());
+    } else if (overlay.classList.contains('visible')) {
+        renderKeywords();
+    }
+}
+
+function renderKeywords() {
+    const body = document.getElementById('keywordsBody');
+    const statsBar = document.getElementById('keywordsStats');
+    if (!systemKeywords) {
+        body.innerHTML = '<div class="empty-state">לא נמצאו מילות מפתח<br><small style="color:var(--text-dim);">המידע מסונכרן מהשרת</small></div>';
+        statsBar.innerHTML = '';
+        return;
+    }
+
+    // Count totals
+    let eventCount = 0, peopleCount = 0, violenceCount = 0, noiseCount = 0, locationCount = 0, persianCount = 0;
+    if (systemKeywords.eventKeywords) systemKeywords.eventKeywords.forEach(cat => eventCount += (cat.keywords || []).length);
+    peopleCount = (systemKeywords.peopleKeywords || []).length;
+    violenceCount = (systemKeywords.violenceKeywords || []).length;
+    noiseCount = (systemKeywords.ignoreKeywords || []).length + (systemKeywords.globalNoiseKeywords || []).length + (systemKeywords.ignorePhrases || []).length;
+    locationCount = (systemKeywords.locationFilterKeywords || []).length;
+    persianCount = (systemKeywords.persianKeywords || []).length;
+
+    statsBar.innerHTML = `
+        <span class="keywords-stat"><strong style="color:var(--red);">${eventCount}</strong> אירועים</span>
+        <span class="keywords-stat"><strong style="color:var(--orange);">${peopleCount}</strong> אנשים</span>
+        <span class="keywords-stat"><strong style="color:var(--yellow);">${violenceCount}</strong> אלימות</span>
+        <span class="keywords-stat"><strong style="color:#888;">${noiseCount}</strong> מסננים</span>
+        <span class="keywords-stat"><strong style="color:var(--blue);">${locationCount}</strong> מיקומים</span>
+        <span class="keywords-stat"><strong style="color:#c084fc;">${persianCount}</strong> פרסית</span>
+    `;
+
+    let html = '';
+
+    // Event keywords
+    if (systemKeywords.eventKeywords) {
+        html += '<div style="font-family:var(--font-he);font-size:15px;font-weight:700;color:var(--red);margin-bottom:10px;">קטגוריות אירועים</div>';
+        systemKeywords.eventKeywords.forEach(cat => {
+            const urgColors = { 1:'#666', 2:'var(--blue)', 3:'var(--yellow)', 4:'var(--orange)', 5:'var(--red)' };
+            const urgColor = urgColors[cat.urgencyBoost] || '#666';
+            html += `<div class="keyword-category">
+                <div class="keyword-category-header">
+                    <span class="keyword-category-name">${escapeHtml(cat.nameHe || cat.id)}</span>
+                    <span>
+                        <span class="keyword-urgency-badge" style="background:${urgColor}22;color:${urgColor};border:1px solid ${urgColor};">+${cat.urgencyBoost}</span>
+                        <span class="keyword-category-count">${(cat.keywords || []).length}</span>
+                    </span>
+                </div>
+                <div class="keyword-tags">${(cat.keywords || []).map(kw => `<span class="keyword-tag" style="border-color:${urgColor}44;">${escapeHtml(kw)}</span>`).join('')}</div>
+            </div>`;
+        });
+    }
+
+    // People keywords
+    if (systemKeywords.peopleKeywords && systemKeywords.peopleKeywords.length) {
+        html += `<div class="keyword-category">
+            <div class="keyword-category-header">
+                <span class="keyword-category-name" style="color:var(--orange);">מילות אנשים</span>
+                <span class="keyword-category-count">${systemKeywords.peopleKeywords.length}</span>
+            </div>
+            <div class="keyword-tags">${systemKeywords.peopleKeywords.map(kw => `<span class="keyword-tag" style="border-color:var(--orange)44;">${escapeHtml(kw)}</span>`).join('')}</div>
+        </div>`;
+    }
+
+    // Violence keywords
+    if (systemKeywords.violenceKeywords && systemKeywords.violenceKeywords.length) {
+        html += `<div class="keyword-category">
+            <div class="keyword-category-header">
+                <span class="keyword-category-name" style="color:var(--yellow);">מילות אלימות</span>
+                <span class="keyword-category-count">${systemKeywords.violenceKeywords.length}</span>
+            </div>
+            <div class="keyword-tags">${systemKeywords.violenceKeywords.map(kw => `<span class="keyword-tag" style="border-color:var(--yellow)44;">${escapeHtml(kw)}</span>`).join('')}</div>
+        </div>`;
+    }
+
+    // Ignore / noise keywords
+    const noiseTypes = [
+        { key: 'ignoreKeywords', label: 'מילות סינון', color: '#888' },
+        { key: 'globalNoiseKeywords', label: 'רעש גלובלי', color: '#888' },
+        { key: 'ignorePhrases', label: 'ביטויי סינון', color: '#888' }
+    ];
+    noiseTypes.forEach(nt => {
+        const arr = systemKeywords[nt.key];
+        if (arr && arr.length) {
+            html += `<div class="keyword-category">
+                <div class="keyword-category-header">
+                    <span class="keyword-category-name" style="color:${nt.color};">${nt.label}</span>
+                    <span class="keyword-category-count">${arr.length}</span>
+                </div>
+                <div class="keyword-tags">${arr.map(kw => `<span class="keyword-tag" style="border-color:#88888844;">${escapeHtml(kw)}</span>`).join('')}</div>
+            </div>`;
+        }
+    });
+
+    // Location filter keywords
+    if (systemKeywords.locationFilterKeywords && systemKeywords.locationFilterKeywords.length) {
+        html += `<div class="keyword-category">
+            <div class="keyword-category-header">
+                <span class="keyword-category-name" style="color:var(--blue);">מסנני מיקום</span>
+                <span class="keyword-category-count">${systemKeywords.locationFilterKeywords.length}</span>
+            </div>
+            <div class="keyword-tags">${systemKeywords.locationFilterKeywords.map(kw => `<span class="keyword-tag" style="border-color:var(--blue)44;">${escapeHtml(kw)}</span>`).join('')}</div>
+        </div>`;
+    }
+
+    // Persian keywords
+    if (systemKeywords.persianKeywords && systemKeywords.persianKeywords.length) {
+        html += `<div class="keyword-category">
+            <div class="keyword-category-header">
+                <span class="keyword-category-name" style="color:#c084fc;">מילות פרסית (סינון)</span>
+                <span class="keyword-category-count">${systemKeywords.persianKeywords.length}</span>
+            </div>
+            <div class="keyword-tags">${systemKeywords.persianKeywords.map(kw => `<span class="keyword-tag" style="border-color:#c084fc44;">${escapeHtml(kw)}</span>`).join('')}</div>
+        </div>`;
+    }
+
+    body.innerHTML = html;
+}
+
+// ═══════ KEYBOARD SHORTCUTS ═══════
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (mapIsFullscreen) toggleMapFullscreen();
+        const history = document.getElementById('historyOverlay');
+        if (history.classList.contains('visible')) toggleHistory();
+        const keywords = document.getElementById('keywordsOverlay');
+        if (keywords.classList.contains('visible')) toggleKeywords();
+        const publisher = document.getElementById('publisherOverlay');
+        if (publisher.classList.contains('visible')) closePublisherProfile();
+    }
+    if (e.key === 'f' || e.key === 'F') {
+        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') toggleMapFullscreen();
+    }
+    if (e.key === 'h' || e.key === 'H') {
+        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') toggleHistory();
+    }
+});
+
+// ═══════ REFRESH CYCLE ═══════
+function startRefreshCycle() {
+    const bar = document.getElementById('refreshBar');
+    const nextEl = document.getElementById('nextRefresh');
+    let elapsed = 0;
+
+    setInterval(() => {
+        elapsed += 1000;
+        const remaining = Math.max(0, Math.ceil((REFRESH_INTERVAL - elapsed) / 1000));
+        nextEl.textContent = `${remaining}s`;
+        bar.style.width = `${(elapsed / REFRESH_INTERVAL) * 100}%`;
+
+        if (elapsed >= REFRESH_INTERVAL) {
+            elapsed = 0;
+            bar.style.width = '0%';
+            fetchData();
+        }
+    }, 1000);
+}
+
+// ═══════ LOGIN (handled by inline script above) ═══════
+
+// ═══════ DEMO DATA ═══════
+let isDemoMode = false;
+let demoTimer = null;
+let demoCountdown = 0;
+let realNewsData = {};
+let realAllNewsData = {};
+let realSummaryData = null;
+let realMetaData = null;
+
+function loadDemoData() {
+    const btn = document.querySelector('[onclick="loadDemoData()"]');
+
+    // Toggle off
+    if (isDemoMode) {
+        exitDemoMode();
+        return;
+    }
+
+    // Save real data before overwriting
+    realNewsData = { ...newsData };
+    realAllNewsData = { ...allNewsData };
+    realSummaryData = summaryData;
+    realMetaData = metaData;
+    isDemoMode = true;
+
+    const now = Date.now();
+    const hour = 3600000;
+
+    const demoItems = [
+        {
+            title: 'ירי נ"ט לעבר כוח צה"ל במזרח חאן יונס',
+            snippet: 'דווח על ירי נ"ט לעבר כוח צבאי שפעל מזרחית לחאן יונס. אין נפגעים.',
+            fullText: 'דווח על ירי נגד טנקים לעבר כוח שריון שפעל מזרחית לחאן יונס באזור בני סוהילה. הכוח החזיר אש. אין נפגעים מצד כוחותינו. כוחות נוספים הוזנקו.',
+            source: 'gazaalannet',
+            urgency: 5,
+            urgencyLabel: 'ודאי',
+            timestamp: now - (0.5 * hour),
+            coordinates: { lat: 31.344, lon: 34.320 },
+            matchedLocations: ['Bani Suheila'],
+            matchedKeywords: ['ירי', 'נ"ט', 'שריון']
+        },
+        {
+            title: 'מטען חבלה בציר סלאח א-דין',
+            snippet: 'אותר מטען חבלה בציר סלאח א-דין באזור אל-קררה',
+            fullText: 'כוח הנדסה איתר וטיפל במטען חבלה שהונח בציר סלאח א-דין באזור אל-קררה. הציר נחסם זמנית לתנועה.',
+            source: 'GazaNewsNow',
+            urgency: 5,
+            urgencyLabel: 'ודאי',
+            timestamp: now - (1.2 * hour),
+            coordinates: { lat: 31.370, lon: 34.340 },
+            matchedLocations: ['Al Qarara', 'Salah ad-Din Road'],
+            matchedKeywords: ['מטען', 'חבלה']
+        },
+        {
+            title: 'תנועת חמושים בח\'וזאעה',
+            snippet: 'נצפתה תנועה של מחבלים חמושים באזור ח\'וזאעה',
+            fullText: 'מקורות מקומיים דיווחו על תנועת חמושים של הזרוע הצבאית של חמאס באזור ח\'וזאעה. נצפו כלי רכב חשודים.',
+            source: 'QudsN',
+            urgency: 4,
+            urgencyLabel: 'חזק',
+            timestamp: now - (2.5 * hour),
+            coordinates: { lat: 31.364, lon: 34.335 },
+            matchedLocations: ['Khuza\'a'],
+            matchedKeywords: ['חמושים', 'חמאס']
+        },
+        {
+            title: 'הפצצה אווירית מערבית לחאן יונס',
+            snippet: 'דווח על תקיפה אווירית באזור אל-מוואסי מערבית לחאן יונס',
+            fullText: 'דווחים על תקיפה אווירית של חיל האוויר באזור אל-מוואסי מערבית לחאן יונס. דיווחים סותרים על נפגעים.',
+            source: 'gazala7zapal1',
+            urgency: 5,
+            urgencyLabel: 'ודאי',
+            timestamp: now - (3.8 * hour),
+            coordinates: { lat: 31.340, lon: 34.270 },
+            matchedLocations: ['Al Mawasi'],
+            matchedKeywords: ['תקיפה', 'הפצצה']
+        },
+        {
+            title: 'סריקה צבאית באבסאן אל-כבירה',
+            snippet: 'כוח צבאי ביצע סריקה באבסאן אל-כבירה בעקבות מידע מודיעיני',
+            fullText: 'כוח צבאי נכנס לאבסאן אל-כבירה לביצוע סריקה בעקבות מידע מודיעיני על מחסן נשק. הסריקה בעיצומה.',
+            source: 'akh_bar_gaza',
+            urgency: 4,
+            urgencyLabel: 'חזק',
+            timestamp: now - (5 * hour),
+            coordinates: { lat: 31.355, lon: 34.340 },
+            matchedLocations: ['Abasan al-Kabira'],
+            matchedKeywords: ['סריקה', 'מחסן נשק']
+        },
+        {
+            title: 'שיגור רקטות מאזור אל-פוח\'ארי',
+            snippet: 'זוהה שיגור רקטות מאזור אל-פוח\'ארי לעבר עוטף עזה',
+            fullText: 'מערכת ההתרעה זיהתה שיגור רקטות מאזור אל-פוח\'ארי דרומית-מזרחית לחאן יונס. יירוט מוצלח דווח.',
+            source: 'SamaNewsAgency',
+            urgency: 5,
+            urgencyLabel: 'ודאי',
+            timestamp: now - (6.5 * hour),
+            coordinates: { lat: 31.320, lon: 34.340 },
+            matchedLocations: ['Al Fukhari'],
+            matchedKeywords: ['רקטות', 'שיגור']
+        },
+        {
+            title: 'דיווח על רחפן מעל ניר עוז',
+            snippet: 'תושבים דיווחו על רחפן חשוד שנצפה מעל קיבוץ ניר עוז',
+            fullText: 'תושבי קיבוץ ניר עוז דיווחו על רחפן חשוד שנצפה מעל הקיבוץ בשעות הבוקר. מערכות ההגנה הופעלו.',
+            source: 'google-news',
+            urgency: 3,
+            urgencyLabel: 'בינוני',
+            timestamp: now - (8 * hour),
+            coordinates: { lat: 31.330, lon: 34.395 },
+            matchedLocations: ['Nir Oz'],
+            matchedKeywords: ['רחפן']
+        },
+        {
+            title: 'פעילות הברחה בציר פילדלפי',
+            snippet: 'נצפתה פעילות חשודה בציר פילדלפי - חשד להברחת אמצעי לחימה',
+            fullText: 'כוחות שפעלו בציר פילדלפי זיהו פעילות חשודה של הברחה. כוחות נוספים הוזנקו לאזור לסריקה.',
+            source: 'palinfo',
+            urgency: 4,
+            urgencyLabel: 'חזק',
+            timestamp: now - (10 * hour),
+            coordinates: { lat: 31.250, lon: 34.270 },
+            matchedLocations: ['Philadelphi Corridor'],
+            matchedKeywords: ['הברחה', 'פילדלפי']
+        },
+        {
+            title: 'פעילות הומניטרית במעבר כרם אבו סאלם',
+            snippet: 'משאיות סיוע הומניטרי נכנסו דרך מעבר כרם אבו סאלם',
+            fullText: 'עשרות משאיות סיוע הומניטרי נכנסו לרצועה דרך מעבר כרם אבו סאלם. דווח על עומס ותורים באזור.',
+            source: 'google-news',
+            urgency: 2,
+            urgencyLabel: 'חלש',
+            timestamp: now - (14 * hour),
+            coordinates: { lat: 31.225, lon: 34.290 },
+            matchedLocations: ['Kerem Abu Salem'],
+            matchedKeywords: ['סיוע', 'מעבר']
+        },
+        {
+            title: 'תנועת אזרחים בציר נצרים',
+            snippet: 'נצפתה תנועת אזרחים לאורך ציר נצרים לכיוון צפון',
+            fullText: 'נצפתה תנועת אזרחים מרובה לאורך ציר נצרים בכיוון צפון. מעקב אחר התנועה להבחנה בין אזרחים לחמושים.',
+            source: 'mtqdmon',
+            urgency: 3,
+            urgencyLabel: 'בינוני',
+            timestamp: now - (18 * hour),
+            coordinates: { lat: 31.430, lon: 34.380 },
+            matchedLocations: ['Netzarim Corridor'],
+            matchedKeywords: ['תנועה', 'נצרים']
+        },
+    ];
+
+    // Load demo data
+    const demoNews = {};
+    demoItems.forEach((item, i) => {
+        demoNews['demo-' + i] = item;
+    });
+
+    newsData = demoNews;
+    allNewsData = { ...allNewsData, ...demoNews };
+
+    // Load default profiles for demo
+    if (Object.keys(publisherProfiles).length === 0) {
+        publisherProfiles = JSON.parse(JSON.stringify(DEFAULT_PROFILES));
+    }
+
+    // Demo summary
+    summaryData = {
+        summary: 'בשעות האחרונות נרשמה פעילות משמעותית בגזרת חאן יונס. אירועים עיקריים: ירי נ"ט לעבר כוח שריון באזור בני סוהילה, מטען חבלה בציר סלאח א-דין, ושיגור רקטות מאל-פוח\'ארי.\n\nפעילות מודיעינית: תנועת חמושים בח\'וזאעה, סריקה באבסאן אל-כבירה.\n\nהמלצות:\n• הגברת כוננות באזור בני סוהילה-ח\'וזאעה\n• סריקות מוגברות בציר סלאח א-דין\n• מעקב אחר פעילות הברחה בציר פילדלפי',
+        aiProvider: 'Gemini',
+        generatedAt: now - (15 * 60000)
+    };
+
+    // Demo metadata
+    metaData = { lastRun: now - (3 * 60000) };
+
+    renderAll();
+
+    // Start telegram feed simulation in demo mode
+    simulateTelegramFeed();
+
+    // Start 60s countdown
+    demoCountdown = 60;
+    updateDemoButton();
+    demoTimer = setInterval(() => {
+        demoCountdown--;
+        updateDemoButton();
+        if (demoCountdown <= 0) {
+            exitDemoMode();
+        }
+    }, 1000);
+}
+
+function updateDemoButton() {
+    const btn = document.querySelector('[onclick="loadDemoData()"]');
+    if (!btn) return;
+    btn.style.color = 'var(--green)';
+    btn.style.borderColor = 'var(--green)';
+    btn.innerHTML = `<span class="btn-icon">&#10003;</span><span>הדגמה פעילה ${demoCountdown}s</span>`;
+}
+
+function exitDemoMode() {
+    const btn = document.querySelector('[onclick="loadDemoData()"]');
+    isDemoMode = false;
+    if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
+    if (tgFeedTimer) { clearInterval(tgFeedTimer); tgFeedTimer = null; }
+    newsData = realNewsData;
+    allNewsData = realAllNewsData;
+    summaryData = realSummaryData;
+    metaData = realMetaData;
+    renderAll();
+    if (btn) {
+        btn.style.color = 'var(--yellow)';
+        btn.style.borderColor = 'var(--yellow-dim)';
+        btn.innerHTML = '<span class="btn-icon">&#9881;</span><span>הדגמה</span>';
+    }
+}
+
+// ═══════ TELEGRAM FEED SIMULATION ═══════
+const mockTelegramChannels = [
+    { name: 'غزة الآن', messages: [
+        { text: 'ירי נ"ט לעבר כוח צה"ל מזרחית לחאן יונס', location: 'חאן יונס', urgency: 5 },
+        { text: 'שיירה צבאית בציר סלאח א-דין לכיוון דרום', location: 'אל-קררה', urgency: 3 },
+        { text: 'הפצצה אווירית באזור אל-מוואסי', location: 'אל-מוואסי', urgency: 5 },
+        { text: 'שקט יחסי במרכז חאן יונס', location: 'חאן יונס', urgency: 1 },
+    ]},
+    { name: 'أخبار غزة الحدث', messages: [
+        { text: 'סריקה צבאית באבסאן אל-כבירה, מעצרים', location: 'אבסאן אל-כבירה', urgency: 5 },
+        { text: 'תנועת חמושים נצפתה בח\'וזאעה', location: 'ח\'וזאעה', urgency: 4 },
+        { text: 'פיצוץ חשוד נשמע באזור בני סוהילה', location: 'בני סוהילה', urgency: 4 },
+        { text: 'חלוקת סיוע הומניטרי במרכז העיר', location: 'חאן יונס', urgency: 1 },
+    ]},
+    { name: 'القدس - أخبار', messages: [
+        { text: 'שיגור רקטות מדרום הרצועה לעבר עוטף עזה', location: 'אל-פוח\'ארי', urgency: 5 },
+        { text: 'פעילות הברחה נצפתה בציר פילדלפי', location: 'ציר פילדלפי', urgency: 4 },
+        { text: 'מטען צד אותר בציר סלאח א-דין', location: 'אל-קררה', urgency: 5 },
+        { text: 'תנועת אזרחים שגרתית באזור', location: null, urgency: 1 },
+    ]},
+    { name: 'سما نيوز', messages: [
+        { text: 'רחפן חשוד נצפה מעל ניר עוז', location: 'ניר עוז', urgency: 3 },
+        { text: 'כוחות צבאיים פורשים באזור מעאן', location: 'מעאן', urgency: 4 },
+        { text: 'פעילות בציר נצרים, חסימת תנועה', location: 'ציר נצרים', urgency: 3 },
+        { text: 'שגרה באזור כרם אבו סאלם', location: 'כרם אבו סאלם', urgency: 1 },
+    ]},
+    { name: 'فلسطين المقاومة', messages: [
+        { text: 'כוח מסתערבים נכנס למזרח חאן יונס', location: 'בני סוהילה', urgency: 5 },
+        { text: 'ירי צלפים באזור אבסאן א-סע\'ירה', location: 'אבסאן א-סע\'ירה', urgency: 4 },
+        { text: 'תנועת כלי רכב צבאיים לאורך הגדר', location: 'כיסופים', urgency: 3 },
+        { text: 'בנייה מחודשת של מנהרה שנחשפה', location: null, urgency: 4 },
+    ]},
+];
+
+const TG_KEYWORDS = ['שיירה', 'ירי', 'רקטות', 'שיגור', 'מטען', 'חמושים', 'רחפן', 'הפצצה', 'סריקה', 'מנהרה', 'הברחה', 'צלפים', 'נ"ט'];
+
+let tgFeedTimer = null;
+
+function findLocationCoords(locationName) {
+    if (!locationName) return null;
+    const allLocs = [...KEY_VILLAGES, ...P1_LOCATIONS, ...P2_LOCATIONS, ...ISRAELI_LOCATIONS];
+    const match = allLocs.find(l => l.he === locationName || l.name === locationName);
+    return match ? { lat: match.lat, lng: match.lng } : null;
+}
+
+function pulseMapMarker(lat, lng) {
+    if (!map) return;
+    const pulse = L.circleMarker([lat, lng], {
+        radius: 25, color: '#ffd000', fillColor: '#ffd000',
+        fillOpacity: 0.4, weight: 3, className: 'tg-pulse-marker'
+    }).addTo(map);
+    let r = 25;
+    const anim = setInterval(() => {
+        r += 2;
+        pulse.setRadius(r);
+        pulse.setStyle({ fillOpacity: Math.max(0, 0.4 - (r - 25) * 0.02), opacity: Math.max(0, 1 - (r - 25) * 0.03) });
+        if (r > 50) { clearInterval(anim); map.removeLayer(pulse); }
+    }, 50);
+}
+
+function flashSidebar() {
+    const leftPanel = document.querySelector('.left-panel');
+    if (!leftPanel) return;
+    leftPanel.style.transition = 'box-shadow 0.3s ease';
+    leftPanel.style.boxShadow = '0 0 20px rgba(255,208,0,0.4), inset 0 0 10px rgba(255,208,0,0.1)';
+    setTimeout(() => { leftPanel.style.boxShadow = ''; }, 1500);
+}
+
+function addTelegramLog(msg, channelName) {
+    const hasKeyword = TG_KEYWORDS.some(kw => msg.text.includes(kw));
+    const coords = findLocationCoords(msg.location);
+    const id = 'tg-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
+
+    const report = {
+        title: msg.text,
+        fullText: msg.text,
+        snippet: msg.text,
+        source: channelName,
+        sourceUrl: '',
+        urgencyScore: msg.urgency,
+        urgency: msg.urgency,
+        locationHe: msg.location || '',
+        coordinates: coords,
+        publishedAt: Date.now(),
+        fetchedAt: Date.now(),
+        timestamp: Date.now(),
+        isAnarchist: msg.text.includes('אנרכיסט') || msg.text.includes('ISM') || msg.text.includes('בצלם'),
+        isTelegram: true,
+        keywordHit: hasKeyword,
+    };
+
+    newsData[id] = report;
+    allNewsData[id] = report;
+    renderAll();
+
+    if (hasKeyword) flashSidebar();
+    if (coords) pulseMapMarker(coords.lat, coords.lng);
+}
+
+function simulateTelegramFeed() {
+    if (tgFeedTimer) { clearInterval(tgFeedTimer); tgFeedTimer = null; return; }
+    tgFeedTimer = setInterval(() => {
+        const ch = mockTelegramChannels[Math.floor(Math.random() * mockTelegramChannels.length)];
+        const msg = ch.messages[Math.floor(Math.random() * ch.messages.length)];
+        addTelegramLog(msg, ch.name);
+    }, 5000 + Math.random() * 5000);
+}
+
+function toggleTgFeed() {
+    const btn = document.getElementById('tgFeedBtn');
+    if (tgFeedTimer) {
+        clearInterval(tgFeedTimer); tgFeedTimer = null;
+        btn.style.color = 'var(--cyan)'; btn.style.borderColor = 'var(--cyan)';
+        btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד טלגרם</span>';
+    } else {
+        simulateTelegramFeed();
+        btn.style.color = 'var(--green)'; btn.style.borderColor = 'var(--green)';
+        btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד פעיל...</span>';
+    }
+}
+
+// ═══════ INIT ═══════
+document.addEventListener('DOMContentLoaded', () => {
+    try { updateClock(); } catch(e) { console.error('Clock init error:', e); }
+    setInterval(() => { try { updateClock(); } catch(e) {} }, 1000);
+
+    try {
+        if (typeof L !== 'undefined') {
+            initMap();
+        } else {
+            console.error('Leaflet not loaded');
+            document.getElementById('map').innerHTML = '<div style="color:#ff0040;padding:20px;text-align:center;">MAP: Leaflet loading...</div>';
+            // Retry after 2 seconds
+            setTimeout(() => {
+                try { if (typeof L !== 'undefined') initMap(); } catch(e) { console.error('Map retry error:', e); }
+            }, 2000);
+        }
+    } catch(e) { console.error('Map init error:', e); }
+
+    try { fetchData(); } catch(e) { console.error('Fetch init error:', e); }
+    try { loadJournalNotes(); } catch(e) { console.error('Notes init error:', e); }
+    try { loadAlertVotes(); } catch(e) { console.error('Votes init error:', e); }
+    try { loadPublisherProfiles(); } catch(e) { console.error('Profiles init error:', e); }
+    try { startRefreshCycle(); } catch(e) { console.error('Refresh init error:', e); }
+    try { fetchWeatherDirect(); } catch(e) {}
+    try { checkCalendarLocal(); } catch(e) {}
+});
+</script>
+</body>
+</html>

@@ -2335,7 +2335,7 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
             <button class="filter-chip orange" data-filter="4" onclick="setFilter(4, this)">חזק</button>
             <button class="filter-chip yellow" data-filter="3" onclick="setFilter(3, this)">בינוני</button>
             <button class="filter-chip blue" data-filter="2" onclick="setFilter(2, this)">חלש</button>
-            <button class="filter-chip purple" data-filter="anarchist" onclick="setFilter('anarchist', this)">אנרכיסטים</button>
+            <button class="filter-chip purple" data-filter="anarchist" onclick="setFilter('anarchist', this)">חמאס/ג'האד</button>
             <button class="filter-chip green" data-filter="field" onclick="setFilter('field', this)">שטח</button>
             <button class="filter-chip" data-filter="false" onclick="setFilter('false', this)" style="border-color:#888;color:#888;">שגוי</button>
             <input type="text" class="search-input" id="searchInput" placeholder="חיפוש..." oninput="applyFilters()">
@@ -2474,7 +2474,30 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
 
 const FIREBASE_URL = 'https://project-8874611670473210078-default-rtdb.europe-west1.firebasedatabase.app';
 const SECTOR_CENTER = { lat: 31.346, lng: 34.306 };
+const SECTOR_FILTER_RADIUS_KM = 30;
 const REFRESH_INTERVAL = 30000;
+
+// Geographic filter - only show news relevant to this sector
+function isInSector(item) {
+    if (item.coordinates) {
+        const lat = item.coordinates.lat || item.coordinates.latitude;
+        const lon = item.coordinates.lon || item.coordinates.lng || item.coordinates.longitude;
+        if (lat && lon) {
+            const dLat = (lat - SECTOR_CENTER.lat) * 111.32;
+            const dLon = (lon - SECTOR_CENTER.lng) * 111.32 * Math.cos(SECTOR_CENTER.lat * Math.PI / 180);
+            const dist = Math.sqrt(dLat * dLat + dLon * dLon);
+            return dist <= SECTOR_FILTER_RADIUS_KM;
+        }
+    }
+    return true; // Keep items without coordinates (can't filter)
+}
+function filterSectorNews(news) {
+    const filtered = {};
+    Object.entries(news).forEach(([id, item]) => {
+        if (isInSector(item)) filtered[id] = item;
+    });
+    return filtered;
+}
 
 // KEY VILLAGES - highlighted on map with larger markers + sector history
 const KEY_VILLAGES = [
@@ -2752,19 +2775,16 @@ async function submitFieldReport() {
     }
 }
 
-// Anarchist/activist keywords
+// Hamas/Jihad militant keywords
 const ANARCHIST_KEYWORDS = [
-    'anarchist', 'activist', 'solidarity', 'protest',
-    'ISM', 'B\'Tselem', 'breaking the silence',
-    'international', 'demonstration', 'confrontation',
-    'left-wing', 'peace now',
-    'ناشط', 'ناشطين', 'تضامن', 'متظاهرين', 'اجانب',
-    'اسرائيليين ضد', 'سلام الان',
-    'פעיל', 'פעילי', 'אנרכיסט', 'אנרכיסטים',
-    'שוברים שתיקה', 'בצלם', 'שמאל',
-    'פעילי שמאל', 'מפגינים', 'סולידריות',
-    'ISM', 'בינלאומיים', 'שלום עכשיו',
-    'מחאה', 'הפגנה', 'פעילות מחאה',
+    'hamas', 'jihad', 'qassam', 'saraya', 'resistance', 'mujahideen',
+    'armed', 'militant', 'tunnel', 'rocket', 'mortar', 'IED',
+    'حماس', 'جهاد', 'قسام', 'سرايا', 'مقاومة', 'مسلح', 'مسلحين',
+    'نفق', 'صاروخ', 'هاون', 'عبوة', 'ناسفة',
+    'חמאס', 'ג\'האד', 'קסאם', 'סראיא', 'חמושים',
+    'מנהרה', 'רקטה', 'רקטות', 'מרגמה', 'מטען',
+    'נ"ט', 'נגד טנקים', 'שיגור', 'צלפים',
+    'כתיבות', 'זרוע צבאית', 'נוח\'בה',
 ];
 
 // ═══════ CLOCK ═══════
@@ -3212,18 +3232,19 @@ async function fetchData() {
                 if (item.timestamp && item.timestamp < 1000000000000) item.timestamp = item.timestamp * 1000;
                 if (!item.locationHe && item.matchedLocations) item.locationHe = item.matchedLocations.join(', ');
             });
+            const filteredNews = filterSectorNews(news);
             // Detect new alerts for flash
             if (!isFirstLoad) {
-                const newIds = Object.keys(news);
+                const newIds = Object.keys(filteredNews);
                 let hasNewRed = false;
                 newIds.forEach(id => {
-                    if (!knownIds.has(id) && news[id].urgency >= 5) hasNewRed = true;
+                    if (!knownIds.has(id) && filteredNews[id].urgency >= 5) hasNewRed = true;
                 });
                 if (hasNewRed) triggerRedAlert();
             }
-            newsData = news;
-            allNewsData = { ...allNewsData, ...news };
-            Object.keys(news).forEach(id => knownIds.add(id));
+            newsData = filteredNews;
+            allNewsData = { ...allNewsData, ...filteredNews };
+            Object.keys(filteredNews).forEach(id => knownIds.add(id));
         }
         if (summary && !summary.error) summaryData = summary;
         if (meta && !meta.error) metaData = meta;
@@ -3700,7 +3721,7 @@ async function fetchHistory() {
                 if (item.timestamp && item.timestamp < 1000000000000) item.timestamp = item.timestamp * 1000;
                 if (!item.locationHe && item.matchedLocations) item.locationHe = item.matchedLocations.join(', ');
             });
-            allNewsData = data;
+            allNewsData = filterSectorNews(data);
         }
         renderHistory();
     } catch (e) {

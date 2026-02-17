@@ -786,6 +786,194 @@ body {
 .config-key { color: var(--text-secondary); }
 .config-val { color: var(--cyan); }
 
+/* ═══════ WHATSAPP PANEL ═══════ */
+.wa-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+.wa-overlay.visible { display: flex; }
+.wa-panel {
+    background: var(--bg-secondary);
+    border: 1px solid #25D366;
+    border-radius: 12px;
+    width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(37, 211, 102, 0.15);
+}
+.wa-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(37, 211, 102, 0.05);
+}
+.wa-panel-title {
+    flex: 1;
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.wa-section {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+}
+.wa-section-title {
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    color: #25D366;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.wa-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.wa-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff0040;
+    box-shadow: 0 0 6px #ff004088;
+}
+.wa-status-dot.connected {
+    background: #25D366;
+    box-shadow: 0 0 6px #25D36688;
+    animation: dotPulse 1.5s ease-in-out infinite;
+}
+.wa-field {
+    margin-bottom: 8px;
+}
+.wa-field label {
+    display: block;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+}
+.wa-field input {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.wa-field input:focus { border-color: #25D366; }
+.wa-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.wa-btn-connect {
+    background: #25D366;
+    color: #000;
+}
+.wa-btn-connect:hover { background: #20bd5a; }
+.wa-btn-secondary {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--border-primary);
+}
+.wa-btn-secondary:hover { border-color: var(--cyan); }
+.wa-btn-stop {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+    width: 100%;
+    margin-top: 10px;
+}
+.wa-btn-stop:hover { background: rgba(255, 0, 64, 0.1); }
+.wa-groups-list {
+    max-height: 200px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.wa-group-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.wa-group-item:hover { background: rgba(37, 211, 102, 0.08); }
+.wa-group-item.selected {
+    background: rgba(37, 211, 102, 0.12);
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    color: var(--text-primary);
+}
+.wa-group-item input[type="checkbox"] { accent-color: #25D366; }
+.wa-monitor-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.wa-stat-card {
+    background: var(--bg-primary);
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+}
+.wa-stat-card .wa-stat-num {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: #25D366;
+}
+.wa-stat-card .wa-stat-label {
+    font-family: var(--font-he);
+    font-size: 9px;
+    color: var(--text-dim);
+}
+.wa-recent-messages {
+    max-height: 150px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.wa-msg-item {
+    padding: 6px 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    border-right: 2px solid #25D366;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+.wa-msg-item .wa-msg-group { color: #25D366; font-size: 9px; font-weight: 600; }
+.wa-msg-item .wa-msg-time { color: var(--text-dim); font-size: 9px; float: left; direction: ltr; }
+
 /* ═══════ BOTTOM - ALERT FEED ═══════ */
 .alert-feed { grid-column: 2 / 3; display: flex; flex-direction: column; }
 
@@ -2239,6 +2427,10 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                     <span class="btn-icon" id="alertCount" style="background:var(--orange);color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">0</span>
                     <span>יומן מבצעים</span>
                 </button>
+                <button class="header-btn" onclick="toggleWhatsApp()" id="waBtn" style="color:#25D366;border-color:#25D366;">
+                    <span class="btn-icon">&#128172;</span>
+                    <span>WhatsApp</span>
+                </button>
             </div>
         </div>
 
@@ -2402,10 +2594,71 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                 <div class="config-item" id="sentimentRow"><span class="config-key">סנטימנט</span><span class="config-val" id="sentimentVal">--</span></div>
                 <div class="config-item" id="trendsRow"><span class="config-key">מגמות</span><span class="config-val" id="trendsVal" style="color:var(--green);">0</span></div>
                 <div class="config-item"><span class="config-key">מקורות</span><span class="config-val" style="font-size:9px;">TG+RSS+ACLED+OCHA+Waze</span></div>
+                <div class="config-item" style="cursor:pointer;" onclick="toggleWhatsApp()"><span class="config-key">WhatsApp</span><span class="config-val" id="waConfigStatus" style="color:var(--text-dim);font-size:9px;">לא פעיל</span></div>
             </div>
         </div>
     </div>
 
+</div>
+
+<!-- WHATSAPP OVERLAY -->
+<div class="wa-overlay" id="waOverlay" onclick="if(event.target===this)toggleWhatsApp()">
+    <div class="wa-panel">
+        <div class="wa-panel-header">
+            <span style="color:#25D366;font-size:18px;">&#128172;</span>
+            <span class="wa-panel-title">WhatsApp - מערכת איסוף</span>
+            <button class="history-close" onclick="toggleWhatsApp()">סגור ESC</button>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="wa-section">
+            <div class="wa-section-title">סטטוס חיבור</div>
+            <div class="wa-status-row">
+                <div class="wa-status-dot" id="waStatusDot"></div>
+                <span id="waStatusText">לא מחובר</span>
+            </div>
+            <div id="waQrContainer" style="display:none;text-align:center;margin:10px 0;">
+                <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px;">סרוק את הקוד עם הטלפון</div>
+                <img id="waQrImg" style="max-width:200px;border-radius:8px;border:2px solid var(--border-glow);">
+            </div>
+        </div>
+
+        <!-- API Settings -->
+        <div class="wa-section">
+            <div class="wa-section-title">הגדרות Green API</div>
+            <div class="wa-field">
+                <label>Instance ID</label>
+                <input type="text" id="waInstanceId" placeholder="1234567890" dir="ltr">
+            </div>
+            <div class="wa-field">
+                <label>API Token</label>
+                <input type="password" id="waApiToken" placeholder="API Token" dir="ltr">
+            </div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+                <button class="wa-btn wa-btn-connect" onclick="connectWhatsApp()">התחבר</button>
+                <button class="wa-btn wa-btn-secondary" onclick="checkWaStatus()">בדוק סטטוס</button>
+            </div>
+        </div>
+
+        <!-- Group Selection -->
+        <div class="wa-section" id="waGroupsSection" style="display:none;">
+            <div class="wa-section-title">קבוצות לניטור</div>
+            <div style="display:flex;gap:8px;margin-bottom:8px;">
+                <button class="wa-btn wa-btn-secondary" onclick="loadWaGroups()">טען קבוצות</button>
+                <span id="waGroupCount" style="color:var(--text-dim);font-size:11px;align-self:center;"></span>
+            </div>
+            <div id="waGroupsList" class="wa-groups-list"></div>
+            <button class="wa-btn wa-btn-connect" onclick="saveWaSettings()" style="margin-top:10px;width:100%;">שמור והפעל ניטור</button>
+        </div>
+
+        <!-- Monitoring Status -->
+        <div class="wa-section" id="waMonitorSection" style="display:none;">
+            <div class="wa-section-title">ניטור פעיל</div>
+            <div id="waMonitorStats" class="wa-monitor-stats"></div>
+            <div id="waRecentMessages" class="wa-recent-messages"></div>
+            <button class="wa-btn wa-btn-stop" onclick="stopWaMonitoring()">עצור ניטור</button>
+        </div>
+    </div>
 </div>
 
 <!-- FIELD REPORT OVERLAY -->
@@ -4745,6 +4998,351 @@ function toggleTgFeed() {
     }
 }
 
+// ═══════ WHATSAPP GREEN API INTEGRATION ═══════
+const WA_STORAGE_KEY = 'mabat188-wa-config';
+let waConfig = JSON.parse(localStorage.getItem(WA_STORAGE_KEY) || 'null') || { instanceId: '', apiToken: '', monitoredGroups: [], isMonitoring: false };
+let waPollingTimer = null;
+let waMessageCount = 0;
+let waLastNotificationId = null;
+
+function getWaBaseUrl() {
+    return `https://api.green-api.com/waInstance${waConfig.instanceId}`;
+}
+
+function toggleWhatsApp() {
+    const overlay = document.getElementById('waOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible')) {
+        // Restore saved settings
+        if (waConfig.instanceId) document.getElementById('waInstanceId').value = waConfig.instanceId;
+        if (waConfig.apiToken) document.getElementById('waApiToken').value = waConfig.apiToken;
+        if (waConfig.instanceId && waConfig.apiToken) {
+            checkWaStatus();
+        }
+    }
+}
+
+async function checkWaStatus() {
+    const instanceId = document.getElementById('waInstanceId').value.trim();
+    const apiToken = document.getElementById('waApiToken').value.trim();
+    if (!instanceId || !apiToken) return;
+
+    waConfig.instanceId = instanceId;
+    waConfig.apiToken = apiToken;
+
+    const dot = document.getElementById('waStatusDot');
+    const text = document.getElementById('waStatusText');
+    text.textContent = 'בודק...';
+
+    try {
+        const res = await fetch(`${getWaBaseUrl()}/getStateInstance/${apiToken}`);
+        const data = await res.json();
+
+        if (data.stateInstance === 'authorized') {
+            dot.classList.add('connected');
+            text.textContent = 'מחובר';
+            text.style.color = '#25D366';
+            document.getElementById('waGroupsSection').style.display = 'block';
+            document.getElementById('waQrContainer').style.display = 'none';
+            updateWaButton(true);
+
+            // Auto-load groups
+            loadWaGroups();
+
+            // If was monitoring, restart
+            if (waConfig.isMonitoring && waConfig.monitoredGroups.length > 0) {
+                startWaMonitoring();
+            }
+        } else if (data.stateInstance === 'notAuthorized' || data.stateInstance === 'sleepMode') {
+            dot.classList.remove('connected');
+            text.textContent = 'לא מאומת - יש לסרוק QR';
+            text.style.color = 'var(--orange)';
+            getWaQrCode();
+        } else {
+            dot.classList.remove('connected');
+            text.textContent = `סטטוס: ${data.stateInstance || 'לא ידוע'}`;
+            text.style.color = 'var(--red)';
+        }
+    } catch (e) {
+        dot.classList.remove('connected');
+        text.textContent = 'שגיאת חיבור';
+        text.style.color = 'var(--red)';
+        console.error('WA status error:', e);
+    }
+}
+
+async function getWaQrCode() {
+    try {
+        const res = await fetch(`${getWaBaseUrl()}/qr/${waConfig.apiToken}`);
+        const data = await res.json();
+        if (data.message && data.message.startsWith('data:image')) {
+            document.getElementById('waQrImg').src = data.message;
+            document.getElementById('waQrContainer').style.display = 'block';
+        }
+    } catch (e) {
+        console.error('WA QR error:', e);
+    }
+}
+
+async function connectWhatsApp() {
+    const instanceId = document.getElementById('waInstanceId').value.trim();
+    const apiToken = document.getElementById('waApiToken').value.trim();
+    if (!instanceId || !apiToken) {
+        alert('יש להזין Instance ID ו-API Token');
+        return;
+    }
+    waConfig.instanceId = instanceId;
+    waConfig.apiToken = apiToken;
+    saveWaConfig();
+    await checkWaStatus();
+}
+
+async function loadWaGroups() {
+    const list = document.getElementById('waGroupsList');
+    const count = document.getElementById('waGroupCount');
+    list.innerHTML = '<div style="color:var(--text-dim);font-size:11px;padding:8px;">טוען קבוצות...</div>';
+
+    try {
+        const res = await fetch(`${getWaBaseUrl()}/getContacts/${waConfig.apiToken}`);
+        const contacts = await res.json();
+        const groups = contacts.filter(c => c.id && c.id.endsWith('@g.us') && c.name);
+
+        count.textContent = `${groups.length} קבוצות נמצאו`;
+
+        if (groups.length === 0) {
+            list.innerHTML = '<div style="color:var(--text-dim);font-size:11px;padding:8px;">לא נמצאו קבוצות</div>';
+            return;
+        }
+
+        list.innerHTML = groups.map(g => {
+            const isSelected = waConfig.monitoredGroups.includes(g.id);
+            return `<label class="wa-group-item${isSelected ? ' selected' : ''}" data-gid="${g.id}">
+                <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleWaGroup('${g.id}', this)">
+                <span>${escapeHtml(g.name)}</span>
+            </label>`;
+        }).join('');
+    } catch (e) {
+        list.innerHTML = '<div style="color:var(--red);font-size:11px;padding:8px;">שגיאה בטעינת קבוצות</div>';
+        console.error('WA groups error:', e);
+    }
+}
+
+function toggleWaGroup(groupId, checkbox) {
+    const item = checkbox.closest('.wa-group-item');
+    if (checkbox.checked) {
+        if (!waConfig.monitoredGroups.includes(groupId)) {
+            waConfig.monitoredGroups.push(groupId);
+        }
+        item.classList.add('selected');
+    } else {
+        waConfig.monitoredGroups = waConfig.monitoredGroups.filter(id => id !== groupId);
+        item.classList.remove('selected');
+    }
+}
+
+function saveWaSettings() {
+    saveWaConfig();
+    if (waConfig.monitoredGroups.length === 0) {
+        alert('יש לבחור לפחות קבוצה אחת');
+        return;
+    }
+    startWaMonitoring();
+}
+
+function startWaMonitoring() {
+    waConfig.isMonitoring = true;
+    saveWaConfig();
+
+    document.getElementById('waMonitorSection').style.display = 'block';
+    updateWaButton(true);
+    updateWaMonitorStats();
+
+    // Start polling for new messages
+    if (waPollingTimer) clearInterval(waPollingTimer);
+    pollWaMessages();
+    waPollingTimer = setInterval(pollWaMessages, 10000); // Every 10 seconds
+}
+
+function stopWaMonitoring() {
+    waConfig.isMonitoring = false;
+    saveWaConfig();
+
+    if (waPollingTimer) {
+        clearInterval(waPollingTimer);
+        waPollingTimer = null;
+    }
+
+    document.getElementById('waMonitorSection').style.display = 'none';
+    updateWaButton(false);
+}
+
+async function pollWaMessages() {
+    try {
+        const res = await fetch(`${getWaBaseUrl()}/receiveNotification/${waConfig.apiToken}`);
+        const data = await res.json();
+
+        if (!data || !data.body) return;
+
+        const receiptId = data.receiptId;
+        const body = data.body;
+
+        // Process incoming group messages
+        if (body.typeWebhook === 'incomingMessageReceived' && body.senderData) {
+            const chatId = body.senderData.chatId || '';
+            const isGroup = chatId.endsWith('@g.us');
+
+            if (isGroup && waConfig.monitoredGroups.includes(chatId)) {
+                const msgData = body.messageData;
+                let messageText = '';
+
+                if (msgData.typeMessage === 'textMessage') {
+                    messageText = msgData.textMessageData?.textMessage || '';
+                } else if (msgData.typeMessage === 'extendedTextMessage') {
+                    messageText = msgData.extendedTextMessageData?.text || '';
+                } else if (msgData.typeMessage === 'imageMessage' || msgData.typeMessage === 'videoMessage') {
+                    messageText = msgData.fileMessageData?.caption || `[${msgData.typeMessage === 'imageMessage' ? 'תמונה' : 'וידאו'}]`;
+                } else if (msgData.typeMessage === 'documentMessage') {
+                    messageText = `[מסמך: ${msgData.fileMessageData?.fileName || ''}]`;
+                }
+
+                if (messageText) {
+                    await processWaMessage({
+                        text: messageText,
+                        groupName: body.senderData.senderName || body.senderData.chatName || chatId,
+                        chatId: chatId,
+                        sender: body.senderData.senderContactName || body.senderData.senderName || '',
+                        timestamp: body.timestamp * 1000 || Date.now()
+                    });
+                }
+            }
+        }
+
+        // Delete notification after processing
+        await fetch(`${getWaBaseUrl()}/deleteNotification/${waConfig.apiToken}/${receiptId}`, { method: 'DELETE' });
+
+        // Continue polling if there are more notifications
+        pollWaMessages();
+
+    } catch (e) {
+        // Silent - will retry on next interval
+    }
+}
+
+async function processWaMessage(msg) {
+    waMessageCount++;
+    updateWaMonitorStats();
+    addWaRecentMessage(msg);
+
+    // Build alert object in same format as existing alerts
+    const alertId = `wa-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+    const alertData = {
+        title: msg.text.length > 120 ? msg.text.substring(0, 120) + '...' : msg.text,
+        fullText: msg.text,
+        snippet: msg.text.substring(0, 200),
+        source: `WhatsApp: ${msg.groupName}`,
+        sourceType: 'whatsapp',
+        timestamp: msg.timestamp,
+        urgency: 2,
+        locationHe: '',
+        isWhatsApp: true,
+        sender: msg.sender
+    };
+
+    // Auto-detect urgency from keywords
+    const urgentKeywords = ['ירי','פיצוץ','פגיעה','רקטה','חדירה','מטען','אזעקה','פצועים','הרוגים','חיסול','תקיפה','הפצצה'];
+    const highKeywords = ['חשוד','רחפן','תצפית','תנועה חשודה','כוחות','טנק','שיגור','חילוץ'];
+    const textLower = msg.text;
+
+    for (const kw of urgentKeywords) {
+        if (textLower.includes(kw)) { alertData.urgency = 5; break; }
+    }
+    if (alertData.urgency < 5) {
+        for (const kw of highKeywords) {
+            if (textLower.includes(kw)) { alertData.urgency = 4; break; }
+        }
+    }
+
+    // Try to detect location
+    const allLocs = [...IN_SECTOR, ...P1_LOCATIONS.map(l => l.he), ...P2_LOCATIONS.map(l => l.he)];
+    for (const loc of allLocs) {
+        if (textLower.includes(loc)) {
+            alertData.locationHe = loc;
+            break;
+        }
+    }
+
+    // Save to Firebase
+    try {
+        await fetch(`${FIREBASE_URL}/auto-news/${alertId}.json`, {
+            method: 'PUT',
+            body: JSON.stringify(alertData)
+        });
+
+        // Update local data and re-render
+        if (isInSector(alertData) || alertData.isWhatsApp) {
+            newsData[alertId] = alertData;
+            allNewsData[alertId] = alertData;
+            knownIds.add(alertId);
+
+            if (alertData.urgency >= 5) triggerRedAlert();
+            renderAll();
+        }
+    } catch (e) {
+        console.error('WA save to Firebase error:', e);
+    }
+}
+
+function addWaRecentMessage(msg) {
+    const container = document.getElementById('waRecentMessages');
+    if (!container) return;
+    const time = new Date(msg.timestamp).toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+    const msgEl = document.createElement('div');
+    msgEl.className = 'wa-msg-item';
+    msgEl.innerHTML = `<span class="wa-msg-group">${escapeHtml(msg.groupName)}</span> <span class="wa-msg-time">${time}</span><br>${escapeHtml(msg.text.substring(0, 80))}${msg.text.length > 80 ? '...' : ''}`;
+    container.insertBefore(msgEl, container.firstChild);
+
+    // Keep only last 20
+    while (container.children.length > 20) container.removeChild(container.lastChild);
+}
+
+function updateWaMonitorStats() {
+    const stats = document.getElementById('waMonitorStats');
+    if (!stats) return;
+    stats.innerHTML = `
+        <div class="wa-stat-card"><div class="wa-stat-num">${waConfig.monitoredGroups.length}</div><div class="wa-stat-label">קבוצות</div></div>
+        <div class="wa-stat-card"><div class="wa-stat-num">${waMessageCount}</div><div class="wa-stat-label">הודעות נקלטו</div></div>
+    `;
+}
+
+function updateWaButton(active) {
+    const btn = document.getElementById('waBtn');
+    const configStatus = document.getElementById('waConfigStatus');
+    if (btn) {
+        if (active) {
+            btn.style.color = '#000';
+            btn.style.background = '#25D366';
+            btn.style.borderColor = '#25D366';
+            btn.innerHTML = '<span class="btn-icon">&#128172;</span><span>WA פעיל</span>';
+        } else {
+            btn.style.color = '#25D366';
+            btn.style.background = 'transparent';
+            btn.style.borderColor = '#25D366';
+            btn.innerHTML = '<span class="btn-icon">&#128172;</span><span>WhatsApp</span>';
+        }
+    }
+    if (configStatus) {
+        configStatus.textContent = active ? `פעיל (${waConfig.monitoredGroups.length} קבוצות)` : 'לא פעיל';
+        configStatus.style.color = active ? '#25D366' : 'var(--text-dim)';
+    }
+}
+
+function saveWaConfig() {
+    localStorage.setItem(WA_STORAGE_KEY, JSON.stringify(waConfig));
+}
+
+// Add WhatsApp as source in מקורות
+מקורות.push({ id: 'whatsapp', name: 'WhatsApp', type: 'local', icon: '&#128172;' });
+
 // ═══════ INIT ═══════
 document.addEventListener('DOMContentLoaded', () => {
     try { updateClock(); } catch(e) { console.error('Clock init error:', e); }
@@ -4770,6 +5368,11 @@ document.addEventListener('DOMContentLoaded', () => {
     try { startRefreshCycle(); } catch(e) { console.error('Refresh init error:', e); }
     try { fetchWeatherDirect(); } catch(e) {}
     try { checkCalendarLocal(); } catch(e) {}
+
+    // Auto-resume WhatsApp monitoring if was active
+    if (waConfig.instanceId && waConfig.apiToken && waConfig.isMonitoring) {
+        setTimeout(() => { try { checkWaStatus(); } catch(e) {} }, 3000);
+    }
 });
 </script>
 </body>

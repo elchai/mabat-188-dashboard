@@ -605,10 +605,43 @@ body {
 .map-panel.fullscreen {
     position: fixed !important;
     top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: none !important;
     z-index: 9000;
     border-radius: 0;
     grid-row: auto;
     grid-column: auto;
+}
+.map-panel.fullscreen .map-legend {
+    transform: scale(0.75);
+    transform-origin: bottom right;
+    opacity: 0.7;
+    max-width: 130px;
+    padding: 6px 10px;
+    bottom: 6px;
+    right: 6px;
+}
+.map-panel.fullscreen .map-legend .legend-item {
+    font-size: 10px;
+    padding: 1px 0;
+    gap: 5px;
+}
+.map-panel.fullscreen .map-legend .legend-circle,
+.map-panel.fullscreen .map-legend .legend-ring {
+    width: 7px;
+    height: 7px;
+}
+.map-panel.fullscreen .map-legend .legend-title {
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+.map-panel.fullscreen .map-legend .legend-subtitle {
+    font-size: 9px;
+}
+.map-panel.fullscreen .map-legend .legend-divider {
+    margin: 3px 0;
 }
 
 #map {
@@ -3184,12 +3217,30 @@ function toggleMapFullscreen() {
 
     if (mapIsFullscreen) {
         panel.classList.add('fullscreen');
-        btn.innerHTML = '&#x26F6; מזער';
+        btn.innerHTML = '&#x2716; סגור';
+        btn.style.background = 'rgba(255,0,64,0.25)';
+        btn.style.borderColor = '#ff0040';
+        btn.style.color = '#ff4466';
+        btn.style.fontSize = '13px';
+        btn.style.padding = '8px 14px';
+        // Prevent body scroll on mobile
+        document.body.style.overflow = 'hidden';
     } else {
         panel.classList.remove('fullscreen');
         btn.innerHTML = '&#x26F6; הרחב';
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+        btn.style.fontSize = '';
+        btn.style.padding = '';
+        document.body.style.overflow = '';
     }
-    setTimeout(() => map.invalidateSize(), 400);
+    setTimeout(() => {
+        map.invalidateSize();
+        if (mapIsFullscreen && window.innerWidth <= 900) {
+            map.setZoom(Math.max(map.getZoom(), 12));
+        }
+    }, 400);
 }
 
 function updateMapMarkers(news) {

@@ -793,6 +793,353 @@ body {
 .config-key { color: var(--text-secondary); }
 .config-val { color: var(--cyan); }
 
+/* ═══════ SECTOR HISTORY PANEL ═══════ */
+.sector-history-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: #040810;
+    z-index: 8000;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+}
+.sector-history-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('ops-room.jpg') center center / cover no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+}
+.sector-history-overlay.visible { display: flex; }
+
+.sh-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 15px 25px;
+    border-bottom: 1px solid var(--border-primary);
+    background: linear-gradient(180deg, rgba(168, 85, 247, 0.08), transparent);
+    flex-shrink: 0;
+}
+.sh-title {
+    font-family: var(--font-he);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--purple);
+}
+.sh-tabs {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+}
+.sh-tab {
+    padding: 6px 16px;
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.sh-tab:hover { border-color: var(--purple); color: var(--purple); }
+.sh-tab.active {
+    background: var(--purple);
+    color: #fff;
+    border-color: var(--purple);
+}
+
+.sh-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 25px;
+}
+
+.sh-summary-bar {
+    display: flex;
+    gap: 16px;
+    padding: 12px 0;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-primary);
+    flex-wrap: wrap;
+}
+.sh-summary-stat {
+    font-family: var(--font-he);
+    font-size: 12px;
+    color: var(--text-dim);
+}
+.sh-summary-stat strong {
+    color: var(--cyan);
+    font-family: var(--font-display);
+    font-size: 16px;
+    margin-left: 4px;
+}
+
+/* Location Cards */
+.sh-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+.sh-loc-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    padding: 14px;
+    transition: border-color 0.2s;
+    cursor: default;
+}
+.sh-loc-card:hover { border-color: var(--purple); }
+.sh-loc-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.sh-loc-name {
+    font-family: var(--font-he);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.sh-loc-count {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.sh-loc-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bg-primary);
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.sh-loc-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+.sh-loc-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+}
+.sh-loc-urgency-dots {
+    display: flex;
+    gap: 3px;
+    margin-top: 6px;
+}
+.sh-loc-urgency-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+.sh-loc-last-event {
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(15, 52, 96, 0.3);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Zone Cards */
+.sh-zones-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+.sh-zone-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.sh-zone-header {
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+}
+.sh-zone-name {
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.sh-zone-count {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+}
+.sh-zone-body { padding: 12px 16px; }
+.sh-zone-urgency-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.sh-zone-urg-badge {
+    padding: 3px 10px;
+    border-radius: 3px;
+    font-family: var(--font-he);
+    font-size: 10px;
+    font-weight: 600;
+}
+.sh-zone-locations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+.sh-zone-loc-tag {
+    padding: 2px 8px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 3px;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+.sh-zone-bar {
+    height: 24px;
+    border-radius: 4px;
+    background: var(--bg-primary);
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+.sh-zone-bar-seg {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: #000;
+    font-weight: 700;
+    min-width: 20px;
+    transition: width 0.6s ease;
+}
+
+/* Timeline */
+.sh-timeline-chart {
+    margin-bottom: 20px;
+}
+.sh-timeline-months {
+    display: flex;
+    gap: 6px;
+    align-items: flex-end;
+    height: 200px;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--border-primary);
+}
+.sh-month-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.sh-month-col:hover { opacity: 0.8; }
+.sh-month-col.selected .sh-month-label { color: var(--purple); font-weight: 700; }
+.sh-month-bar-stack {
+    width: 100%;
+    max-width: 40px;
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 3px 3px 0 0;
+    overflow: hidden;
+}
+.sh-month-seg {
+    width: 100%;
+    transition: height 0.4s ease;
+}
+.sh-month-count {
+    font-family: var(--font-display);
+    font-size: 11px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.sh-month-label {
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 8px;
+    text-align: center;
+}
+.sh-timeline-details {
+    padding: 10px 0;
+}
+.sh-timeline-detail-header {
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--purple);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-primary);
+}
+.sh-timeline-events {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+.sh-timeline-event {
+    display: flex;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border-radius: 4px;
+    border-right: 3px solid;
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-secondary);
+    align-items: flex-start;
+}
+.sh-timeline-event-date {
+    color: var(--text-dim);
+    font-size: 10px;
+    white-space: nowrap;
+    min-width: 45px;
+}
+.sh-timeline-event-loc {
+    color: var(--cyan);
+    font-size: 10px;
+    min-width: 80px;
+}
+
+@media (max-width: 900px) {
+    .sh-header { flex-wrap: wrap; padding: 10px 15px; gap: 8px; }
+    .sh-title { font-size: 14px; }
+    .sh-tabs { width: 100%; }
+    .sh-tab { flex: 1; text-align: center; font-size: 11px; padding: 6px 8px; }
+    .sh-content { padding: 12px 15px; }
+    .sh-locations-grid { grid-template-columns: 1fr; }
+    .sh-zones-container { grid-template-columns: 1fr; }
+    .sh-timeline-months { height: 150px; }
+}
+
 /* ═══════ WHATSAPP PANEL ═══════ */
 .wa-overlay {
     display: none;
@@ -2445,6 +2792,10 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                     <span class="btn-icon" id="alertCount" style="background:var(--orange);color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">0</span>
                     <span>יומן מבצעים</span>
                 </button>
+                <button class="header-btn" onclick="toggleSectorHistory()" style="color:var(--purple);border-color:var(--purple);">
+                    <span class="btn-icon">&#x1F4CA;</span>
+                    <span>היסטוריה גזרתית</span>
+                </button>
                 <button class="header-btn" onclick="toggleWhatsApp()" id="waBtn" style="color:#25D366;border-color:#25D366;">
                     <span class="btn-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
                     <span>WhatsApp</span>
@@ -2617,6 +2968,40 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
         </div>
     </div>
 
+</div>
+
+<!-- SECTOR HISTORY OVERLAY -->
+<div class="sector-history-overlay" id="sectorHistoryOverlay">
+    <div class="sh-header">
+        <div class="sh-title">היסטוריה גזרתית</div>
+        <div class="sh-tabs">
+            <button class="sh-tab active" data-tab="locations" onclick="switchShTab('locations', this)">מיקומים</button>
+            <button class="sh-tab" data-tab="zones" onclick="switchShTab('zones', this)">אזורים</button>
+            <button class="sh-tab" data-tab="timeline" onclick="switchShTab('timeline', this)">ציר זמן</button>
+        </div>
+        <button class="history-close" onclick="toggleSectorHistory()">סגור ESC</button>
+    </div>
+
+    <!-- TAB: Locations Heatmap -->
+    <div class="sh-content" id="shTabLocations">
+        <div class="sh-summary-bar" id="shLocationSummary"></div>
+        <div class="sh-locations-grid" id="shLocationsGrid">
+            <div class="loading-state"><div class="loading-spinner"></div><span>טוען נתוני מיקום...</span></div>
+        </div>
+    </div>
+
+    <!-- TAB: Zone Summary -->
+    <div class="sh-content" id="shTabZones" style="display:none;">
+        <div class="sh-zones-container" id="shZonesContainer">
+            <div class="loading-state"><div class="loading-spinner"></div><span>טוען אזורים...</span></div>
+        </div>
+    </div>
+
+    <!-- TAB: Monthly Timeline -->
+    <div class="sh-content" id="shTabTimeline" style="display:none;">
+        <div class="sh-timeline-chart" id="shTimelineChart"></div>
+        <div class="sh-timeline-details" id="shTimelineDetails"></div>
+    </div>
 </div>
 
 <!-- WHATSAPP OVERLAY -->
@@ -5014,6 +5399,290 @@ function toggleTgFeed() {
         btn.style.color = 'var(--green)'; btn.style.borderColor = 'var(--green)';
         btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד פעיל...</span>';
     }
+}
+
+// ═══════ SECTOR HISTORY ═══════
+const SECTOR_ZONES = [
+    { id: 'center', name: 'מרכז חאן יונס', color: '#ff0040',
+      locations: ['חאן יונס','חמד (חאן יונס)','תל אל-הווא'] },
+    { id: 'east', name: 'מזרח (בני סוהילה-עבסאן)', color: '#ff8800',
+      locations: ['בני סוהילה','עבסאן אל-כביר','עבסאן א-סגירה','חוזעה',"ח'וזאעה",'חוזאעה'] },
+    { id: 'northeast', name: 'צפון-מזרח (אל-קררה)', color: '#ffd000',
+      locations: ['אל-קררה','קררה',"ג'וחר א-דיכ"] },
+    { id: 'south', name: 'דרום', color: '#a855f7',
+      locations: ['מען',"אל-פוח'ארי",'פוח\'ארי','רפיח','רפיח צפון'] },
+    { id: 'west', name: 'מערב / חוף', color: '#4488ff',
+      locations: ['אל-מוואסי','מוואסי'] },
+    { id: 'corridors', name: 'צירים ומעברים', color: '#00ff88',
+      locations: ['ציר נצרים','ציר פילדלפי','כביש סלאח א-דין','מעבר כרם אבו סאלם','כרם שלום','כרם אבו סאלם'] },
+    { id: 'north', name: 'צפון הרצועה', color: '#00d4ff',
+      locations: ['עיר עזה','עזה','בית חאנון','בית לאהיא',"ג'באליה",'שג\'אעיה','זייתון'] },
+    { id: 'middle', name: 'מרכז הרצועה', color: '#ff44aa',
+      locations: ['דיר אל-בלח','א-נוצייראת','נוסייראת',"אל-בורייג'",'בורייג\'','מע\'אזי','א-זוואידה'] },
+];
+
+let shAllHistory = {};
+let shSelectedMonth = null;
+
+function toggleSectorHistory() {
+    const overlay = document.getElementById('sectorHistoryOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible')) {
+        loadSectorHistory();
+    }
+}
+
+async function loadSectorHistory() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/auto-news.json`);
+        const data = await res.json();
+        if (data && !data.error) {
+            // Normalize
+            Object.values(data).forEach(item => {
+                if (!item.urgency && item.urgencyScore) item.urgency = item.urgencyScore;
+                if (!item.timestamp) {
+                    if (item.publishedAt) item.timestamp = typeof item.publishedAt === 'number' ? item.publishedAt : new Date(item.publishedAt).getTime();
+                    else if (item.date) item.timestamp = new Date(item.date).getTime();
+                    else if (item.fetchedAt) item.timestamp = typeof item.fetchedAt === 'number' ? item.fetchedAt : new Date(item.fetchedAt).getTime();
+                }
+                if (item.timestamp && item.timestamp < 1000000000000) item.timestamp = item.timestamp * 1000;
+                if (!item.locationHe && item.matchedLocations) item.locationHe = item.matchedLocations.join(', ');
+            });
+            shAllHistory = data;
+            renderShLocations();
+            renderShZones();
+            renderShTimeline();
+        }
+    } catch (e) {
+        console.error('Sector history load error:', e);
+    }
+}
+
+function getItemLocation(item) {
+    if (item.locationHe) return item.locationHe.split(',')[0].trim();
+    if (item.matchedLocations && item.matchedLocations.length) return item.matchedLocations[0];
+    // Try to detect from text
+    const text = [item.title, item.snippet, item.fullText].filter(Boolean).join(' ');
+    const allLocs = [...IN_SECTOR, ...KEY_VILLAGES.map(v => v.he)];
+    for (const loc of allLocs) {
+        if (text.includes(loc)) return loc;
+    }
+    return null;
+}
+
+function switchShTab(tab, btn) {
+    document.querySelectorAll('.sh-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('shTabLocations').style.display = tab === 'locations' ? '' : 'none';
+    document.getElementById('shTabZones').style.display = tab === 'zones' ? '' : 'none';
+    document.getElementById('shTabTimeline').style.display = tab === 'timeline' ? '' : 'none';
+}
+
+// ── TAB 1: LOCATIONS ──
+function renderShLocations() {
+    const items = Object.values(shAllHistory);
+    const locMap = {};
+
+    items.forEach(item => {
+        const loc = getItemLocation(item);
+        if (!loc) return;
+        if (!locMap[loc]) locMap[loc] = { count: 0, urgencies: [], lastEvent: null, lastTimestamp: 0 };
+        locMap[loc].count++;
+        locMap[loc].urgencies.push(item.urgency || 2);
+        if ((item.timestamp || 0) > locMap[loc].lastTimestamp) {
+            locMap[loc].lastTimestamp = item.timestamp || 0;
+            locMap[loc].lastEvent = item;
+        }
+    });
+
+    const sorted = Object.entries(locMap).sort((a, b) => b[1].count - a[1].count);
+    const maxCount = sorted.length > 0 ? sorted[0][1].count : 1;
+    const totalEvents = sorted.reduce((s, [, d]) => s + d.count, 0);
+
+    // Summary bar
+    const summaryEl = document.getElementById('shLocationSummary');
+    summaryEl.innerHTML = `
+        <div class="sh-summary-stat"><strong>${totalEvents}</strong> אירועים</div>
+        <div class="sh-summary-stat"><strong>${sorted.length}</strong> מיקומים</div>
+        <div class="sh-summary-stat"><strong>${sorted.length > 0 ? sorted[0][0] : '-'}</strong> הכי פעיל</div>
+    `;
+
+    // Grid
+    const grid = document.getElementById('shLocationsGrid');
+    const urgColors = { 5: '#ff0040', 4: '#ff8800', 3: '#ffd000', 2: '#4488ff', 1: '#6880a0' };
+
+    grid.innerHTML = sorted.map(([loc, data]) => {
+        const avgUrg = data.urgencies.reduce((s, u) => s + u, 0) / data.urgencies.length;
+        const barColor = avgUrg >= 4.5 ? '#ff0040' : avgUrg >= 3.5 ? '#ff8800' : avgUrg >= 2.5 ? '#ffd000' : '#4488ff';
+        const barWidth = Math.max(5, (data.count / maxCount) * 100);
+        const countColor = avgUrg >= 4.5 ? '#ff0040' : avgUrg >= 3.5 ? '#ff8800' : avgUrg >= 2.5 ? '#ffd000' : '#4488ff';
+        const lastDate = data.lastTimestamp ? new Date(data.lastTimestamp).toLocaleDateString('he-IL') : '';
+
+        // Urgency distribution dots
+        const urgCounts = {};
+        data.urgencies.forEach(u => { urgCounts[u] = (urgCounts[u] || 0) + 1; });
+
+        const urgDots = Object.entries(urgCounts)
+            .sort((a, b) => b[0] - a[0])
+            .map(([u, c]) => `<span style="display:flex;align-items:center;gap:2px;"><span class="sh-loc-urgency-dot" style="background:${urgColors[u] || '#888'};"></span><span style="font-size:9px;color:var(--text-dim);">${c}</span></span>`)
+            .join('');
+
+        const lastTitle = data.lastEvent ? escapeHtml((data.lastEvent.title || '').substring(0, 80)) : '';
+
+        return `<div class="sh-loc-card">
+            <div class="sh-loc-card-header">
+                <span class="sh-loc-name">${escapeHtml(loc)}</span>
+                <span class="sh-loc-count" style="color:${countColor};background:${countColor}22;">${data.count}</span>
+            </div>
+            <div class="sh-loc-bar"><div class="sh-loc-bar-fill" style="width:${barWidth}%;background:${barColor};"></div></div>
+            <div class="sh-loc-meta">
+                <span>אחרון: ${lastDate}</span>
+                <div class="sh-loc-urgency-dots">${urgDots}</div>
+            </div>
+            ${lastTitle ? `<div class="sh-loc-last-event">${lastTitle}</div>` : ''}
+        </div>`;
+    }).join('');
+}
+
+// ── TAB 2: ZONES ──
+function renderShZones() {
+    const items = Object.values(shAllHistory);
+    const zoneData = SECTOR_ZONES.map(zone => {
+        const zoneItems = items.filter(item => {
+            const loc = getItemLocation(item);
+            return loc && zone.locations.some(zl => loc.includes(zl));
+        });
+        const urgCounts = { 5: 0, 4: 0, 3: 0, 2: 0 };
+        const locCounts = {};
+        zoneItems.forEach(item => {
+            const u = item.urgency || 2;
+            urgCounts[Math.min(5, Math.max(2, u))] = (urgCounts[Math.min(5, Math.max(2, u))] || 0) + 1;
+            const loc = getItemLocation(item);
+            if (loc) locCounts[loc] = (locCounts[loc] || 0) + 1;
+        });
+        return { ...zone, total: zoneItems.length, urgCounts, locCounts };
+    });
+
+    zoneData.sort((a, b) => b.total - a.total);
+    const maxTotal = zoneData.length > 0 ? Math.max(1, zoneData[0].total) : 1;
+
+    const container = document.getElementById('shZonesContainer');
+    container.innerHTML = zoneData.map(zone => {
+        if (zone.total === 0) return '';
+        const totalUrg = zone.urgCounts[5] + zone.urgCounts[4] + zone.urgCounts[3] + zone.urgCounts[2];
+        const barSegs = [
+            { u: 5, c: zone.urgCounts[5], color: '#ff0040', label: 'ודאי' },
+            { u: 4, c: zone.urgCounts[4], color: '#ff8800', label: 'חזק' },
+            { u: 3, c: zone.urgCounts[3], color: '#ffd000', label: 'בינוני' },
+            { u: 2, c: zone.urgCounts[2], color: '#4488ff', label: 'חלש' },
+        ].filter(s => s.c > 0).map(s => `<div class="sh-zone-bar-seg" style="width:${(s.c/totalUrg)*100}%;background:${s.color};" title="${s.label}: ${s.c}">${s.c}</div>`).join('');
+
+        const locTags = Object.entries(zone.locCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 6)
+            .map(([loc, c]) => `<span class="sh-zone-loc-tag">${escapeHtml(loc)} (${c})</span>`)
+            .join('');
+
+        return `<div class="sh-zone-card">
+            <div class="sh-zone-header" style="border-right:4px solid ${zone.color};">
+                <span class="sh-zone-name">${zone.name}</span>
+                <span class="sh-zone-count" style="color:${zone.color};">${zone.total}</span>
+            </div>
+            <div class="sh-zone-body">
+                <div class="sh-zone-bar">${barSegs}</div>
+                <div class="sh-zone-locations">${locTags}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ── TAB 3: TIMELINE ──
+function renderShTimeline() {
+    const items = Object.values(shAllHistory);
+    const monthMap = {};
+
+    items.forEach(item => {
+        if (!item.timestamp) return;
+        const d = new Date(item.timestamp);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        if (!monthMap[key]) monthMap[key] = { total: 0, urgCounts: { 5: 0, 4: 0, 3: 0, 2: 0 }, items: [] };
+        monthMap[key].total++;
+        const u = Math.min(5, Math.max(2, item.urgency || 2));
+        monthMap[key].urgCounts[u]++;
+        monthMap[key].items.push(item);
+    });
+
+    const months = Object.keys(monthMap).sort();
+    const maxMonth = months.reduce((m, k) => Math.max(m, monthMap[k].total), 1);
+
+    const heMonths = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+
+    const chart = document.getElementById('shTimelineChart');
+    chart.innerHTML = `<div class="sh-timeline-months">${months.map(key => {
+        const md = monthMap[key];
+        const height = Math.max(8, (md.total / maxMonth) * 180);
+        const segs = [
+            { u: 5, c: md.urgCounts[5], color: '#ff0040' },
+            { u: 4, c: md.urgCounts[4], color: '#ff8800' },
+            { u: 3, c: md.urgCounts[3], color: '#ffd000' },
+            { u: 2, c: md.urgCounts[2], color: '#4488ff' },
+        ].filter(s => s.c > 0).map(s => {
+            const segH = (s.c / md.total) * height;
+            return `<div class="sh-month-seg" style="height:${segH}px;background:${s.color};"></div>`;
+        }).join('');
+        const [y, m] = key.split('-');
+        const label = heMonths[parseInt(m) - 1] + ' ' + y.slice(2);
+        return `<div class="sh-month-col${shSelectedMonth === key ? ' selected' : ''}" onclick="selectShMonth('${key}')">
+            <span class="sh-month-count">${md.total}</span>
+            <div class="sh-month-bar-stack" style="height:${height}px;">${segs}</div>
+            <span class="sh-month-label">${label}</span>
+        </div>`;
+    }).join('')}</div>`;
+
+    // Show latest month details by default
+    if (!shSelectedMonth && months.length > 0) {
+        shSelectedMonth = months[months.length - 1];
+    }
+    if (shSelectedMonth) renderShMonthDetails(shSelectedMonth);
+}
+
+function selectShMonth(key) {
+    shSelectedMonth = key;
+    renderShTimeline();
+}
+
+function renderShMonthDetails(key) {
+    const monthData = shAllHistory ? Object.values(shAllHistory).filter(item => {
+        if (!item.timestamp) return false;
+        const d = new Date(item.timestamp);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` === key;
+    }) : [];
+
+    monthData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    const heMonths = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+    const [y, m] = key.split('-');
+    const label = heMonths[parseInt(m) - 1] + ' ' + y;
+    const urgColors = { 5: '#ff0040', 4: '#ff8800', 3: '#ffd000', 2: '#4488ff', 1: '#6880a0' };
+
+    const details = document.getElementById('shTimelineDetails');
+    details.innerHTML = `
+        <div class="sh-timeline-detail-header">${label} - ${monthData.length} אירועים</div>
+        <div class="sh-timeline-events">
+            ${monthData.slice(0, 50).map(item => {
+                const d = new Date(item.timestamp || 0);
+                const date = d.toLocaleDateString('he-IL', { day: 'numeric', month: 'short' });
+                const time = d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+                const loc = getItemLocation(item) || '';
+                const urg = item.urgency || 2;
+                return `<div class="sh-timeline-event" style="border-color:${urgColors[urg] || '#888'};">
+                    <span class="sh-timeline-event-date">${date}<br>${time}</span>
+                    <span class="sh-timeline-event-loc">${escapeHtml(loc)}</span>
+                    <span>${escapeHtml((item.title || '').substring(0, 100))}</span>
+                </div>`;
+            }).join('')}
+        </div>
+    `;
 }
 
 // ═══════ WHATSAPP GREEN API INTEGRATION ═══════

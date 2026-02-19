@@ -187,7 +187,7 @@ body {
 .header {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 280px 1fr 280px;
+    grid-template-columns: 200px 1fr auto;
     align-items: center;
     padding: 0 0;
     background: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
@@ -288,12 +288,12 @@ body {
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 5px 14px;
+    gap: 6px;
+    padding: 4px 10px;
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     font-family: var(--font-he);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
 }
 
@@ -350,9 +350,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 10px;
     font-family: var(--font-mono);
-    padding: 0 15px;
+    padding: 0 12px;
+    white-space: nowrap;
 }
 
 .clock {

@@ -1825,19 +1825,6 @@ body {
     transition: all 0.2s;
 }
 .firms-toggle:hover, .firms-toggle.active { background: rgba(255,136,0,0.2); }
-.firms-marker {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #ff4400 30%, rgba(255,68,0,0.3) 70%);
-    border: 1px solid #ff6600;
-    box-shadow: 0 0 8px rgba(255,68,0,0.6);
-    animation: firmsPulse 2s ease-in-out infinite;
-}
-@keyframes firmsPulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(255,68,0,0.6); transform: scale(1); }
-    50% { box-shadow: 0 0 16px rgba(255,68,0,0.9); transform: scale(1.2); }
-}
 
 /* ═══════ KEYWORDS OVERLAY ═══════ */
 .keywords-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(4,8,16,0.97); z-index:8000; display:none; flex-direction:column; }
@@ -3650,7 +3637,6 @@ let showAnarchists = true;
 let checkedAlerts = new Set(JSON.parse(localStorage.getItem('mabat188-checked') || '[]'));
 let journalNotes = {};
 let alertVotes = {};
-let firmsMarkers = [];
 let firmsVisible = false;
 let waData = {};
 let networkGraph = null;
@@ -6394,108 +6380,34 @@ function saveWaConfig() {
 // Add WhatsApp as source in מקורות
 מקורות.push({ id: 'whatsapp', name: 'WhatsApp', type: 'local', icon: '&#128172;' });
 
-// ═══════ NASA FIRMS - FIRE/EXPLOSION DETECTION ═══════
-async function fetchFirmsData() {
-    try {
-        // NASA FIRMS API - last 24 hours, Gaza area bounding box
-        const bbox = '34.0,31.1,34.6,31.7'; // minLng,minLat,maxLng,maxLat
-        const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/OPEN_KEY/VIIRS_SNPP_NRT/${bbox}/1`;
-        const res = await fetch(url);
-        if (!res.ok) {
-            // Fallback: try MODIS
-            const url2 = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/OPEN_KEY/MODIS_NRT/${bbox}/1`;
-            const res2 = await fetch(url2);
-            if (!res2.ok) return;
-            const text = await res2.text();
-            parseFirmsCSV(text);
-            return;
-        }
-        const text = await res.text();
-        parseFirmsCSV(text);
-    } catch (e) {
-        console.log('FIRMS fetch error, using demo data');
-        renderFirmsDemoData();
-    }
-}
+// ═══════ NASA FIRMS - REAL SATELLITE FIRE/EXPLOSION DETECTION ═══════
+let firmsWmsLayer = null;
 
-function parseFirmsCSV(csv) {
-    const lines = csv.trim().split('\n');
-    if (lines.length < 2) { renderFirmsDemoData(); return; }
-    const header = lines[0].split(',');
-    const latIdx = header.indexOf('latitude');
-    const lngIdx = header.indexOf('longitude');
-    const confIdx = header.indexOf('confidence');
-    const brightIdx = header.indexOf('bright_ti4') >= 0 ? header.indexOf('bright_ti4') : header.indexOf('brightness');
-    const dateIdx = header.indexOf('acq_date');
-    const timeIdx = header.indexOf('acq_time');
-
-    clearFirmsMarkers();
-    for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',');
-        const lat = parseFloat(cols[latIdx]);
-        const lng = parseFloat(cols[lngIdx]);
-        const conf = cols[confIdx] || 'nominal';
-        const bright = cols[brightIdx] || '';
-        const date = cols[dateIdx] || '';
-        const time = cols[timeIdx] || '';
-        if (!isNaN(lat) && !isNaN(lng)) {
-            addFirmsMarker(lat, lng, conf, bright, date, time);
-        }
-    }
-    if (firmsMarkers.length === 0) renderFirmsDemoData();
-}
-
-function renderFirmsDemoData() {
-    // Show recent known activity points in Khan Younis area
-    clearFirmsMarkers();
-    const demoPoints = [
-        { lat: 31.345, lng: 34.302, conf: 'high', note: 'Khan Younis center' },
-        { lat: 31.351, lng: 34.338, conf: 'nominal', note: 'Bani Suheila' },
-        { lat: 31.328, lng: 34.350, conf: 'high', note: 'Abasan al-Kabira' },
-        { lat: 31.363, lng: 34.270, conf: 'nominal', note: 'Al Mawasi coast' },
-        { lat: 31.310, lng: 34.335, conf: 'low', note: 'Al Fukhari' },
-    ];
-    demoPoints.forEach(p => addFirmsMarker(p.lat, p.lng, p.conf, '', '', '', p.note));
-}
-
-function addFirmsMarker(lat, lng, conf, bright, date, time, note) {
-    const size = conf === 'high' ? 16 : conf === 'nominal' ? 12 : 8;
-    const icon = L.divIcon({
-        className: '',
-        html: `<div class="firms-marker" style="width:${size}px;height:${size}px;"></div>`,
-        iconSize: [size, size],
-        iconAnchor: [size/2, size/2]
+function initFirmsLayer() {
+    // NASA FIRMS WMS - real satellite data, no API key needed
+    firmsWmsLayer = L.tileLayer.wms(
+        'https://firms.modaps.eosdis.nasa.gov/mapserver/wms/fires/aab9e5f2469a4c138cc4b1f16b752213/', {
+        layers: 'fires_viirs_24',
+        format: 'image/png',
+        transparent: true,
+        version: '1.1.1',
+        attribution: 'NASA FIRMS',
+        opacity: 0.85
     });
-    const marker = L.marker([lat, lng], { icon }).bindPopup(
-        `<div style="direction:rtl;font-family:Heebo;font-size:12px;">
-            <b style="color:#ff4400;">NASA FIRMS</b><br>
-            ${note || `${lat.toFixed(4)}, ${lng.toFixed(4)}`}<br>
-            ${conf ? `עוצמה: <b>${conf}</b>` : ''}
-            ${bright ? `<br>בהירות: ${bright}K` : ''}
-            ${date ? `<br>תאריך: ${date} ${time}` : ''}
-        </div>`, { className: 'firms-popup' }
-    );
-    firmsMarkers.push(marker);
-    if (firmsVisible) marker.addTo(map);
-}
-
-function clearFirmsMarkers() {
-    firmsMarkers.forEach(m => m.remove());
-    firmsMarkers = [];
 }
 
 function toggleFirmsLayer() {
     firmsVisible = !firmsVisible;
     const btn = document.getElementById('firmsToggle');
+    if (!firmsWmsLayer) initFirmsLayer();
     if (firmsVisible) {
         btn.classList.add('active');
         btn.textContent = 'FIRMS ON';
-        firmsMarkers.forEach(m => m.addTo(map));
-        if (firmsMarkers.length === 0) fetchFirmsData();
+        firmsWmsLayer.addTo(map);
     } else {
         btn.classList.remove('active');
         btn.textContent = 'FIRMS';
-        firmsMarkers.forEach(m => m.remove());
+        firmsWmsLayer.remove();
     }
 }
 
@@ -6912,7 +6824,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // OSINT Panels init
-    try { fetchFirmsData(); } catch(e) { console.error('FIRMS init error:', e); }
+    try { initFirmsLayer(); } catch(e) { console.error('FIRMS init error:', e); }
     try { fetchWhatsAppData(); } catch(e) { console.error('WhatsApp init error:', e); }
     try { setTimeout(() => initNetworkGraph(), 500); } catch(e) { console.error('Graph init error:', e); }
 });

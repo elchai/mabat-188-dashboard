@@ -175,7 +175,7 @@ body {
 .dashboard {
     display: grid;
     grid-template-rows: 70px 1fr 400px 480px;
-    grid-template-columns: 280px 1fr 320px;
+    grid-template-columns: 280px 1fr 280px;
     min-height: 100vh;
     gap: 2px;
     padding: 8px;
@@ -187,7 +187,7 @@ body {
 .header {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 280px 1fr 320px;
+    grid-template-columns: 280px 1fr 280px;
     align-items: center;
     padding: 0 0;
     background: linear-gradient(180deg, rgba(0, 212, 255, 0.08), transparent);
@@ -261,7 +261,8 @@ body {
     justify-content: flex-start;
     min-width: 0;
     padding: 0 10px;
-    gap: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .header-status-group {
@@ -280,7 +281,8 @@ body {
 .header-actions-group {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .status-badge {
@@ -299,13 +301,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 6px 16px;
-    min-width: 110px;
+    gap: 5px;
+    padding: 5px 12px;
+    min-width: auto;
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     font-family: var(--font-he);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--cyan);
     background: transparent;
@@ -2427,8 +2429,8 @@ body {
 
 /* ═══════ RESPONSIVE ═══════ */
 @media (max-width: 1200px) {
-    .dashboard { grid-template-columns: 220px 1fr 260px; }
-    .header { grid-template-columns: 220px 1fr 260px; }
+    .dashboard { grid-template-columns: 220px 1fr 220px; }
+    .header { grid-template-columns: 220px 1fr 220px; }
     .osint-row { grid-template-columns: 1fr 1fr; }
     .osint-row .osint-panel:last-child { grid-column: 1 / -1; }
 }
@@ -3038,7 +3040,7 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                     <span>יומן מבצעים</span>
                 </button>
                 <button class="header-btn" onclick="toggleSectorHistory()" style="color:var(--purple);border-color:var(--purple);">
-                    <span class="btn-icon">&#x1F4CA;</span>
+                    <span class="btn-icon">&#x23F2;</span>
                     <span>היסטוריה גזרתית</span>
                 </button>
                 <button class="header-btn" onclick="toggleWhatsApp()" id="waBtn" style="color:#25D366;border-color:#25D366;">

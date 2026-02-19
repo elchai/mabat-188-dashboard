@@ -624,35 +624,18 @@ body {
     padding: 0 !important;
     order: -1 !important;
     border: none !important;
+    background: #0a0a1a !important;
+}
+.map-panel.fullscreen #map {
+    position: absolute !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100% !important;
+    height: 100% !important;
 }
 .map-panel.fullscreen .map-legend {
-    transform: scale(0.75);
-    transform-origin: bottom right;
-    opacity: 0.7;
-    max-width: 130px;
-    padding: 6px 10px;
-    bottom: 6px;
-    right: 6px;
-}
-.map-panel.fullscreen .map-legend .legend-item {
-    font-size: 10px;
-    padding: 1px 0;
-    gap: 5px;
-}
-.map-panel.fullscreen .map-legend .legend-circle,
-.map-panel.fullscreen .map-legend .legend-ring {
-    width: 7px;
-    height: 7px;
-}
-.map-panel.fullscreen .map-legend .legend-title {
-    font-size: 10px;
-    margin-bottom: 4px;
-}
-.map-panel.fullscreen .map-legend .legend-subtitle {
-    font-size: 9px;
-}
-.map-panel.fullscreen .map-legend .legend-divider {
-    margin: 3px 0;
+    opacity: 0.8;
+    bottom: 12px;
+    right: 12px;
 }
 
 #map {
@@ -2592,53 +2575,53 @@ body {
 /* ═══════ MAP LEGEND ═══════ */
 .map-legend {
     position: absolute;
-    top: 50px;
-    right: 10px;
+    bottom: 8px;
+    right: 8px;
     z-index: 10001;
-    background: rgba(4, 8, 16, 0.95);
+    background: rgba(4, 8, 16, 0.9);
     border: 1px solid var(--cyan-dim);
-    border-radius: 6px;
-    padding: 10px 14px;
+    border-radius: 4px;
+    padding: 6px 8px;
     font-family: var(--font-he);
-    font-size: 12px;
+    font-size: 9px;
     direction: rtl;
     pointer-events: auto;
-    max-width: 160px;
+    max-width: 120px;
     backdrop-filter: blur(8px);
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
 }
 .legend-title {
     font-family: var(--font-he);
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 700;
     color: var(--cyan);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     text-align: center;
 }
 .legend-subtitle {
-    font-size: 11px;
+    font-size: 8px;
     font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 3px 0;
+    gap: 5px;
+    padding: 1px 0;
     color: var(--text-primary);
-    font-size: 12px;
+    font-size: 9px;
     font-weight: 400;
 }
 .legend-circle {
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     flex-shrink: 0;
 }
 .legend-ring {
-    width: 10px;
-    height: 10px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     border: 2px solid;
     background: transparent;
@@ -2647,7 +2630,7 @@ body {
 .legend-divider {
     height: 1px;
     background: var(--border-primary);
-    margin: 5px 0;
+    margin: 3px 0;
 }
 
 .threat-ring-pulse {
@@ -4255,7 +4238,8 @@ function toggleMapFullscreen() {
         if (mapIsFullscreen && window.innerWidth <= 900) {
             map.setZoom(Math.max(map.getZoom(), 12));
         }
-    }, 400);
+    }, 100);
+    setTimeout(() => { map.invalidateSize(); }, 500);
 }
 
 function updateMapMarkers(news) {

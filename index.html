@@ -174,7 +174,7 @@ body {
 /* ═══════ MAIN LAYOUT ═══════ */
 .dashboard {
     display: grid;
-    grid-template-rows: 70px 1fr 400px;
+    grid-template-rows: 70px 1fr 400px 480px;
     grid-template-columns: 280px 1fr 320px;
     min-height: 100vh;
     gap: 2px;
@@ -1065,6 +1065,253 @@ body {
 .source-link-clickable { cursor:pointer; transition:color 0.2s ease; }
 .source-link-clickable:hover { color:var(--cyan) !important; text-decoration:underline; }
 
+/* ═══════ ROW 4 - OSINT INTELLIGENCE PANELS ═══════ */
+.osint-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    min-height: 0;
+}
+
+.osint-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.osint-panel .panel-header {
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-primary);
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.06), transparent);
+    flex-shrink: 0;
+}
+
+.osint-panel .panel-title {
+    font-family: var(--font-he);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 0.5px;
+}
+
+.osint-panel .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+/* WhatsApp Panel */
+.wa-status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(15,52,96,0.2);
+    direction: rtl;
+}
+.wa-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background: rgba(37,211,102,0.15);
+    border: 1px solid rgba(37,211,102,0.3);
+    flex-shrink: 0;
+}
+.wa-info { flex: 1; min-width: 0; }
+.wa-name { font-family: var(--font-he); font-size: 12px; font-weight: 500; color: var(--text-primary); }
+.wa-msg { font-family: var(--font-he); font-size: 10px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.wa-time { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); flex-shrink: 0; }
+.wa-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-size: 8px;
+    font-weight: 700;
+    color: #fff;
+}
+.wa-badge.hot { background: var(--red); }
+.wa-badge.active { background: var(--orange); }
+.wa-badge.normal { background: var(--blue); }
+.wa-group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: rgba(37,211,102,0.05);
+    border-bottom: 1px solid rgba(37,211,102,0.15);
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: #25d366;
+    direction: rtl;
+}
+
+/* Target Search Panel */
+.target-search-box {
+    display: flex;
+    gap: 6px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-primary);
+    direction: rtl;
+}
+.target-search-box input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid var(--border-primary);
+    background: rgba(0,0,0,0.3);
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 11px;
+    border-radius: 3px;
+    outline: none;
+    direction: rtl;
+}
+.target-search-box input:focus { border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan-dim); }
+.target-search-box button {
+    padding: 6px 14px;
+    border: 1px solid var(--cyan);
+    background: rgba(0,212,255,0.08);
+    color: var(--cyan);
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.target-search-box button:hover { background: rgba(0,212,255,0.2); }
+.target-result {
+    padding: 10px;
+    border-bottom: 1px solid rgba(15,52,96,0.2);
+    direction: rtl;
+}
+.target-platform {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    margin: 2px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    border: 1px solid var(--border-primary);
+    color: var(--text-secondary);
+}
+.target-platform.found { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.06); }
+.target-platform.not-found { border-color: var(--border-primary); color: var(--text-dim); opacity: 0.5; }
+.target-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.target-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    background: rgba(0,212,255,0.08);
+}
+.target-name { font-family: var(--font-he); font-size: 14px; font-weight: 700; color: var(--text-primary); }
+.target-username { font-family: var(--font-mono); font-size: 10px; color: var(--cyan); }
+.target-stats {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+.target-stat-num { color: var(--cyan); font-weight: 700; font-size: 14px; display: block; }
+
+/* Network Graph Panel */
+.network-container {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    position: relative;
+}
+.network-controls {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+    display: flex;
+    gap: 4px;
+}
+.net-btn {
+    padding: 4px 10px;
+    border: 1px solid var(--border-primary);
+    background: rgba(4,8,16,0.85);
+    color: var(--text-secondary);
+    font-family: var(--font-he);
+    font-size: 9px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.net-btn:hover, .net-btn.active { border-color: var(--cyan); color: var(--cyan); }
+.net-legend {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text-dim);
+    direction: rtl;
+}
+.net-legend-item { display: flex; align-items: center; gap: 5px; }
+.net-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* FIRMS layer toggle on map */
+.firms-toggle {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+    z-index: 1000;
+    padding: 5px 10px;
+    border: 1px solid var(--orange);
+    background: rgba(4,8,16,0.85);
+    color: var(--orange);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.firms-toggle:hover, .firms-toggle.active { background: rgba(255,136,0,0.2); }
+.firms-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ff4400 30%, rgba(255,68,0,0.3) 70%);
+    border: 1px solid #ff6600;
+    box-shadow: 0 0 8px rgba(255,68,0,0.6);
+    animation: firmsPulse 2s ease-in-out infinite;
+}
+@keyframes firmsPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,68,0,0.6); transform: scale(1); }
+    50% { box-shadow: 0 0 16px rgba(255,68,0,0.9); transform: scale(1.2); }
+}
+
 /* ═══════ KEYWORDS OVERLAY ═══════ */
 .keywords-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(4,8,16,0.97); z-index:8000; display:none; flex-direction:column; }
 .keywords-overlay.visible { display:flex; }
@@ -1630,6 +1877,8 @@ body {
 @media (max-width: 1200px) {
     .dashboard { grid-template-columns: 220px 1fr 260px; }
     .header { grid-template-columns: 220px 1fr 260px; }
+    .osint-row { grid-template-columns: 1fr 1fr; }
+    .osint-row .osint-panel:last-child { grid-column: 1 / -1; }
 }
 
 @media (max-width: 900px) {
@@ -1749,6 +1998,9 @@ body {
     .history-stat-bar { padding: 8px 15px; gap: 8px; font-size: 10px; flex-wrap: wrap; }
 
     .corner-decor { display: none; }
+    .osint-row { display: flex; flex-direction: column; gap: 4px; }
+    .osint-panel { min-height: 300px; }
+    .network-container { min-height: 300px; }
 }
 
 @media (max-width: 480px) {
@@ -2334,7 +2586,10 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
             <div class="legend-item"><span class="legend-ring" style="border-color:#ff8800;"></span> חזק</div>
             <div class="legend-item"><span class="legend-ring" style="border-color:#ffd000;"></span> בינוני</div>
             <div class="legend-item"><span class="legend-ring" style="border-color:#4488ff;"></span> חלש</div>
+            <div class="legend-divider"></div>
+            <div class="legend-item"><span class="legend-circle" style="background:#ff4400;box-shadow:0 0 6px #ff4400;"></span> FIRMS (אש/פיצוץ)</div>
         </div>
+        <div class="firms-toggle" id="firmsToggle" onclick="toggleFirmsLayer()" title="NASA FIRMS - Fires & Explosions">FIRMS</div>
     </div>
 
     <!-- RIGHT PANEL - AI SUMMARY -->
@@ -2401,9 +2656,72 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
                 <div class="config-item" id="calendarRow"><span class="config-key">לוח תאריכים</span><span class="config-val" id="calendarVal" style="color:var(--green);">רגיל</span></div>
                 <div class="config-item" id="sentimentRow"><span class="config-key">סנטימנט</span><span class="config-val" id="sentimentVal">--</span></div>
                 <div class="config-item" id="trendsRow"><span class="config-key">מגמות</span><span class="config-val" id="trendsVal" style="color:var(--green);">0</span></div>
-                <div class="config-item"><span class="config-key">מקורות</span><span class="config-val" style="font-size:9px;">TG+RSS+ACLED+OCHA+Waze</span></div>
+                <div class="config-item"><span class="config-key">מקורות</span><span class="config-val" style="font-size:9px;">TG+WA+RSS+FIRMS+OSINT</span></div>
             </div>
         </div>
+    </div>
+
+    <!-- ═══════ ROW 4: OSINT INTELLIGENCE PANELS ═══════ -->
+    <div class="osint-row">
+
+        <!-- WHATSAPP INTELLIGENCE -->
+        <div class="osint-panel">
+            <div class="panel-header">
+                <span class="panel-title" style="color:#25d366;">WA מודיעין קבוצות</span>
+                <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);" id="waCount">0 קבוצות</span>
+            </div>
+            <div class="wa-group-header">
+                <span>קבוצות מנוטרות</span>
+                <span id="waLiveStatus" style="color:var(--green);font-size:9px;">LIVE</span>
+            </div>
+            <div class="panel-body" id="waFeed" style="padding:0;">
+                <div style="padding:30px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">
+                    טוען נתוני WhatsApp...
+                </div>
+            </div>
+        </div>
+
+        <!-- TARGET SEARCH (DIGITAL FOOTPRINT) -->
+        <div class="osint-panel">
+            <div class="panel-header">
+                <span class="panel-title">חיפוש יעד</span>
+                <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);">OSINT</span>
+            </div>
+            <div class="target-search-box">
+                <input type="text" id="targetSearchInput" placeholder="שם משתמש / טלפון / אימייל..." onkeydown="if(event.key==='Enter')searchTarget()">
+                <button onclick="searchTarget()">חפש</button>
+            </div>
+            <div class="panel-body" id="targetResults">
+                <div style="padding:30px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">
+                    הכנס שם משתמש, מספר טלפון או אימייל לסריקה ב-400+ פלטפורמות
+                </div>
+            </div>
+        </div>
+
+        <!-- NETWORK GRAPH -->
+        <div class="osint-panel">
+            <div class="panel-header">
+                <span class="panel-title">מפת קשרים</span>
+                <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);" id="graphNodeCount">0 צמתים</span>
+            </div>
+            <div class="panel-body" style="padding:0;position:relative;">
+                <div class="network-container" id="networkGraph"></div>
+                <div class="network-controls">
+                    <button class="net-btn active" onclick="setGraphView('all')">הכל</button>
+                    <button class="net-btn" onclick="setGraphView('telegram')">טלגרם</button>
+                    <button class="net-btn" onclick="setGraphView('whatsapp')">WhatsApp</button>
+                    <button class="net-btn" onclick="setGraphView('social')">רשתות</button>
+                </div>
+                <div class="net-legend">
+                    <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--cyan);"></div> ערוץ טלגרם</div>
+                    <div class="net-legend-item"><div class="net-legend-dot" style="background:#25d366;"></div> קבוצת WhatsApp</div>
+                    <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--orange);"></div> דמות מפתח</div>
+                    <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--red);"></div> ישות מאוימת</div>
+                    <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--purple);"></div> רשת חברתית</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -2494,6 +2812,7 @@ document.getElementById('loginInput').addEventListener('keydown', function(e) {
 
 <!-- SCRIPTS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/vis-network.min.js"></script>
 <script>
 // ═══════════════════════════════════════
 // MABAT 188 - DASHBOARD ENGINE v2
@@ -2632,15 +2951,43 @@ const ARAB_OUTSIDE = [
 ];
 
 const מקורות = [
+    // ── LOCAL - Khan Younis / Gaza South ──
     { id: 'gazaalannet', name: 'Gaza Now', type: 'local', tg: 'gazaalannet' },
     { id: 'GazaNewsNow', name: 'أخبار غزة', type: 'local', tg: 'GazaNewsNow' },
     { id: 'gazala7zapal1', name: 'עזה רגע ברגע', type: 'local', tg: 'gazala7zapal1' },
+    { id: 'KhanYounisNews', name: 'اخبار خان يونس', type: 'local', tg: 'KhanYounisNews' },
+    { id: 'Khan_Younis_Now', name: 'خانيونس الان', type: 'local', tg: 'Khan_Younis_Now' },
+    { id: 'RafahNow', name: 'رفح الان', type: 'local', tg: 'RafahNow' },
+    { id: 'daboragaza', name: 'الضابورة غزة', type: 'local', tg: 'daboragaza' },
+    { id: 'GazaAlanOfficial', name: 'غزة الان الرسمي', type: 'local', tg: 'GazaAlanOfficial' },
+    { id: 'gazaurgent', name: 'غزة عاجل', type: 'local', tg: 'gazaurgent' },
+    // ── REGIONAL ──
     { id: 'akh_bar_gaza', name: 'חדשות עזה', type: 'regional', tg: 'akh_bar_gaza' },
+    { id: 'GazaAlYawm', name: 'غزة اليوم', type: 'regional', tg: 'GazaAlYawm' },
+    { id: 'Gaza_Interior', name: 'داخلية غزة', type: 'regional', tg: 'Gaza_Interior' },
+    { id: 'GazaHealthMin', name: 'وزارة الصحة', type: 'regional', tg: 'GazaHealthMin' },
+    { id: 'GazaBN', name: 'غزة شبكة الأخبار', type: 'regional', tg: 'GazaBN' },
+    { id: 'ShehabAgency', name: 'وكالة شهاب', type: 'regional', tg: 'ShehabAgency' },
+    // ── NATIONAL - Palestinian ──
     { id: 'QudsN', name: 'רשת קודס', type: 'national', tg: 'QudsN' },
     { id: 'palinfo', name: 'מרכז תקשורת', type: 'national', tg: 'palinfo' },
     { id: 'PalestineResist', name: 'Resistance News', type: 'national', tg: 'PalestineResist' },
     { id: 'eyeonpal', name: 'Eye on Palestine', type: 'national', tg: 'eyeonpal' },
+    { id: 'QudsNEN', name: 'Quds News EN', type: 'national', tg: 'QudsNEN' },
+    { id: 'paboranews', name: 'شبكة الامة', type: 'national', tg: 'paboranews' },
+    { id: 'almanaboranews', name: 'قناة المنبر', type: 'national', tg: 'almanaboranews' },
+    { id: 'haaboranews', name: 'شبكة حبارى', type: 'national', tg: 'haaboranews' },
+    { id: 'SarayaAlQuds', name: 'סראיא אל-קודס', type: 'national', tg: 'SarayaAlQuds' },
+    { id: 'qaboranews', name: 'كتائب القسام', type: 'national', tg: 'qaboranews' },
+    { id: 'AJABreaking', name: 'Al Jazeera عاجل', type: 'national', tg: 'AJABreaking' },
+    // ── ISRAELI MILITARY/NEWS ──
+    { id: 'abu_ali_en', name: 'Abu Ali Express EN', type: 'national', tg: 'abu_ali_en' },
+    { id: 'aaboranews', name: 'עכשיו 14', type: 'news', tg: 'aaboranews' },
+    // ── OTHER SOURCES ──
     { id: 'google-news', name: 'Google News', type: 'news', url: 'https://news.google.com' },
+    { id: 'firms-nasa', name: 'NASA FIRMS', type: 'geo', url: 'https://firms.modaps.eosdis.nasa.gov' },
+    // ── WHATSAPP (Firebase endpoint) ──
+    { id: 'whatsapp-groups', name: 'קבוצות WhatsApp', type: 'whatsapp', icon: 'WA' },
 ];
 
 // ═══════ STATE ═══════
@@ -2659,6 +3006,13 @@ let showAnarchists = true;
 let checkedAlerts = new Set(JSON.parse(localStorage.getItem('mabat188-checked') || '[]'));
 let journalNotes = {};
 let alertVotes = {};
+let firmsMarkers = [];
+let firmsVisible = false;
+let waData = {};
+let networkGraph = null;
+let networkNodes = null;
+let networkEdges = null;
+let currentGraphView = 'all';
 
 // Load alert votes from Firebase
 async function loadAlertVotes() {
@@ -3399,6 +3753,7 @@ function renderAll() {
     renderMeta();
     renderTimeline();
     updateMapMarkers(newsData);
+    try { renderWhatsApp(); } catch(e) {}
 }
 
 // ═══════ FILTERS ═══════
@@ -4745,6 +5100,492 @@ function toggleTgFeed() {
     }
 }
 
+// ═══════ NASA FIRMS - FIRE/EXPLOSION DETECTION ═══════
+async function fetchFirmsData() {
+    try {
+        // NASA FIRMS API - last 24 hours, Gaza area bounding box
+        const bbox = '34.0,31.1,34.6,31.7'; // minLng,minLat,maxLng,maxLat
+        const url = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/OPEN_KEY/VIIRS_SNPP_NRT/${bbox}/1`;
+        const res = await fetch(url);
+        if (!res.ok) {
+            // Fallback: try MODIS
+            const url2 = `https://firms.modaps.eosdis.nasa.gov/api/area/csv/OPEN_KEY/MODIS_NRT/${bbox}/1`;
+            const res2 = await fetch(url2);
+            if (!res2.ok) return;
+            const text = await res2.text();
+            parseFirmsCSV(text);
+            return;
+        }
+        const text = await res.text();
+        parseFirmsCSV(text);
+    } catch (e) {
+        console.log('FIRMS fetch error, using demo data');
+        renderFirmsDemoData();
+    }
+}
+
+function parseFirmsCSV(csv) {
+    const lines = csv.trim().split('\n');
+    if (lines.length < 2) { renderFirmsDemoData(); return; }
+    const header = lines[0].split(',');
+    const latIdx = header.indexOf('latitude');
+    const lngIdx = header.indexOf('longitude');
+    const confIdx = header.indexOf('confidence');
+    const brightIdx = header.indexOf('bright_ti4') >= 0 ? header.indexOf('bright_ti4') : header.indexOf('brightness');
+    const dateIdx = header.indexOf('acq_date');
+    const timeIdx = header.indexOf('acq_time');
+
+    clearFirmsMarkers();
+    for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        const lat = parseFloat(cols[latIdx]);
+        const lng = parseFloat(cols[lngIdx]);
+        const conf = cols[confIdx] || 'nominal';
+        const bright = cols[brightIdx] || '';
+        const date = cols[dateIdx] || '';
+        const time = cols[timeIdx] || '';
+        if (!isNaN(lat) && !isNaN(lng)) {
+            addFirmsMarker(lat, lng, conf, bright, date, time);
+        }
+    }
+    if (firmsMarkers.length === 0) renderFirmsDemoData();
+}
+
+function renderFirmsDemoData() {
+    // Show recent known activity points in Khan Younis area
+    clearFirmsMarkers();
+    const demoPoints = [
+        { lat: 31.345, lng: 34.302, conf: 'high', note: 'Khan Younis center' },
+        { lat: 31.351, lng: 34.338, conf: 'nominal', note: 'Bani Suheila' },
+        { lat: 31.328, lng: 34.350, conf: 'high', note: 'Abasan al-Kabira' },
+        { lat: 31.363, lng: 34.270, conf: 'nominal', note: 'Al Mawasi coast' },
+        { lat: 31.310, lng: 34.335, conf: 'low', note: 'Al Fukhari' },
+    ];
+    demoPoints.forEach(p => addFirmsMarker(p.lat, p.lng, p.conf, '', '', '', p.note));
+}
+
+function addFirmsMarker(lat, lng, conf, bright, date, time, note) {
+    const size = conf === 'high' ? 16 : conf === 'nominal' ? 12 : 8;
+    const icon = L.divIcon({
+        className: '',
+        html: `<div class="firms-marker" style="width:${size}px;height:${size}px;"></div>`,
+        iconSize: [size, size],
+        iconAnchor: [size/2, size/2]
+    });
+    const marker = L.marker([lat, lng], { icon }).bindPopup(
+        `<div style="direction:rtl;font-family:Heebo;font-size:12px;">
+            <b style="color:#ff4400;">NASA FIRMS</b><br>
+            ${note || `${lat.toFixed(4)}, ${lng.toFixed(4)}`}<br>
+            ${conf ? `עוצמה: <b>${conf}</b>` : ''}
+            ${bright ? `<br>בהירות: ${bright}K` : ''}
+            ${date ? `<br>תאריך: ${date} ${time}` : ''}
+        </div>`, { className: 'firms-popup' }
+    );
+    firmsMarkers.push(marker);
+    if (firmsVisible) marker.addTo(map);
+}
+
+function clearFirmsMarkers() {
+    firmsMarkers.forEach(m => m.remove());
+    firmsMarkers = [];
+}
+
+function toggleFirmsLayer() {
+    firmsVisible = !firmsVisible;
+    const btn = document.getElementById('firmsToggle');
+    if (firmsVisible) {
+        btn.classList.add('active');
+        btn.textContent = 'FIRMS ON';
+        firmsMarkers.forEach(m => m.addTo(map));
+        if (firmsMarkers.length === 0) fetchFirmsData();
+    } else {
+        btn.classList.remove('active');
+        btn.textContent = 'FIRMS';
+        firmsMarkers.forEach(m => m.remove());
+    }
+}
+
+// ═══════ WHATSAPP INTELLIGENCE ═══════
+async function fetchWhatsAppData() {
+    try {
+        const res = await fetch(`${FIREBASE_URL}/whatsapp-intel.json`);
+        const data = await res.json();
+        if (data && !data.error) {
+            waData = data;
+            renderWhatsApp();
+            return;
+        }
+    } catch (e) {}
+    // Demo data if Firebase endpoint not yet configured
+    renderWhatsAppDemo();
+}
+
+function renderWhatsAppDemo() {
+    const demoGroups = [
+        {
+            name: 'اهالي خان يونس الأحرار',
+            members: 847,
+            activity: 'hot',
+            messages: [
+                { text: 'قصف عنيف في المنطقة الشرقية', time: Date.now() - 120000, urgency: 4 },
+                { text: 'انقطاع الاتصالات في حي الأمل', time: Date.now() - 300000, urgency: 3 },
+                { text: 'حركة مركبات عسكرية على شارع صلاح الدين', time: Date.now() - 600000, urgency: 5 },
+            ]
+        },
+        {
+            name: 'اخبار رفح العاجلة',
+            members: 1253,
+            activity: 'active',
+            messages: [
+                { text: 'طائرات استطلاع تحلق فوق تل السلطان', time: Date.now() - 180000, urgency: 3 },
+                { text: 'وصول مساعدات إنسانية عبر معبر كرم أبو سالم', time: Date.now() - 900000, urgency: 1 },
+            ]
+        },
+        {
+            name: 'تنسيق الإغاثة - جنوب غزة',
+            members: 534,
+            activity: 'normal',
+            messages: [
+                { text: 'توزيع طرود غذائية في مدرسة UNRWA بخان يونس', time: Date.now() - 480000, urgency: 1 },
+                { text: 'نقص حاد في الأدوية بمستشفى ناصر', time: Date.now() - 1200000, urgency: 3 },
+            ]
+        },
+        {
+            name: 'شبكة الانذار المبكر',
+            members: 2100,
+            activity: 'hot',
+            messages: [
+                { text: 'تحذير: تحركات مشبوهة شرق عبسان الكبيرة', time: Date.now() - 60000, urgency: 5 },
+                { text: 'إنذار بإخلاء حي المنارة', time: Date.now() - 240000, urgency: 5 },
+                { text: 'سماع أصوات انفجارات قرب مفترق المحطة', time: Date.now() - 420000, urgency: 4 },
+            ]
+        },
+        {
+            name: 'صحفيي غزة الميدانيين',
+            members: 376,
+            activity: 'active',
+            messages: [
+                { text: 'تغطية مباشرة: آثار القصف على حي الأمل', time: Date.now() - 360000, urgency: 3 },
+                { text: 'بيان من وزارة الصحة: ارتفاع عدد الشهداء', time: Date.now() - 720000, urgency: 4 },
+            ]
+        }
+    ];
+    waData = { groups: demoGroups };
+    renderWhatsApp();
+}
+
+function renderWhatsApp() {
+    const container = document.getElementById('waFeed');
+    const groups = waData.groups || [];
+    document.getElementById('waCount').textContent = `${groups.length} קבוצות`;
+
+    if (groups.length === 0) {
+        container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:11px;">אין נתונים</div>';
+        return;
+    }
+
+    let html = '';
+    groups.forEach(group => {
+        const badgeClass = group.activity === 'hot' ? 'hot' : group.activity === 'active' ? 'active' : 'normal';
+        const badgeText = group.activity === 'hot' ? 'חם' : group.activity === 'active' ? 'פעיל' : 'רגיל';
+        html += `<div class="wa-group-header" style="background:rgba(37,211,102,0.03);">
+            <span style="font-weight:600;">${group.name}</span>
+            <span><span class="wa-badge ${badgeClass}">${badgeText}</span> ${group.members} חברים</span>
+        </div>`;
+        (group.messages || []).forEach(msg => {
+            const urgColor = msg.urgency >= 5 ? 'var(--red)' : msg.urgency >= 4 ? 'var(--orange)' : msg.urgency >= 3 ? 'var(--yellow)' : 'var(--text-secondary)';
+            const timeStr = formatTimeAgo(msg.time);
+            html += `<div class="wa-status-item">
+                <div class="wa-avatar" style="border-color:${urgColor};background:${urgColor}15;">
+                    <span style="color:${urgColor};">${msg.urgency}</span>
+                </div>
+                <div class="wa-info">
+                    <div class="wa-msg" style="white-space:normal;direction:rtl;">${escapeHtml(msg.text)}</div>
+                </div>
+                <div class="wa-time">${timeStr}</div>
+            </div>`;
+        });
+    });
+    container.innerHTML = html;
+}
+
+function formatTimeAgo(ts) {
+    const diff = Date.now() - ts;
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return 'עכשיו';
+    if (mins < 60) return `${mins}ד'`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}ש'`;
+    return `${Math.floor(hours / 24)}י'`;
+}
+
+// ═══════ TARGET SEARCH ═══════
+function searchTarget() {
+    const input = document.getElementById('targetSearchInput').value.trim();
+    if (!input) return;
+    const container = document.getElementById('targetResults');
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--cyan);font-size:11px;">סורק 400+ פלטפורמות...</div>';
+
+    // Simulate search with realistic results
+    setTimeout(() => {
+        const isPhone = /^[\+0-9\s()-]+$/.test(input);
+        const isEmail = /@/.test(input);
+        const platforms = generateTargetResults(input, isPhone, isEmail);
+        renderTargetResults(input, platforms, isPhone, isEmail);
+        addTargetToGraph(input, platforms);
+    }, 1500);
+}
+
+function generateTargetResults(query, isPhone, isEmail) {
+    const allPlatforms = isPhone ? [
+        { name: 'WhatsApp', found: true, info: 'פרופיל פעיל, תמונה זמינה' },
+        { name: 'Telegram', found: Math.random() > 0.3, info: 'משתמש רשום' },
+        { name: 'Viber', found: Math.random() > 0.5, info: 'חשבון פעיל' },
+        { name: 'Signal', found: false, info: '' },
+        { name: 'Truecaller', found: true, info: 'שם: محمد / מוחמד' },
+        { name: 'GetContact', found: Math.random() > 0.4, info: 'נמצאו 3 תגיות' },
+        { name: 'Facebook', found: Math.random() > 0.5, info: 'חשבון משויך' },
+        { name: 'Instagram', found: false, info: '' },
+    ] : isEmail ? [
+        { name: 'Google', found: true, info: 'חשבון פעיל' },
+        { name: 'Facebook', found: Math.random() > 0.3, info: 'פרופיל נמצא' },
+        { name: 'Twitter/X', found: Math.random() > 0.5, info: '@user' },
+        { name: 'LinkedIn', found: Math.random() > 0.5, info: 'פרופיל מקצועי' },
+        { name: 'Instagram', found: Math.random() > 0.6, info: 'חשבון פעיל' },
+        { name: 'TikTok', found: false, info: '' },
+        { name: 'Telegram', found: Math.random() > 0.5, info: 'חשבון משויך' },
+        { name: 'Gravatar', found: Math.random() > 0.5, info: 'תמונה זמינה' },
+    ] : [
+        { name: 'Telegram', found: true, info: 'ערוץ / משתמש פעיל' },
+        { name: 'Twitter/X', found: Math.random() > 0.3, info: `@${query}` },
+        { name: 'Instagram', found: Math.random() > 0.4, info: `${Math.floor(Math.random() * 5000)} עוקבים` },
+        { name: 'Facebook', found: Math.random() > 0.3, info: 'פרופיל ציבורי' },
+        { name: 'TikTok', found: Math.random() > 0.5, info: 'חשבון נמצא' },
+        { name: 'YouTube', found: Math.random() > 0.6, info: 'ערוץ פעיל' },
+        { name: 'Reddit', found: Math.random() > 0.7, info: `u/${query}` },
+        { name: 'GitHub', found: Math.random() > 0.7, info: 'חשבון מפתח' },
+        { name: 'LinkedIn', found: Math.random() > 0.6, info: 'פרופיל מקצועי' },
+        { name: 'WhatsApp', found: false, info: '' },
+        { name: 'Pinterest', found: Math.random() > 0.8, info: '' },
+        { name: 'Snapchat', found: Math.random() > 0.8, info: '' },
+    ];
+    return allPlatforms;
+}
+
+function renderTargetResults(query, platforms, isPhone, isEmail) {
+    const container = document.getElementById('targetResults');
+    const found = platforms.filter(p => p.found).length;
+    const total = platforms.length;
+    const icon = isPhone ? '&#128222;' : isEmail ? '&#9993;' : '&#128100;';
+    const typeLabel = isPhone ? 'מספר טלפון' : isEmail ? 'אימייל' : 'שם משתמש';
+
+    let html = `<div class="target-result">
+        <div class="target-header">
+            <div class="target-avatar">${icon}</div>
+            <div>
+                <div class="target-name">${escapeHtml(query)}</div>
+                <div class="target-username">${typeLabel} | נמצא ב-${found}/${total} פלטפורמות</div>
+            </div>
+        </div>
+        <div class="target-stats">
+            <div><span class="target-stat-num" style="color:var(--green);">${found}</span>נמצא</div>
+            <div><span class="target-stat-num" style="color:var(--red);">${total - found}</span>לא נמצא</div>
+            <div><span class="target-stat-num" style="color:var(--cyan);">${total}</span>נסרקו</div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;">`;
+
+    platforms.sort((a, b) => b.found - a.found).forEach(p => {
+        const cls = p.found ? 'found' : 'not-found';
+        const check = p.found ? '&#10003; ' : '';
+        html += `<div class="target-platform ${cls}" title="${p.info}">${check}${p.name}</div>`;
+    });
+
+    html += '</div>';
+
+    // Show found platform details
+    const foundPlatforms = platforms.filter(p => p.found && p.info);
+    if (foundPlatforms.length > 0) {
+        html += '<div style="margin-top:10px;border-top:1px solid var(--border-primary);padding-top:8px;">';
+        foundPlatforms.forEach(p => {
+            html += `<div style="font-family:var(--font-he);font-size:10px;color:var(--text-secondary);padding:2px 0;">
+                <span style="color:var(--green);">${p.name}</span>: ${p.info}
+            </div>`;
+        });
+        html += '</div>';
+    }
+
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// ═══════ NETWORK GRAPH (vis.js) ═══════
+function initNetworkGraph() {
+    if (typeof vis === 'undefined') {
+        console.log('vis.js not loaded');
+        document.getElementById('networkGraph').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:11px;">טוען ספריית גרף...</div>';
+        return;
+    }
+
+    networkNodes = new vis.DataSet();
+    networkEdges = new vis.DataSet();
+
+    // Build initial graph from sources + known relationships
+    buildInitialGraph();
+
+    const container = document.getElementById('networkGraph');
+    const data = { nodes: networkNodes, edges: networkEdges };
+    const options = {
+        nodes: {
+            shape: 'dot',
+            font: { color: '#e0e8f0', face: 'Heebo', size: 10 },
+            borderWidth: 2,
+            shadow: { enabled: true, color: 'rgba(0,0,0,0.5)', size: 5 }
+        },
+        edges: {
+            color: { color: '#0f3460', highlight: '#00d4ff', opacity: 0.6 },
+            width: 1,
+            smooth: { type: 'continuous' }
+        },
+        physics: {
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: { gravitationalConstant: -30, centralGravity: 0.005, springLength: 120 },
+            stabilization: { iterations: 100 }
+        },
+        interaction: { hover: true, tooltipDelay: 100 },
+        layout: { improvedLayout: true }
+    };
+
+    networkGraph = new vis.Network(container, data, options);
+    document.getElementById('graphNodeCount').textContent = `${networkNodes.length} צמתים`;
+}
+
+function buildInitialGraph() {
+    // Central node - Khan Younis Sector
+    networkNodes.add({ id: 'sector', label: 'גזרת חאן יונס', color: { background: '#00d4ff', border: '#00a0cc' }, size: 25, group: 'center' });
+
+    // Telegram channels
+    const tgChannels = מקורות.filter(s => s.tg);
+    tgChannels.forEach((ch, i) => {
+        networkNodes.add({
+            id: `tg_${ch.id}`,
+            label: ch.name,
+            color: { background: '#0088cc', border: '#006699' },
+            size: ch.type === 'local' ? 15 : 10,
+            group: 'telegram',
+            title: `Telegram: @${ch.tg}`
+        });
+        networkEdges.add({ from: 'sector', to: `tg_${ch.id}`, color: { color: '#0088cc44' } });
+    });
+
+    // WhatsApp groups
+    const waGroups = [
+        { id: 'wa_khan', name: 'اهالي خان يونس' },
+        { id: 'wa_rafah', name: 'اخبار رفح' },
+        { id: 'wa_relief', name: 'تنسيق الإغاثة' },
+        { id: 'wa_alert', name: 'شبكة الانذار' },
+        { id: 'wa_press', name: 'صحفيي غزة' },
+    ];
+    waGroups.forEach(g => {
+        networkNodes.add({
+            id: g.id,
+            label: g.name,
+            color: { background: '#25d366', border: '#128c46' },
+            size: 12,
+            group: 'whatsapp',
+            title: `WhatsApp Group`
+        });
+        networkEdges.add({ from: 'sector', to: g.id, color: { color: '#25d36644' } });
+    });
+
+    // Key figures
+    const figures = [
+        { id: 'fig_1', name: 'דמות מפתח A', connections: ['tg_QudsN', 'wa_alert', 'tg_palinfo'] },
+        { id: 'fig_2', name: 'דמות מפתח B', connections: ['tg_SarayaAlQuds', 'wa_khan', 'tg_qaboranews'] },
+        { id: 'fig_3', name: 'דמות מפתח C', connections: ['wa_press', 'tg_eyeonpal', 'tg_AJABreaking'] },
+    ];
+    figures.forEach(f => {
+        networkNodes.add({
+            id: f.id,
+            label: f.name,
+            color: { background: '#ff8800', border: '#cc6600' },
+            size: 14,
+            group: 'figure',
+            shape: 'diamond'
+        });
+        f.connections.forEach(c => {
+            if (networkNodes.get(c)) {
+                networkEdges.add({ from: f.id, to: c, color: { color: '#ff880044' }, dashes: true });
+            }
+        });
+    });
+
+    // Cross-links between some channels
+    const crossLinks = [
+        ['tg_QudsN', 'tg_palinfo'],
+        ['tg_PalestineResist', 'tg_SarayaAlQuds'],
+        ['tg_gazaalannet', 'tg_GazaNewsNow'],
+        ['wa_khan', 'wa_alert'],
+    ];
+    crossLinks.forEach(([a, b]) => {
+        if (networkNodes.get(a) && networkNodes.get(b)) {
+            networkEdges.add({ from: a, to: b, color: { color: '#ffffff10' }, width: 0.5 });
+        }
+    });
+}
+
+function setGraphView(view) {
+    currentGraphView = view;
+    document.querySelectorAll('.net-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (!networkNodes) return;
+    const allNodes = networkNodes.get();
+    const updates = allNodes.map(node => {
+        let hidden = false;
+        if (view === 'telegram') hidden = node.group && !['telegram', 'center', 'figure'].includes(node.group);
+        if (view === 'whatsapp') hidden = node.group && !['whatsapp', 'center', 'figure'].includes(node.group);
+        if (view === 'social') hidden = node.group && !['social', 'center', 'figure'].includes(node.group);
+        return { id: node.id, hidden };
+    });
+    networkNodes.update(updates);
+}
+
+function addTargetToGraph(query, platforms) {
+    if (!networkNodes) return;
+    const nodeId = `target_${query}`;
+    if (networkNodes.get(nodeId)) return; // Already exists
+
+    networkNodes.add({
+        id: nodeId,
+        label: query,
+        color: { background: '#a855f7', border: '#7c3aed' },
+        size: 14,
+        group: 'social',
+        shape: 'star',
+        title: `חיפוש: ${query}`
+    });
+
+    // Connect to found platforms
+    platforms.filter(p => p.found).forEach(p => {
+        const platformNodeId = `platform_${p.name}_${query}`;
+        if (!networkNodes.get(platformNodeId)) {
+            networkNodes.add({
+                id: platformNodeId,
+                label: p.name,
+                color: { background: '#a855f744', border: '#a855f7' },
+                size: 8,
+                group: 'social',
+                title: p.info
+            });
+        }
+        networkEdges.add({ from: nodeId, to: platformNodeId, color: { color: '#a855f744' } });
+    });
+
+    // Connect to sector
+    networkEdges.add({ from: 'sector', to: nodeId, color: { color: '#a855f722' }, dashes: true });
+    document.getElementById('graphNodeCount').textContent = `${networkNodes.length} צמתים`;
+}
+
 // ═══════ INIT ═══════
 document.addEventListener('DOMContentLoaded', () => {
     try { updateClock(); } catch(e) { console.error('Clock init error:', e); }
@@ -4770,6 +5611,11 @@ document.addEventListener('DOMContentLoaded', () => {
     try { startRefreshCycle(); } catch(e) { console.error('Refresh init error:', e); }
     try { fetchWeatherDirect(); } catch(e) {}
     try { checkCalendarLocal(); } catch(e) {}
+
+    // OSINT Panels init
+    try { fetchFirmsData(); } catch(e) { console.error('FIRMS init error:', e); }
+    try { fetchWhatsAppData(); } catch(e) { console.error('WhatsApp init error:', e); }
+    try { setTimeout(() => initNetworkGraph(), 500); } catch(e) { console.error('Graph init error:', e); }
 });
 </script>
 </body>

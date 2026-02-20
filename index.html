@@ -1588,10 +1588,13 @@ body {
 
 /* ═══════ VOTE BUTTONS ═══════ */
 .vote-buttons { display:flex; gap:6px; align-items:center; margin-right:auto; }
-.vote-btn { background:none; border:1px solid var(--border-primary); color:var(--text-dim); font-size:14px; width:28px; height:28px; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease; }
-.vote-btn:hover { border-color:var(--cyan); background:rgba(0,212,255,0.06); }
-.vote-btn.vote-like.active { border-color:var(--green); color:var(--green); background:rgba(0,255,136,0.1); }
-.vote-btn.vote-dislike.active { border-color:var(--red); color:var(--red); background:var(--red-dim); }
+.vote-btn { background:transparent; border:1px solid var(--border-primary); color:var(--text-dim); width:28px; height:28px; border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s ease; opacity:0.5; }
+.vote-btn svg { width:14px; height:14px; fill:currentColor; }
+.vote-btn:hover { opacity:1; }
+.vote-btn.vote-like:hover { border-color:var(--cyan); color:var(--cyan); background:rgba(0,212,255,0.08); }
+.vote-btn.vote-dislike:hover { border-color:var(--red); color:var(--red); background:rgba(255,0,64,0.08); }
+.vote-btn.vote-like.active { border-color:var(--cyan); color:var(--cyan); background:rgba(0,212,255,0.12); opacity:1; }
+.vote-btn.vote-dislike.active { border-color:var(--red); color:var(--red); background:rgba(255,0,64,0.12); opacity:1; }
 .alert-item.alert-false { opacity:0.6; }
 .alert-item.alert-false .alert-title { text-decoration:line-through; text-decoration-color:var(--red); }
 .false-badge { display:inline-block; font-family:var(--font-he); font-size:9px; font-weight:700; color:var(--red); background:var(--red-dim); border:1px solid var(--red); border-radius:3px; padding:0px 5px; margin-left:6px; }
@@ -4624,8 +4627,8 @@ function renderAlerts() {
                 ${sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" onclick="event.stopPropagation();" style="color:var(--text-dim);font-size:10px;text-decoration:none;">&#128279; מקור</a>' : ''}
                 ${item.matchedKeywords ? '<span>KW: ' + escapeHtml(item.matchedKeywords.join(', ')) + '</span>' : ''}
                 <div class="vote-buttons">
-                    <button class="vote-btn vote-like${isLiked ? ' active' : ''}" onclick="toggleVote('${alertId}','like',event)" title="אמין" style="opacity:${isLiked ? '1' : '0.4'};">&#128077;</button>
-                    <button class="vote-btn vote-dislike${isDisliked ? ' active' : ''}" onclick="toggleVote('${alertId}','dislike',event)" title="שגוי" style="opacity:${isDisliked ? '1' : '0.4'};">&#128078;</button>
+                    <button class="vote-btn vote-like${isLiked ? ' active' : ''}" onclick="toggleVote('${alertId}','like',event)" title="אמין"><svg viewBox="0 0 24 24"><path d="M2 20h2V8H2v12zm20-11a2 2 0 0 0-2-2h-6.31l.95-4.57.03-.32a1.49 1.49 0 0 0-.44-1.06L13.17 0 6.59 6.59A1.98 1.98 0 0 0 6 8v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9z"/></svg></button>
+                    <button class="vote-btn vote-dislike${isDisliked ? ' active' : ''}" onclick="toggleVote('${alertId}','dislike',event)" title="שגוי"><svg viewBox="0 0 24 24"><path d="M22 4h-2v12h2V4zM2 15a2 2 0 0 0 2 2h6.31l-.95 4.57-.03.32c0 .4.17.77.44 1.06L10.83 24l6.58-6.59A1.98 1.98 0 0 0 18 16V6a2 2 0 0 0-2-2H7a2 2 0 0 0-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2z"/></svg></button>
                 </div>
             </div>
         </div>
@@ -5044,8 +5047,8 @@ function renderHistory() {
                             ${locTag}
                             ${sourceTag}
                             <div class="vote-buttons" style="margin-right:4px;">
-                                <button class="vote-btn vote-like${hIsLiked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','like',event).then(()=>renderHistory())" title="אמין" style="opacity:${hIsLiked ? '1' : '0.4'};width:24px;height:24px;font-size:12px;">&#128077;</button>
-                                <button class="vote-btn vote-dislike${hIsDisliked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','dislike',event).then(()=>renderHistory())" title="שגוי" style="opacity:${hIsDisliked ? '1' : '0.4'};width:24px;height:24px;font-size:12px;">&#128078;</button>
+                                <button class="vote-btn vote-like${hIsLiked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','like',event).then(()=>renderHistory())" title="אמין" style="width:24px;height:24px;"><svg viewBox="0 0 24 24"><path d="M2 20h2V8H2v12zm20-11a2 2 0 0 0-2-2h-6.31l.95-4.57.03-.32a1.49 1.49 0 0 0-.44-1.06L13.17 0 6.59 6.59A1.98 1.98 0 0 0 6 8v10a2 2 0 0 0 2 2h9a2 2 0 0 0 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9z"/></svg></button>
+                                <button class="vote-btn vote-dislike${hIsDisliked ? ' active' : ''}" onclick="event.stopPropagation();toggleVote('${noteId}','dislike',event).then(()=>renderHistory())" title="שגוי" style="width:24px;height:24px;"><svg viewBox="0 0 24 24"><path d="M22 4h-2v12h2V4zM2 15a2 2 0 0 0 2 2h6.31l-.95 4.57-.03.32c0 .4.17.77.44 1.06L10.83 24l6.58-6.59A1.98 1.98 0 0 0 18 16V6a2 2 0 0 0-2-2H7a2 2 0 0 0-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2z"/></svg></button>
                             </div>
                             <button class="journal-note-btn" onclick="event.stopPropagation();toggleNoteForm('${noteId}')">${note ? '📝' : '➕ הוסף מידע'}</button>
                         </div>

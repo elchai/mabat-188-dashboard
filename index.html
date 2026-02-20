@@ -438,7 +438,13 @@ body {
 }
 
 /* Threat Level */
-.threat-container { flex: 0 0 200px; }
+.threat-container { flex: 0 0 230px; }
+.threat-status-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
+}
 
 .threat-gauge {
     display: flex;
@@ -2470,10 +2476,10 @@ body {
         order: 2;
         padding: 0;
     }
-    .header-right .header-status-group { gap: 6px; }
-    .header-right .header-status-group .status-badge { padding: 2px 6px; font-size: 9px; }
     .header-right .clock { font-size: 14px; }
     .header-right .date-display { font-size: 9px; }
+    .threat-status-row { flex-wrap: wrap; gap: 4px; }
+    .threat-status-row .status-badge { padding: 2px 6px; font-size: 9px; }
 
     .map-panel {
         height: 45vh;
@@ -2555,7 +2561,7 @@ body {
 }
 
 @media (max-width: 480px) {
-    .header-status-group .status-badge:nth-child(2) { display: none; }
+    .threat-status-row .status-badge { font-size: 8px; }
     .header-actions-group .header-btn { padding: 4px 6px; font-size: 9px; min-width: auto; }
     .header-actions-group .header-btn .btn-icon { font-size: 11px; }
     .logo-section { gap: 8px; }
@@ -3069,17 +3075,6 @@ window.addEventListener('load', function() {
         </div>
 
         <div class="header-right">
-            <div class="header-status-group">
-                <div class="status-badge">
-                    <div class="status-dot" id="statusDot"></div>
-                    <span id="statusText">ONLINE</span>
-                </div>
-                <div class="status-badge">
-                    <span>סריקה</span>
-                    <span id="lastScan" style="color: var(--cyan);">--:--</span>
-                </div>
-            </div>
-            <div class="header-divider"></div>
             <div>
                 <div class="clock" id="clock">00:00:00</div>
                 <div class="date-display" id="dateDisplay"></div>
@@ -3109,6 +3104,16 @@ window.addEventListener('load', function() {
                     <div class="threat-bar"></div>
                     <div class="threat-bar"></div>
                     <div class="threat-bar"></div>
+                </div>
+                <div class="threat-status-row">
+                    <div class="status-badge">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span id="statusText">ONLINE</span>
+                    </div>
+                    <div class="status-badge">
+                        <span>סריקה</span>
+                        <span id="lastScan" style="color: var(--cyan);">--:--</span>
+                    </div>
                 </div>
             </div>
         </div>

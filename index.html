@@ -2598,7 +2598,7 @@ body {
     .corner-decor { display: none; }
 
     .osint-row { display: flex; flex-direction: column; gap: 4px; order: 6; }
-    .osint-panel { min-height: 450px; }
+    .osint-panel { min-height: 55vh; }
     .osint-panel .panel-body { position: static !important; display: flex; flex-direction: column; }
     .network-controls {
         position: static;
@@ -2608,7 +2608,7 @@ body {
         justify-content: center;
         flex-shrink: 0;
     }
-    .network-container { min-height: 350px; flex: 1; }
+    .network-container { min-height: 50vh; flex: 1; }
     .net-legend {
         position: static;
         padding: 6px 8px;
@@ -6858,6 +6858,9 @@ function initNetworkGraph() {
     };
 
     networkGraph = new vis.Network(container, data, options);
+    networkGraph.once('stabilizationIterationsDone', function() {
+        networkGraph.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } });
+    });
     document.getElementById('graphNodeCount').textContent = `${networkNodes.length} צמתים`;
 }
 

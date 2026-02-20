@@ -2445,128 +2445,128 @@ body {
         gap: 4px;
     }
 
+    /* ── HEADER: compact single row ── */
     .header {
         display: flex;
         flex-wrap: wrap;
-        padding: 8px 12px;
-        gap: 8px;
-        min-height: 60px;
+        padding: 6px 10px;
+        gap: 6px;
+        min-height: auto;
         height: auto;
         justify-content: center;
         position: relative;
     }
-
     .logo-section {
-        width: 100%;
-        justify-content: center;
+        width: auto;
+        gap: 8px;
+        order: 1;
     }
-
-    .system-title { font-size: 16px; letter-spacing: 2px; }
-    .system-subtitle { font-size: 9px; display: none; }
-    .logo-hex { width: 35px; height: 35px; }
-    .header-center { gap: 6px; flex-wrap: nowrap; justify-content: center; width: 100%; order: 3; }
-    .header-divider { display: none; }
-    .header-actions-group { gap: 6px; justify-content: center; width: 100%; flex-wrap: wrap; }
-    .header-actions-group .header-btn { padding: 5px 10px; font-size: 10px; min-width: auto; }
+    .system-title { font-size: 14px; letter-spacing: 2px; }
+    .system-subtitle { display: none; }
+    .logo-hex { width: 30px; height: 30px; }
     .header-right {
         display: flex;
-        width: 100%;
-        justify-content: center;
+        align-items: center;
         gap: 8px;
         order: 2;
         padding: 0;
+        margin-right: auto;
     }
-    .header-right .clock { font-size: 14px; }
-    .header-right .date-display { font-size: 9px; }
-    .threat-status-row { flex-wrap: wrap; gap: 4px; }
-    .threat-status-row .status-badge { padding: 2px 6px; font-size: 9px; }
+    .header-right .clock { font-size: 13px; }
+    .header-right .date-display { font-size: 8px; }
+    .header-divider { display: none; }
+    .header-center {
+        width: 100%;
+        order: 3;
+        gap: 4px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .header-actions-group {
+        gap: 4px;
+        justify-content: center;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .header-actions-group .header-btn {
+        padding: 4px 8px;
+        font-size: 9px;
+        min-width: auto;
+    }
+    .header-actions-group .header-btn .btn-icon { font-size: 10px; }
 
+    /* ── CONTENT ORDER ── */
     .map-panel {
-        height: 45vh;
-        min-height: 280px;
+        height: 40vh;
+        min-height: 250px;
         order: 1;
     }
 
-    .alert-feed {
-        min-height: 300px;
-        max-height: none;
-        order: 2;
-        flex: 1;
-    }
-
-    .alert-toolbar { flex-wrap: wrap; gap: 4px; padding: 4px 8px; }
-    .filter-chip { padding: 4px 8px; font-size: 9px; }
-    .search-input { max-width: 100%; min-width: 120px; }
-
-    .timeline-graph { padding: 4px 8px; }
-    .timeline-bars { height: 25px; }
-
-    .alert-item { padding: 8px 10px; gap: 8px; }
-    .alert-title { font-size: 12px; -webkit-line-clamp: 2; }
-    .alert-source { font-size: 8px; padding: 1px 4px; }
-
     .left-panel {
-        flex-direction: row;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         gap: 4px;
+        order: 2;
+        overflow: visible;
+    }
+    .threat-container { flex: none; }
+    .threat-container { grid-column: 1; }
+    .stats-container { flex: none; grid-column: 2; }
+    .sources-container { grid-column: 1 / -1; }
+    .threat-gauge { padding: 8px; }
+    .threat-circle { width: 80px; height: 80px; }
+    .threat-level-num { font-size: 24px; }
+    .threat-status-row { gap: 4px; }
+    .threat-status-row .status-badge { padding: 2px 5px; font-size: 8px; }
+
+    .alert-feed {
+        min-height: 250px;
+        max-height: 400px;
         order: 3;
     }
+    .alert-toolbar { flex-wrap: wrap; gap: 3px; padding: 4px 8px; }
+    .filter-chip { padding: 3px 6px; font-size: 9px; }
+    .search-input { max-width: 100%; min-width: 100px; }
+    .timeline-graph { padding: 4px 8px; }
+    .timeline-bars { height: 20px; }
+    .alert-item { padding: 8px 10px; gap: 6px; }
+    .alert-title { font-size: 11px; -webkit-line-clamp: 2; }
+    .alert-source { font-size: 8px; padding: 1px 4px; }
 
-    .threat-container {
-        flex: 1 1 160px;
-        max-width: 50%;
-    }
+    .right-panel { order: 4; min-height: 150px; }
+    .config-panel { order: 5; }
 
-    .threat-gauge { padding: 10px; }
-    .threat-circle { width: 90px; height: 90px; }
-    .threat-level-num { font-size: 28px; }
-
-    .stats-container {
-        flex: 1 1 160px;
-        max-width: 50%;
-    }
-
-    .sources-container {
-        flex: 1 1 100%;
-    }
-
-    .right-panel {
-        order: 4;
-        min-height: 200px;
-    }
-
-    .config-panel {
-        order: 5;
-    }
-
-    .panel-title { font-size: 9px; letter-spacing: 2px; }
+    .panel-title { font-size: 9px; letter-spacing: 1px; }
     .stat-label { font-size: 10px; }
-    .stat-value { font-size: 14px; }
+    .stat-value { font-size: 13px; }
 
-    .map-btn { font-size: 12px; padding: 8px 14px; z-index: 10000; }
+    .map-btn { font-size: 11px; padding: 6px 12px; z-index: 10000; }
     .map-panel.fullscreen { position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; height: 100vh !important; min-height: 100vh !important; z-index: 9999 !important; }
     .map-panel.fullscreen .map-btn { top: 10px; left: 10px; font-size: 14px; padding: 10px 18px; }
 
-    .history-header { padding: 10px 15px; }
-    .history-title { font-size: 14px; }
-    .history-filters { padding: 8px 15px; gap: 6px; }
-    .history-body { padding: 10px 15px; }
-    .history-item { padding: 8px; }
-    .history-stat-bar { padding: 8px 15px; gap: 8px; font-size: 10px; flex-wrap: wrap; }
+    .history-header { padding: 8px 12px; }
+    .history-title { font-size: 13px; }
+    .history-filters { padding: 6px 12px; gap: 4px; }
+    .history-body { padding: 8px 12px; }
+    .history-item { padding: 6px; }
+    .history-stat-bar { padding: 6px 12px; gap: 6px; font-size: 9px; flex-wrap: wrap; }
 
     .corner-decor { display: none; }
-    .osint-row { display: flex; flex-direction: column; gap: 4px; }
-    .osint-panel { min-height: 300px; }
-    .network-container { min-height: 300px; }
+
+    .osint-row { display: flex; flex-direction: column; gap: 4px; order: 6; }
+    .osint-panel { min-height: 200px; }
+    .network-container { min-height: 250px; }
 }
 
 @media (max-width: 480px) {
-    .threat-status-row .status-badge { font-size: 8px; }
-    .header-actions-group .header-btn { padding: 4px 6px; font-size: 9px; min-width: auto; }
-    .header-actions-group .header-btn .btn-icon { font-size: 11px; }
-    .logo-section { gap: 8px; }
-    .map-panel { height: 35vh; min-height: 220px; }
-    .threat-container, .stats-container { max-width: 100%; flex: 1 1 100%; }
+    .logo-section { gap: 6px; }
+    .system-title { font-size: 12px; }
+    .header-right .clock { font-size: 11px; }
+    .header-actions-group .header-btn { padding: 3px 6px; font-size: 8px; }
+    .map-panel { height: 35vh; min-height: 200px; }
+    .left-panel { grid-template-columns: 1fr 1fr; }
+    .threat-circle { width: 65px; height: 65px; }
+    .threat-level-num { font-size: 20px; }
     .alert-toolbar .toggle-container span:last-child { display: none; }
 }
 

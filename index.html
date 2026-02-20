@@ -352,12 +352,12 @@ body {
     justify-content: flex-end;
     gap: 10px;
     font-family: var(--font-mono);
-    padding: 0 12px;
+    padding: 0 25px;
     white-space: nowrap;
 }
 
 .clock {
-    font-size: 20px;
+    font-size: 17px;
     letter-spacing: 2px;
     color: var(--cyan);
     text-shadow: 0 0 10px var(--cyan-dim);
@@ -1617,7 +1617,7 @@ body {
 .osint-row {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 2px;
     min-height: 0;
 }
@@ -1629,6 +1629,7 @@ body {
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     overflow: hidden;
+    min-width: 0;
 }
 
 .osint-panel .panel-header {

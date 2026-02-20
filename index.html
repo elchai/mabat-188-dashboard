@@ -2598,8 +2598,15 @@ body {
     .corner-decor { display: none; }
 
     .osint-row { display: flex; flex-direction: column; gap: 4px; order: 6; }
-    .osint-panel { min-height: 55vh; }
-    .osint-panel .panel-body { position: static !important; display: flex; flex-direction: column; }
+    .osint-panel { min-height: auto; overflow: visible; }
+    .osint-panel .panel-body {
+        position: static !important;
+        display: flex;
+        flex-direction: column;
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+    }
     .network-controls {
         position: static;
         padding: 6px 8px;
@@ -2608,7 +2615,11 @@ body {
         justify-content: center;
         flex-shrink: 0;
     }
-    .network-container { min-height: 50vh; flex: 1; }
+    .network-container {
+        min-height: 60vh !important;
+        height: 60vh !important;
+        flex: none;
+    }
     .net-legend {
         position: static;
         padding: 6px 8px;

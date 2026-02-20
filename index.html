@@ -6861,25 +6861,27 @@ function buildInitialGraph() {
         networkEdges.add({ from: 'sector', to: `tg_${ch.id}`, color: { color: '#0088cc44' } });
     });
 
-    // WhatsApp groups
-    const waGroups = [
-        { id: 'wa_khan', name: 'اهالي خان يونس' },
-        { id: 'wa_rafah', name: 'اخبار رفح' },
-        { id: 'wa_relief', name: 'تنسيق الإغاثة' },
-        { id: 'wa_alert', name: 'شبكة الانذار' },
-        { id: 'wa_press', name: 'صحفيي غزة' },
-    ];
-    waGroups.forEach(g => {
-        networkNodes.add({
-            id: g.id,
-            label: g.name,
-            color: { background: '#25d366', border: '#128c46' },
-            size: 12,
-            group: 'whatsapp',
-            title: `WhatsApp Group`
+    // WhatsApp groups (demo mode only — real groups come from Green API)
+    if (isDemoMode) {
+        const waGroups = [
+            { id: 'wa_khan', name: 'اهالي خان يونس' },
+            { id: 'wa_rafah', name: 'اخبار رفح' },
+            { id: 'wa_relief', name: 'تنسيق الإغاثة' },
+            { id: 'wa_alert', name: 'شبكة الانذار' },
+            { id: 'wa_press', name: 'صحفيي غزة' },
+        ];
+        waGroups.forEach(g => {
+            networkNodes.add({
+                id: g.id,
+                label: g.name,
+                color: { background: '#25d366', border: '#128c46' },
+                size: 12,
+                group: 'whatsapp',
+                title: `WhatsApp Group`
+            });
+            networkEdges.add({ from: 'sector', to: g.id, color: { color: '#25d36644' } });
         });
-        networkEdges.add({ from: 'sector', to: g.id, color: { color: '#25d36644' } });
-    });
+    }
 
     // Key figures and cross-links (demo mode only)
     if (isDemoMode) {

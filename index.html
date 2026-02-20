@@ -256,6 +256,10 @@ body {
     text-align: center;
 }
 
+.hamburger-btn {
+    display: none;
+}
+
 .header-center {
     display: flex;
     align-items: center;
@@ -2475,12 +2479,32 @@ body {
     .header-right .clock { font-size: 13px; }
     .header-right .date-display { font-size: 8px; }
     .header-divider { display: none; }
+    .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        order: 2;
+        background: transparent;
+        border: 1px solid var(--border-primary);
+        color: var(--cyan);
+        font-size: 20px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: auto;
+    }
     .header-center {
+        display: none;
         width: 100%;
-        order: 3;
+        order: 10;
         gap: 4px;
         flex-wrap: wrap;
         justify-content: center;
+        padding: 6px 0;
+        border-top: 1px solid var(--border-primary);
+    }
+    .header-center.menu-open {
+        display: flex;
     }
     .header-actions-group {
         gap: 4px;
@@ -2494,6 +2518,16 @@ body {
         min-width: auto;
     }
     .header-actions-group .header-btn .btn-icon { font-size: 10px; }
+    .logo-hex {
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+    }
+    .logo-hex img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
     /* ── CONTENT ORDER ── */
     .map-panel {
@@ -2555,7 +2589,23 @@ body {
 
     .osint-row { display: flex; flex-direction: column; gap: 4px; order: 6; }
     .osint-panel { min-height: 200px; }
-    .network-container { min-height: 250px; }
+    .osint-panel .panel-body { position: static !important; }
+    .network-controls {
+        position: static;
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border-primary);
+        background: rgba(0, 0, 0, 0.2);
+        justify-content: center;
+    }
+    .network-container { min-height: 200px; }
+    .net-legend {
+        position: static;
+        padding: 6px 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -3048,6 +3098,8 @@ window.addEventListener('load', function() {
                 <div class="system-subtitle">פלטפורמת מודיעין גזרתית</div>
             </div>
         </div>
+
+        <button class="hamburger-btn" onclick="toggleMobileMenu()">☰</button>
 
         <div class="header-center">
             <div class="header-actions-group">
@@ -3771,6 +3823,10 @@ function toggleNoteForm(itemId) {
 
 // ═══════ FIELD REPORT ═══════
 let reportUrgency = 3;
+
+function toggleMobileMenu() {
+    document.querySelector('.header-center').classList.toggle('menu-open');
+}
 
 function toggleReportForm() {
     const overlay = document.getElementById('reportOverlay');
@@ -4547,11 +4603,15 @@ function renderAlerts() {
                 <span class="alert-time">${formatTimeWithDate(item.timestamp)}</span>
                 <div class="alert-urgency ${item.isFieldReport ? 'urgency-field' : item._isAnarchist ? 'urgency-anarchist' : 'urgency-' + (item.urgency || 1)}"></div>
                 <div class="alert-content">
-                    <div class="alert-title">${isDisliked ? '<span class="false-badge">שגוי</span>' : ''}${isLiked ? '<span class="verified-badge">אומת</span>' : ''}${escapeHtml(item.title || 'N/A')}</div>
+                    <div class="alert-title">${isDisliked ? '<span class="false-badge">שגוי</span>' : ''}${isLiked ? '<span class="verified-badge">אומת</span>' : ''}${escapeHtml(
+                        (item.title && (item.title.endsWith(':') || item.title.length < 20) && item.summary)
+                            ? item.summary.substring(0, 120)
+                            : (item.title || item.summary || 'N/A')
+                    )}</div>
                     ${locationTag}
                 </div>
             </div>
-            ${(item.fullText || item.snippet) ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(item.fullText || item.snippet) + '</div>' : ''}
+            ${(item.fullText || item.snippet || item.summary) ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(item.fullText || item.snippet || item.summary) + '</div>' : ''}
             <div class="alert-meta-row" style="display:none;">
                 <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeHtml(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>
                 ${sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" onclick="event.stopPropagation();" style="color:var(--text-dim);font-size:10px;text-decoration:none;">&#128279; מקור</a>' : ''}
@@ -5612,6 +5672,9 @@ function loadDemoData() {
 
     renderAll();
 
+    // Load demo WhatsApp data
+    renderWhatsAppDemo();
+
     // Start telegram feed simulation in demo mode
     simulateTelegramFeed();
 
@@ -5645,6 +5708,13 @@ function exitDemoMode() {
     summaryData = realSummaryData;
     metaData = realMetaData;
     renderAll();
+    // Restore WhatsApp to real data (re-fetch from Firebase)
+    fetchWhatsAppData();
+    // Clear OSINT search results
+    const targetResults = document.getElementById('targetResults');
+    if (targetResults) {
+        targetResults.innerHTML = '<div style="padding:30px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">הכנס שם משתמש, מספר טלפון או אימייל לסריקה</div>';
+    }
     if (btn) {
         btn.style.color = 'var(--yellow)';
         btn.style.borderColor = 'var(--yellow-dim)';
@@ -5782,14 +5852,23 @@ function simulateTelegramFeed() {
 
 function toggleTgFeed() {
     const btn = document.getElementById('tgFeedBtn');
+    // Allow turning off if already running
     if (tgFeedTimer) {
         clearInterval(tgFeedTimer); tgFeedTimer = null;
         btn.style.color = 'var(--cyan)'; btn.style.borderColor = 'var(--cyan)';
         btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד טלגרם</span>';
-    } else {
+    } else if (isDemoMode) {
         simulateTelegramFeed();
         btn.style.color = 'var(--green)'; btn.style.borderColor = 'var(--green)';
         btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד פעיל...</span>';
+    } else {
+        // Not in demo mode — show message
+        btn.style.color = 'var(--text-dim)'; btn.style.borderColor = 'var(--text-dim)';
+        btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>הדגמה בלבד</span>';
+        setTimeout(() => {
+            btn.style.color = 'var(--cyan)'; btn.style.borderColor = 'var(--cyan)';
+            btn.innerHTML = '<span class="btn-icon">&#9889;</span><span>פיד טלגרם</span>';
+        }, 2000);
     }
 }
 
@@ -6512,8 +6591,11 @@ async function fetchWhatsAppData() {
             return;
         }
     } catch (e) {}
-    // Demo data if Firebase endpoint not yet configured
-    renderWhatsAppDemo();
+    // Show empty state if Firebase endpoint not yet configured (demo data only via הדגמה button)
+    const waContainer = document.getElementById('waFeed');
+    if (waContainer) {
+        waContainer.innerHTML = '<div style="padding:20px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">אין נתוני WhatsApp.<br>הגדר חיבור Green API או לחץ על \'הדגמה\'.</div>';
+    }
 }
 
 function renderWhatsAppDemo() {
@@ -6620,9 +6702,15 @@ function searchTarget() {
     const input = document.getElementById('targetSearchInput').value.trim();
     if (!input) return;
     const container = document.getElementById('targetResults');
+
+    if (!isDemoMode) {
+        container.innerHTML = '<div style="padding:30px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">חיפוש OSINT דורש חיבור API חיצוני.<br>לחץ על \'הדגמה\' לצפייה בדוגמה.</div>';
+        return;
+    }
+
     container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--cyan);font-size:11px;">סורק 400+ פלטפורמות...</div>';
 
-    // Simulate search with realistic results
+    // Simulate search with realistic results (demo mode only)
     setTimeout(() => {
         const isPhone = /^[\+0-9\s()-]+$/.test(input);
         const isEmail = /@/.test(input);
@@ -6793,40 +6881,41 @@ function buildInitialGraph() {
         networkEdges.add({ from: 'sector', to: g.id, color: { color: '#25d36644' } });
     });
 
-    // Key figures
-    const figures = [
-        { id: 'fig_1', name: 'דמות מפתח A', connections: ['tg_QudsN', 'wa_alert', 'tg_palinfo'] },
-        { id: 'fig_2', name: 'דמות מפתח B', connections: ['tg_SarayaAlQuds', 'wa_khan', 'tg_qaboranews'] },
-        { id: 'fig_3', name: 'דמות מפתח C', connections: ['wa_press', 'tg_eyeonpal', 'tg_AJABreaking'] },
-    ];
-    figures.forEach(f => {
-        networkNodes.add({
-            id: f.id,
-            label: f.name,
-            color: { background: '#ff8800', border: '#cc6600' },
-            size: 14,
-            group: 'figure',
-            shape: 'diamond'
+    // Key figures and cross-links (demo mode only)
+    if (isDemoMode) {
+        const figures = [
+            { id: 'fig_1', name: 'דמות מפתח A', connections: ['tg_QudsN', 'wa_alert', 'tg_palinfo'] },
+            { id: 'fig_2', name: 'דמות מפתח B', connections: ['tg_SarayaAlQuds', 'wa_khan', 'tg_qaboranews'] },
+            { id: 'fig_3', name: 'דמות מפתח C', connections: ['wa_press', 'tg_eyeonpal', 'tg_AJABreaking'] },
+        ];
+        figures.forEach(f => {
+            networkNodes.add({
+                id: f.id,
+                label: f.name,
+                color: { background: '#ff8800', border: '#cc6600' },
+                size: 14,
+                group: 'figure',
+                shape: 'diamond'
+            });
+            f.connections.forEach(c => {
+                if (networkNodes.get(c)) {
+                    networkEdges.add({ from: f.id, to: c, color: { color: '#ff880044' }, dashes: true });
+                }
+            });
         });
-        f.connections.forEach(c => {
-            if (networkNodes.get(c)) {
-                networkEdges.add({ from: f.id, to: c, color: { color: '#ff880044' }, dashes: true });
+
+        const crossLinks = [
+            ['tg_QudsN', 'tg_palinfo'],
+            ['tg_PalestineResist', 'tg_SarayaAlQuds'],
+            ['tg_gazaalannet', 'tg_GazaNewsNow'],
+            ['wa_khan', 'wa_alert'],
+        ];
+        crossLinks.forEach(([a, b]) => {
+            if (networkNodes.get(a) && networkNodes.get(b)) {
+                networkEdges.add({ from: a, to: b, color: { color: '#ffffff10' }, width: 0.5 });
             }
         });
-    });
-
-    // Cross-links between some channels
-    const crossLinks = [
-        ['tg_QudsN', 'tg_palinfo'],
-        ['tg_PalestineResist', 'tg_SarayaAlQuds'],
-        ['tg_gazaalannet', 'tg_GazaNewsNow'],
-        ['wa_khan', 'wa_alert'],
-    ];
-    crossLinks.forEach(([a, b]) => {
-        if (networkNodes.get(a) && networkNodes.get(b)) {
-            networkEdges.add({ from: a, to: b, color: { color: '#ffffff10' }, width: 0.5 });
-        }
-    });
+    }
 }
 
 function setGraphView(view) {

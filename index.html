@@ -2510,17 +2510,21 @@ body {
         display: flex;
     }
     .header-actions-group {
-        gap: 4px;
+        gap: 6px;
         justify-content: center;
         width: 100%;
         flex-wrap: wrap;
     }
     .header-actions-group .header-btn {
-        padding: 4px 8px;
-        font-size: 9px;
-        min-width: auto;
+        padding: 8px 14px;
+        font-size: 11px;
+        min-width: 0;
+        flex: 1 1 auto;
+        max-width: 160px;
+        text-align: center;
+        justify-content: center;
     }
-    .header-actions-group .header-btn .btn-icon { font-size: 10px; }
+    .header-actions-group .header-btn .btn-icon { font-size: 12px; }
     .logo-hex {
         width: 30px;
         height: 30px;
@@ -2591,7 +2595,7 @@ body {
     .corner-decor { display: none; }
 
     .osint-row { display: flex; flex-direction: column; gap: 4px; order: 6; }
-    .osint-panel { min-height: 200px; }
+    .osint-panel { min-height: 350px; }
     .osint-panel .panel-body { position: static !important; }
     .network-controls {
         position: static;
@@ -2600,7 +2604,7 @@ body {
         background: rgba(0, 0, 0, 0.2);
         justify-content: center;
     }
-    .network-container { min-height: 200px; }
+    .network-container { min-height: 350px; }
     .net-legend {
         position: static;
         padding: 6px 8px;

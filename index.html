@@ -4611,7 +4611,13 @@ function renderAlerts() {
                     ${locationTag}
                 </div>
             </div>
-            ${(item.fullText || item.snippet || item.summary) ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(item.fullText || item.snippet || item.summary) + '</div>' : ''}
+            ${(() => {
+                const expandText = item.fullText || item.snippet || item.summary || '';
+                const displayTitle = (item.title && (item.title.endsWith(':') || item.title.length < 20) && item.summary)
+                    ? item.summary.substring(0, 120) : (item.title || item.summary || '');
+                return (expandText && expandText !== displayTitle && expandText !== item.title)
+                    ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(expandText) + '</div>' : '';
+            })()}
             <div class="alert-meta-row" style="display:none;">
                 <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeHtml(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>
                 ${sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" onclick="event.stopPropagation();" style="color:var(--text-dim);font-size:10px;text-decoration:none;">&#128279; מקור</a>' : ''}

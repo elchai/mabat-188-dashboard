@@ -4613,10 +4613,11 @@ function renderAlerts() {
             </div>
             ${(() => {
                 const expandText = item.fullText || item.snippet || item.summary || '';
-                const displayTitle = (item.title && (item.title.endsWith(':') || item.title.length < 20) && item.summary)
-                    ? item.summary.substring(0, 120) : (item.title || item.summary || '');
-                return (expandText && expandText !== displayTitle && expandText !== item.title)
-                    ? '<div class="alert-full-text" style="display:none;">' + escapeHtml(expandText) + '</div>' : '';
+                if (!expandText) return '';
+                const lines = expandText.split('\n').map(l => l.trim()).filter(Boolean);
+                const unique = lines.filter((line, i) => lines.findIndex(l => l === line || l.replace(/[-,]/g, '') === line.replace(/[-,]/g, '')) === i);
+                const deduped = unique.join('\n');
+                return '<div class="alert-full-text" style="display:none;">' + escapeHtml(deduped) + '</div>';
             })()}
             <div class="alert-meta-row" style="display:none;">
                 <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeHtml(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>

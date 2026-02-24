@@ -5906,7 +5906,7 @@ function renderShLocations() {
     summaryEl.innerHTML = `
         <div class="sh-summary-stat"><strong>${totalEvents}</strong> אירועים</div>
         <div class="sh-summary-stat"><strong>${sorted.length}</strong> מיקומים</div>
-        <div class="sh-summary-stat"><strong>${sorted.length > 0 ? sorted[0][0] : '-'}</strong> הכי פעיל</div>
+        <div class="sh-summary-stat"><strong>${sorted.length > 0 ? escapeHtml(sorted[0][0]) : '-'}</strong> הכי פעיל</div>
     `;
 
     // Grid

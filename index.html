@@ -308,13 +308,93 @@ body {
     font-weight: 500;
 }
 
+/* ═══════ ICON BUTTONS ═══════ */
+.header-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--border-primary);
+    border-radius: 6px;
+    font-size: 16px;
+    color: var(--btn-color, var(--cyan));
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+.header-icon-btn:hover {
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--btn-color, var(--cyan));
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
+    transform: translateY(-1px);
+}
+.header-icon-btn:active { transform: translateY(0); }
+.header-icon-btn .btn-icon { font-size: 16px; line-height: 1; }
+.header-icon-btn-sm { width: 30px; height: 30px; }
+.header-icon-btn-sm .btn-icon { font-size: 13px; }
+
+/* Badge counter */
+.header-badge {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    background: var(--orange);
+    color: #000;
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+/* Button group divider */
+.header-btn-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border-primary);
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+/* CSS Tooltip */
+.header-icon-btn[title] { position: relative; }
+.header-icon-btn::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 8px;
+    background: rgba(8, 16, 35, 0.95);
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 10px;
+    white-space: nowrap;
+    border-radius: 3px;
+    border: 1px solid var(--border-primary);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 100;
+}
+.header-icon-btn:hover::after { opacity: 1; }
+
+/* Legacy support */
 .header-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
     padding: 5px 12px;
-    min-width: auto;
     border: 1px solid var(--border-primary);
     border-radius: 4px;
     font-family: var(--font-he);
@@ -324,19 +404,14 @@ body {
     background: transparent;
     cursor: pointer;
     transition: all 0.3s ease;
-    letter-spacing: 1px;
     flex-shrink: 0;
 }
-
 .header-btn:hover {
     background: rgba(0, 212, 255, 0.1);
     border-color: var(--cyan);
     box-shadow: 0 0 15px var(--cyan-dim);
 }
-
-.header-btn .btn-icon {
-    font-size: 14px;
-}
+.header-btn .btn-icon { font-size: 14px; }
 
 .status-dot {
     width: 8px;
@@ -1773,6 +1848,78 @@ body {
     direction: rtl;
 }
 
+/* ═══════ TELEGRAM FEED PANEL ═══════ */
+.tg-feed-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    border-bottom: 1px solid rgba(0, 136, 204, 0.15);
+    background: rgba(0, 136, 204, 0.03);
+    font-family: var(--font-he);
+    font-size: 9px;
+    direction: rtl;
+}
+.tg-filter-btn {
+    padding: 2px 8px;
+    border: 1px solid var(--border-primary);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 9px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.tg-filter-btn:hover, .tg-filter-btn.active {
+    border-color: #0088cc;
+    color: #0088cc;
+}
+.tg-feed-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.2);
+    direction: rtl;
+    transition: background 0.2s;
+}
+.tg-feed-item:hover { background: rgba(0, 136, 204, 0.05); }
+.tg-feed-item.new-item { animation: tgItemFlash 1.5s ease-out; }
+@keyframes tgItemFlash {
+    0% { background: rgba(0, 136, 204, 0.2); }
+    100% { background: transparent; }
+}
+.tg-urgency-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+.tg-item-content { flex: 1; min-width: 0; }
+.tg-item-text {
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-primary);
+    line-height: 1.4;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.tg-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text-dim);
+}
+.tg-item-source { color: #0088cc; font-weight: 500; }
+.tg-item-location { color: var(--orange); }
 
 /* Network Graph Panel */
 .network-container {
@@ -2501,6 +2648,23 @@ body {
         box-sizing: border-box;
     }
     .header-actions-group .header-btn .btn-icon { font-size: 12px; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; }
+    /* Mobile: icon buttons show label */
+    .header-actions-group .header-icon-btn {
+        width: auto;
+        height: 36px;
+        padding: 0 12px;
+        gap: 6px;
+        flex: 1 1 auto;
+        max-width: 160px;
+    }
+    .header-actions-group .header-icon-btn::before {
+        content: attr(data-mobile-label);
+        font-family: var(--font-he);
+        font-size: 11px;
+        font-weight: 500;
+    }
+    .header-actions-group .header-icon-btn::after { display: none !important; }
+    .header-btn-divider { display: none; }
     .logo-hex {
         width: 30px;
         height: 30px;
@@ -2631,6 +2795,8 @@ body {
     .system-title { font-size: 12px; }
     .header-right .clock { font-size: 11px; }
     .header-actions-group .header-btn { padding: 3px 6px; font-size: 8px; }
+    .header-actions-group .header-icon-btn { padding: 0 8px; max-width: 120px; }
+    .header-actions-group .header-icon-btn::before { font-size: 9px; }
     .map-panel { height: 35vh; min-height: 200px; }
     .left-panel { grid-template-columns: 1fr 1fr; }
     .threat-circle { width: 65px; height: 65px; }
@@ -3358,21 +3524,21 @@ window.addEventListener('load', function() {
 
         <div class="header-center">
             <div class="header-actions-group">
-                <button class="header-btn" onclick="toggleReportForm()" style="color:var(--green);border-color:var(--green);">
+                <button class="header-icon-btn" onclick="toggleReportForm()" style="--btn-color:var(--green);" title="דיווח שטח" data-mobile-label="דיווח שטח">
                     <span class="btn-icon">&#x2795;</span>
-                    <span>דיווח שטח</span>
                 </button>
-                <button class="header-btn" onclick="toggleHistory()" style="color:var(--orange);border-color:var(--orange);">
-                    <span class="btn-icon" id="alertCount" style="background:var(--orange);color:#000;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">0</span>
-                    <span>יומן מבצעים</span>
+                <button class="header-icon-btn" onclick="toggleHistory()" style="--btn-color:var(--orange);" title="יומן מבצעים" data-mobile-label="יומן">
+                    <span class="btn-icon">&#x1F4CB;</span>
+                    <span class="header-badge" id="alertCount">0</span>
                 </button>
-                <button class="header-btn" onclick="toggleSectorHistory()" style="color:var(--purple);border-color:var(--purple);background:rgba(176,130,255,0.08);">
+
+                <div class="header-btn-divider"></div>
+
+                <button class="header-icon-btn" onclick="toggleSectorHistory()" style="--btn-color:var(--purple);" title="היסטוריה גזרתית" data-mobile-label="היסטוריה">
                     <span class="btn-icon">&#x23F2;</span>
-                    <span>היסטוריה</span>
                 </button>
-                <button class="header-btn" onclick="toggleWhatsApp()" id="waBtn" style="color:#25D366;border-color:#25D366;">
-                    <span class="btn-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
-                    <span>WhatsApp</span>
+                <button class="header-icon-btn" onclick="toggleWhatsApp()" id="waBtn" style="--btn-color:#25D366;" title="WhatsApp מוניטור" data-mobile-label="WA">
+                    <span class="btn-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
                 </button>
             </div>
         </div>
@@ -3383,12 +3549,12 @@ window.addEventListener('load', function() {
                 <div class="date-display" id="dateDisplay"></div>
             </div>
             <div class="header-divider"></div>
-            <button class="header-btn push-toggle-btn" id="pushToggleBtn" onclick="togglePushNotifications()" style="color:var(--green);border-color:var(--green);font-size:10px;padding:4px 10px;" title="התראות Push">
+            <button class="header-icon-btn header-icon-btn-sm" id="pushToggleBtn" onclick="togglePushNotifications()" style="--btn-color:var(--green);" title="התראות Push">
                 <span class="push-dot"></span>
-                <span>&#x1F514; התראות</span>
+                <span class="btn-icon">&#x1F514;</span>
             </button>
-            <button class="header-btn" onclick="doLogout()" style="color:var(--red);border-color:var(--red);font-size:10px;padding:4px 10px;">
-                <span>יציאה</span>
+            <button class="header-icon-btn header-icon-btn-sm" onclick="doLogout()" style="--btn-color:var(--red);" title="יציאה מהמערכת">
+                <span class="btn-icon">&#x23FB;</span>
             </button>
         </div>
     </header>
@@ -3458,7 +3624,7 @@ window.addEventListener('load', function() {
             </div>
         </div>
 
-        <div class="panel sources-container" id="sourcesContainer">
+        <div class="panel sources-container expanded" id="sourcesContainer">
             <div class="panel-header" onclick="toggleSourcesDropdown()">
                 <span class="panel-title">מקורות</span>
                 <span class="sources-toggle-icon">&#9660;</span>
@@ -3604,6 +3770,25 @@ window.addEventListener('load', function() {
                     <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--orange);"></div> דמות מפתח</div>
                     <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--red);"></div> ישות מאוימת</div>
                     <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--purple);"></div> רשת חברתית</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELEGRAM LIVE FEED -->
+        <div class="osint-panel">
+            <div class="panel-header">
+                <span class="panel-title" style="color:#0088cc;">TG פיד ערוצים</span>
+                <span style="font-family:var(--font-mono);font-size:9px;color:var(--text-dim);" id="tgFeedCount">0 הודעות</span>
+            </div>
+            <div class="tg-feed-controls">
+                <button class="tg-filter-btn active" onclick="filterTgFeed('all', this)">הכל</button>
+                <button class="tg-filter-btn" onclick="filterTgFeed('high', this)">דחיפות גבוהה</button>
+                <button class="tg-filter-btn" onclick="filterTgFeed('sector', this)">בגזרה</button>
+                <span id="tgLiveIndicator" style="color:var(--green);font-size:9px;margin-right:auto;">&#x25CF; LIVE</span>
+            </div>
+            <div class="panel-body" id="tgFeed" style="padding:0;overflow-y:auto;">
+                <div style="padding:30px 15px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">
+                    טוען פיד טלגרם...
                 </div>
             </div>
         </div>
@@ -4764,6 +4949,7 @@ function renderAll() {
     renderTimeline();
     updateMapMarkers(newsData);
     try { renderWhatsApp(); } catch(e) {}
+    try { renderTgFeed(); } catch(e) {}
 }
 
 // ═══════ FILTERS ═══════
@@ -7012,7 +7198,71 @@ function formatTimeAgo(ts) {
     return `${Math.floor(hours / 24)}י'`;
 }
 
+// ═══════ TELEGRAM LIVE FEED PANEL ═══════
+let tgFeedFilter = 'all';
 
+function renderTgFeed() {
+    const container = document.getElementById('tgFeed');
+    if (!container) return;
+
+    // Collect all items from newsData (Telegram sources)
+    const allItems = Object.entries(newsData)
+        .map(([id, item]) => ({ id, ...item }))
+        .sort((a, b) => (b.timestamp || b.publishedAt || 0) - (a.timestamp || a.publishedAt || 0))
+        .slice(0, 80);
+
+    // Apply filter
+    let filtered = allItems;
+    if (tgFeedFilter === 'high') {
+        filtered = allItems.filter(item => (item.urgency || item.urgencyScore || 0) >= 4);
+    } else if (tgFeedFilter === 'sector') {
+        filtered = allItems.filter(item => {
+            const loc = (item.locationHe || item.location || '').toLowerCase();
+            return IN_SECTOR.some(s => loc.includes(s.toLowerCase())) || loc.includes('יונס') || loc.includes('רפיח');
+        });
+    }
+
+    document.getElementById('tgFeedCount').textContent = `${filtered.length} הודעות`;
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-family:var(--font-he);font-size:11px;">אין הודעות</div>';
+        return;
+    }
+
+    const urgencyColors = { 5: 'var(--red)', 4: 'var(--orange)', 3: 'var(--yellow)', 2: 'var(--blue)', 1: 'var(--text-dim)' };
+    const showItems = filtered.slice(0, 30);
+
+    let html = '';
+    showItems.forEach(item => {
+        const urg = item.urgency || item.urgencyScore || 1;
+        const color = urgencyColors[urg] || urgencyColors[1];
+        const ts = item.timestamp || item.publishedAt || Date.now();
+        const timeStr = formatTimeAgo(ts);
+        const text = item.title || item.snippet || item.fullText || '';
+        const location = item.locationHe || '';
+        const sourceName = item.source || '';
+
+        html += `<div class="tg-feed-item">
+            <div class="tg-urgency-dot" style="background:${color};box-shadow:0 0 4px ${color};"></div>
+            <div class="tg-item-content">
+                <div class="tg-item-text">${escapeHtml(text)}</div>
+                <div class="tg-item-meta">
+                    <span class="tg-item-source">${escapeHtml(sourceName)}</span>
+                    ${location ? `<span class="tg-item-location">&#x1F4CD; ${escapeHtml(location)}</span>` : ''}
+                    <span>${timeStr}</span>
+                </div>
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+function filterTgFeed(filter, btn) {
+    tgFeedFilter = filter;
+    document.querySelectorAll('.tg-filter-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    renderTgFeed();
+}
 
 // ═══════ NETWORK GRAPH (vis.js) ═══════
 function initNetworkGraph() {

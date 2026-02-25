@@ -3,7 +3,7 @@
 // PWA Caching + Push Notifications
 // ═══════════════════════════════════════
 
-const CACHE_NAME = 'mabat188-v2';
+const CACHE_NAME = 'mabat188-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

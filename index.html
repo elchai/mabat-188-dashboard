@@ -7141,14 +7141,20 @@ function setGraphView(view) {
 let deferredInstallPrompt = null;
 const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
 const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+let pwaInstallShownThisSession = false;
 
 function showPwaInstallBanner() {
     // Don't show if already installed as PWA
     if (isInStandalone) return;
 
-    // Don't show if dismissed recently (24h)
-    const dismissed = localStorage.getItem('pwa-install-dismissed');
-    if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return;
+    // Don't show if already installed (permanent flag)
+    if (localStorage.getItem('pwa-installed')) return;
+
+    // Don't show if already shown this session
+    if (pwaInstallShownThisSession) return;
+
+    // Don't show if dismissed this session
+    if (sessionStorage.getItem('pwa-install-dismissed')) return;
 
     const banner = document.getElementById('pwaInstallBanner');
     if (!banner) return;
@@ -7160,6 +7166,7 @@ function showPwaInstallBanner() {
         banner.querySelector('.pwa-install-btn').onclick = function() { dismissPwaInstall(); };
     }
 
+    pwaInstallShownThisSession = true;
     banner.classList.add('visible');
 }
 
@@ -7170,7 +7177,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
     setTimeout(() => showPwaInstallBanner(), 3000);
 });
 
-// iOS / fallback — show manual instructions after 5s
+// iOS / fallback — show manual instructions once on load
 setTimeout(() => {
     if (!deferredInstallPrompt && !isInStandalone) {
         showPwaInstallBanner();
@@ -7183,24 +7190,25 @@ function installPwa() {
         deferredInstallPrompt.userChoice.then(result => {
             if (result.outcome === 'accepted') {
                 console.log('PWA installed');
+                localStorage.setItem('pwa-installed', 'true');
             }
             deferredInstallPrompt = null;
             document.getElementById('pwaInstallBanner').classList.remove('visible');
         });
     } else {
-        // Fallback — just dismiss and guide user
         dismissPwaInstall();
     }
 }
 
 function dismissPwaInstall() {
     document.getElementById('pwaInstallBanner').classList.remove('visible');
-    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+    sessionStorage.setItem('pwa-install-dismissed', 'true');
 }
 
-// Hide banner if installed
+// Hide banner permanently if installed
 window.addEventListener('appinstalled', () => {
     document.getElementById('pwaInstallBanner').classList.remove('visible');
+    localStorage.setItem('pwa-installed', 'true');
     deferredInstallPrompt = null;
 });
 

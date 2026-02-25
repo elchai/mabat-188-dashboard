@@ -2538,8 +2538,14 @@ body {
 
     .alert-feed {
         min-height: 250px;
-        max-height: 400px;
+        max-height: none;
         order: 1;
+        overflow: visible;
+    }
+    .alert-feed .panel-body {
+        height: auto;
+        max-height: none;
+        overflow-y: visible;
     }
     .alert-toolbar { flex-wrap: wrap; gap: 3px; padding: 4px 8px; }
     .filter-chip { padding: 3px 6px; font-size: 9px; }
@@ -2550,8 +2556,24 @@ body {
     .alert-title { font-size: 11px; -webkit-line-clamp: 2; }
     .alert-source { font-size: 8px; padding: 1px 4px; }
 
-    .right-panel { order: 5; min-height: 150px; }
-    .config-panel { order: 6; }
+    .right-panel { order: 5; min-height: 150px; overflow: visible; }
+    .right-panel .panel-body { height: auto; overflow-y: visible; }
+    .config-panel { order: 6; overflow: visible; }
+    .config-panel .panel-body { height: auto; overflow-y: visible; }
+
+    /* Remove scroll traps on mobile - let page scroll naturally */
+    .panel-body {
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    .left-panel .panel-body {
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    .sources-container .panel-body {
+        max-height: none;
+        overflow-y: visible !important;
+    }
 
     .panel-title { font-size: 9px; letter-spacing: 1px; }
     .stat-label { font-size: 10px; }
@@ -2589,9 +2611,10 @@ body {
         flex-shrink: 0;
     }
     .network-container {
-        min-height: 60vh !important;
-        height: 60vh !important;
+        min-height: 50vh !important;
+        height: 50vh !important;
         flex: none;
+        touch-action: none;
     }
     .net-legend {
         position: static;
@@ -2975,38 +2998,16 @@ body {
     background: var(--bg-panel);
     border: 1px solid var(--border-primary);
     border-radius: 4px;
-    padding: 20px;
+    padding: 14px 20px;
     direction: rtl;
-}
-
-.suggestions-section .section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-primary);
-}
-
-.suggestions-section .section-title {
-    font-family: var(--font-he);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--cyan);
-    letter-spacing: 0.5px;
-}
-
-.suggestions-section .section-subtitle {
-    font-family: var(--font-he);
-    font-size: 11px;
-    color: var(--text-dim);
+    order: 99;
 }
 
 .suggestion-form {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 8px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .suggestion-form input,
@@ -3067,74 +3068,24 @@ body {
     cursor: not-allowed;
 }
 
-.suggestions-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.suggestion-item {
-    padding: 12px 14px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(15, 52, 96, 0.4);
-    border-radius: 4px;
-    border-right: 3px solid var(--cyan);
-    transition: border-color 0.3s;
-}
-
-.suggestion-item:hover {
-    border-color: rgba(0, 212, 255, 0.3);
-    border-right-color: var(--cyan);
-}
-
-.suggestion-item-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-}
-
-.suggestion-item-author {
-    font-family: var(--font-he);
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--cyan);
-}
-
-.suggestion-item-date {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--text-dim);
-}
-
-.suggestion-item-text {
-    font-family: var(--font-he);
-    font-size: 13px;
-    color: var(--text-primary);
-    line-height: 1.6;
-}
-
-.suggestion-empty {
-    text-align: center;
-    padding: 30px;
-    color: var(--text-dim);
-    font-family: var(--font-he);
-    font-size: 12px;
-}
-
 .suggestion-success {
     text-align: center;
-    padding: 10px;
+    padding: 16px;
     color: var(--green);
     font-family: var(--font-he);
-    font-size: 12px;
-    background: rgba(0, 255, 136, 0.05);
-    border: 1px solid rgba(0, 255, 136, 0.2);
-    border-radius: 4px;
-    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(0, 255, 136, 0.06);
+    border: 1px solid rgba(0, 255, 136, 0.25);
+    border-radius: 6px;
     display: none;
+    animation: successPop 0.4s ease;
+}
+
+@keyframes successPop {
+    0% { transform: scale(0.9); opacity: 0; }
+    60% { transform: scale(1.02); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 @media (max-width: 900px) {
@@ -3659,21 +3610,18 @@ window.addEventListener('load', function() {
 
     <!-- ═══════ ROW 5: DEVELOPMENT SUGGESTIONS ═══════ -->
     <div class="suggestions-section" id="suggestionsSection">
-        <div class="section-header">
-            <div>
-                <div class="section-title">&#x1F4A1; הצעות לפיתוח</div>
-                <div class="section-subtitle">הצעות לשיפור ופיתוח המערכת — כל הצעה נשלחת למפתח</div>
+        <div class="suggestion-success" id="suggestionSuccess">
+            <div style="font-size:24px;margin-bottom:6px;">&#x2705;</div>
+            <div>ההצעה נשלחה בהצלחה!</div>
+            <div style="font-size:10px;color:var(--text-dim);margin-top:4px;">תודה על המשוב — ההצעה נשלחה למפתח</div>
+        </div>
+        <div id="suggestionFormWrapper">
+            <div class="section-title" style="font-family:var(--font-he);font-size:13px;color:var(--cyan);margin-bottom:10px;">יש לך רעיון לשיפור המערכת?</div>
+            <div class="suggestion-form" id="suggestionForm">
+                <input type="text" class="suggestion-name-input" id="suggestionName" placeholder="השם שלך">
+                <textarea id="suggestionText" placeholder="כתוב כאן את ההצעה שלך..." rows="1"></textarea>
+                <button class="suggestion-submit-btn" id="suggestionSubmitBtn" onclick="submitSuggestion()">שלח</button>
             </div>
-            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-dim);" id="suggestionsCount">0 הצעות</span>
-        </div>
-        <div class="suggestion-success" id="suggestionSuccess">ההצעה נשלחה בהצלחה! תודה על המשוב.</div>
-        <div class="suggestion-form" id="suggestionForm">
-            <input type="text" class="suggestion-name-input" id="suggestionName" placeholder="השם שלך">
-            <textarea id="suggestionText" placeholder="כתוב כאן את ההצעה שלך לשיפור או פיתוח המערכת..." rows="1"></textarea>
-            <button class="suggestion-submit-btn" id="suggestionSubmitBtn" onclick="submitSuggestion()">שלח הצעה</button>
-        </div>
-        <div class="suggestions-list" id="suggestionsList">
-            <div class="suggestion-empty">טוען הצעות...</div>
         </div>
     </div>
 
@@ -7380,91 +7328,12 @@ async function checkExistingPushSubscription() {
 
 
 // ═══════ DEVELOPMENT SUGGESTIONS ═══════
-let suggestionsData = [];
-
-const INITIAL_SUGGESTIONS = [
-    { author: 'מערכת', text: 'הוספת בדיקות אוטומטיות (Unit Tests) — כרגע אין בדיקות אוטומטיות למערכת. מומלץ להוסיף בדיקות למנוע הסינון הגיאוגרפי, מנגנון ההצבעה, וזיהוי מיקומים.' },
-    { author: 'מערכת', text: 'הקמת CI/CD Pipeline — הגדרת GitHub Actions לבדיקות אוטומטיות, לינטינג, ו-deploy אוטומטי בכל push. יבטיח איכות קוד ומניעת רגרסיות.' },
-    { author: 'מערכת', text: 'פיצול קובץ ה-HTML למודולים נפרדים — הפרדת CSS, JavaScript, ו-HTML לקבצים עצמאיים עם build process לשיפור תחזוקתיות וביצועים.' },
-    { author: 'מערכת', text: 'הוספת מערכת Build (Vite/esbuild) — כרגע האפליקציה רצה ללא build process. תאפשר minification, code splitting, ושימוש ב-npm packages.' },
-];
-
-async function loadSuggestions() {
-    try {
-        const res = await fetch(`${FIREBASE_URL}/dev-suggestions.json`);
-        const data = await res.json();
-        suggestionsData = [];
-        if (data) {
-            Object.entries(data).forEach(([id, s]) => {
-                suggestionsData.push({ id, ...s });
-            });
-            suggestionsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        }
-
-        // Seed initial suggestions if none exist
-        if (suggestionsData.length === 0) {
-            const baseTs = Date.now();
-            for (let i = 0; i < INITIAL_SUGGESTIONS.length; i++) {
-                const s = { ...INITIAL_SUGGESTIONS[i], timestamp: baseTs - (INITIAL_SUGGESTIONS.length - i) * 60000 };
-                try {
-                    await fetch(`${FIREBASE_URL}/dev-suggestions.json`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(s)
-                    });
-                } catch (seedErr) { console.warn('Seed error:', seedErr); }
-            }
-            // Reload after seeding
-            const res2 = await fetch(`${FIREBASE_URL}/dev-suggestions.json`);
-            const data2 = await res2.json();
-            suggestionsData = [];
-            if (data2) {
-                Object.entries(data2).forEach(([id, s]) => {
-                    suggestionsData.push({ id, ...s });
-                });
-                suggestionsData.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            }
-        }
-
-        renderSuggestions();
-    } catch (e) {
-        console.error('Error loading suggestions:', e);
-    }
-}
-
-function renderSuggestions() {
-    const container = document.getElementById('suggestionsList');
-    const countEl = document.getElementById('suggestionsCount');
-    if (!container) return;
-
-    countEl.textContent = `${suggestionsData.length} הצעות`;
-
-    if (suggestionsData.length === 0) {
-        container.innerHTML = '<div class="suggestion-empty">אין הצעות עדיין — היו הראשונים להציע!</div>';
-        return;
-    }
-
-    let html = '';
-    suggestionsData.forEach(s => {
-        const date = s.timestamp ? new Date(s.timestamp) : new Date();
-        const dateStr = date.toLocaleDateString('he-IL', { day: 'numeric', month: 'short', year: 'numeric' });
-        const timeStr = date.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
-        html += `<div class="suggestion-item">
-            <div class="suggestion-item-header">
-                <span class="suggestion-item-author">${escapeHtml(s.author || 'אנונימי')}</span>
-                <span class="suggestion-item-date">${dateStr} ${timeStr}</span>
-            </div>
-            <div class="suggestion-item-text">${escapeHtml(s.text || '')}</div>
-        </div>`;
-    });
-    container.innerHTML = html;
-}
-
 async function submitSuggestion() {
     const nameEl = document.getElementById('suggestionName');
     const textEl = document.getElementById('suggestionText');
     const btn = document.getElementById('suggestionSubmitBtn');
     const successEl = document.getElementById('suggestionSuccess');
+    const formWrapper = document.getElementById('suggestionFormWrapper');
 
     const name = (nameEl.value || '').trim();
     const text = (textEl.value || '').trim();
@@ -7485,21 +7354,16 @@ async function submitSuggestion() {
     };
 
     try {
-        // Save to Firebase
         await fetch(`${FIREBASE_URL}/dev-suggestions.json`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(suggestion)
         });
 
-        // Send email notification via FormSubmit
         try {
             await fetch('https://formsubmit.co/ajax/elchaifinn@gmail.com', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                 body: JSON.stringify({
                     _subject: 'הצעה חדשה למבט 188',
                     name: suggestion.author,
@@ -7511,20 +7375,21 @@ async function submitSuggestion() {
             console.warn('Email notification failed (suggestion saved):', emailErr);
         }
 
-        // Clear form and show success
         nameEl.value = '';
         textEl.value = '';
+        formWrapper.style.display = 'none';
         successEl.style.display = 'block';
-        setTimeout(() => { successEl.style.display = 'none'; }, 4000);
 
-        // Reload suggestions
-        loadSuggestions();
+        setTimeout(() => {
+            successEl.style.display = 'none';
+            formWrapper.style.display = '';
+        }, 5000);
     } catch (e) {
         console.error('Error submitting suggestion:', e);
         alert('שגיאה בשליחת ההצעה. נסה שנית.');
     } finally {
         btn.disabled = false;
-        btn.textContent = 'שלח הצעה';
+        btn.textContent = 'שלח';
     }
 }
 
@@ -7562,7 +7427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // OSINT Panels init
     try { initFirmsLayer(); } catch(e) { console.error('FIRMS init error:', e); }
     try { fetchWhatsAppData(); } catch(e) { console.error('WhatsApp init error:', e); }
-    try { loadSuggestions(); } catch(e) { console.error('Suggestions init error:', e); }
+    // Suggestions: form only, no loading needed
     try { setTimeout(() => initNetworkGraph(), 500); } catch(e) { console.error('Graph init error:', e); }
 
     // PWA + Push init

@@ -3035,8 +3035,10 @@ body {
 
 .suggestion-form textarea {
     resize: vertical;
-    min-height: 44px;
-    max-height: 120px;
+    min-height: 80px;
+    max-height: 200px;
+    width: 100%;
+    flex: 1 1 100%;
 }
 
 .suggestion-name-input {
@@ -3491,16 +3493,16 @@ window.addEventListener('load', function() {
         <div class="firms-toggle" id="firmsToggle" onclick="toggleFirmsLayer()" title="NASA FIRMS - Fires & Explosions">FIRMS</div>
     </div>
 
-    <!-- RIGHT PANEL - SECTOR NEWS DIGEST -->
+    <!-- RIGHT PANEL - OPERATIONS JOURNAL -->
     <div class="panel right-panel">
         <div class="panel-header">
-            <span class="panel-title">ריכוז ידיעות גזרתי</span>
-            <span class="ai-badge">SECTOR</span>
+            <span class="panel-title">יומן מבצעים</span>
+            <span class="ai-badge" style="cursor:pointer;" onclick="toggleHistory()">הרחב</span>
         </div>
         <div class="panel-body" id="summaryBody" style="overflow-y:auto;">
             <div class="loading-state">
                 <div class="loading-spinner"></div>
-                <span>ממתין לידיעות...</span>
+                <span>טוען יומן...</span>
             </div>
         </div>
     </div>
@@ -3619,7 +3621,7 @@ window.addEventListener('load', function() {
             <div class="section-title" style="font-family:var(--font-he);font-size:13px;color:var(--cyan);margin-bottom:10px;">יש לך רעיון לשיפור המערכת?</div>
             <div class="suggestion-form" id="suggestionForm">
                 <input type="text" class="suggestion-name-input" id="suggestionName" placeholder="השם שלך">
-                <textarea id="suggestionText" placeholder="כתוב כאן את ההצעה שלך..." rows="1"></textarea>
+                <textarea id="suggestionText" placeholder="כתוב כאן את ההצעה שלך..." rows="4"></textarea>
                 <button class="suggestion-submit-btn" id="suggestionSubmitBtn" onclick="submitSuggestion()">שלח</button>
             </div>
         </div>
@@ -4841,7 +4843,12 @@ function renderAlerts() {
 
     items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-    feed.innerHTML = items.map((item, idx) => {
+    const FEED_LIMIT = 5;
+    const showAll = feed.dataset.showAll === 'true';
+    const visibleItems = showAll ? items : items.slice(0, FEED_LIMIT);
+    const hasMore = items.length > FEED_LIMIT && !showAll;
+
+    feed.innerHTML = visibleItems.map((item, idx) => {
         const locationName = item.locationHe || (item.matchedLocations ? item.matchedLocations.join(', ') : '') || '';
         const coords = lookupCoords(item);
         const locationTag = locationName
@@ -4893,6 +4900,10 @@ function renderAlerts() {
             </div>
         </div>
     `}).join('');
+
+    if (hasMore) {
+        feed.innerHTML += `<button onclick="this.parentElement.dataset.showAll='true';renderAlerts();" style="width:100%;padding:10px;background:rgba(168,85,247,0.1);border:1px solid var(--purple);border-radius:4px;color:var(--purple);font-family:var(--font-he);font-size:12px;font-weight:600;cursor:pointer;margin-top:4px;">הצג עוד ${items.length - FEED_LIMIT} ידיעות</button>`;
+    }
 }
 
 function toggleAlertExpand(el) {
@@ -4993,48 +5004,44 @@ function renderTimeline() {
     }
 }
 
-// ═══════ RENDER SUMMARY ═══════
+// ═══════ RENDER SUMMARY (JOURNAL) ═══════
 function renderSummary() {
     const body = document.getElementById('summaryBody');
     const items = Object.values(newsData);
 
     if (!items.length) {
-        body.innerHTML = '<div class="empty-state">אין ידיעות גזרתיות כרגע<br><small>חאן יונס · עזה · הגזרה</small></div>';
+        body.innerHTML = '<div class="empty-state">אין אירועים כרגע<br><small style="color:var(--text-dim);">לחץ "הרחב" ליומן מלא</small></div>';
         return;
     }
 
-    // Sort by timestamp (newest first), then by urgency
+    // Sort by urgency then timestamp
     const sorted = items.slice().sort((a, b) => {
         if ((b.urgency || 1) !== (a.urgency || 1)) return (b.urgency || 1) - (a.urgency || 1);
         return (b.timestamp || 0) - (a.timestamp || 0);
     });
 
-    // Show top 20 items
-    const top = sorted.slice(0, 20);
+    const urgColors = { 5: 'var(--red)', 4: 'var(--orange)', 3: 'var(--yellow)', 2: 'var(--blue)', 1: 'var(--text-dim)' };
+    const JOURNAL_LIMIT = 8;
+    const top = sorted.slice(0, JOURNAL_LIMIT);
     let html = '';
 
     top.forEach(item => {
         const u = item.urgency || 1;
-        const uClass = u >= 3 ? `urgency-${u}` : '';
-        const title = escapeHtml(item.title || item.snippet || 'ללא כותרת');
-        const loc = item.locationHe || item.matchedLocations?.join(', ') || '';
-        const src = item.source || item.channel || '';
+        const title = escapeHtml((item.title || item.snippet || '').substring(0, 60));
+        const loc = item.locationHe || (item.matchedLocations ? item.matchedLocations.join(', ') : '') || '';
         const time = item.timestamp ? formatTimeAgo(item.timestamp) : '';
 
-        html += `<div class="sector-digest-item ${uClass}">
-            <div class="digest-title">${title}</div>
-            <div class="digest-meta">
-                ${loc ? `<span class="digest-location">📍 ${escapeHtml(loc)}</span>` : ''}
-                ${src ? `<span class="digest-source">${escapeHtml(src)}</span>` : ''}
+        html += `<div class="sector-digest-item urgency-${u}" style="padding:6px 8px;margin-bottom:3px;">
+            <div class="digest-title" style="font-size:11px;-webkit-line-clamp:1;">${title}</div>
+            <div class="digest-meta" style="font-size:9px;">
+                ${loc ? `<span class="digest-location">${escapeHtml(loc)}</span>` : ''}
                 ${time ? `<span>${time}</span>` : ''}
             </div>
         </div>`;
     });
 
-    if (items.length > 20) {
-        html += `<div class="digest-counter">מציג 20 מתוך ${items.length} ידיעות</div>`;
-    } else {
-        html += `<div class="digest-counter">${items.length} ידיעות גזרתיות</div>`;
+    if (items.length > JOURNAL_LIMIT) {
+        html += `<div onclick="toggleHistory()" style="text-align:center;padding:8px;color:var(--orange);font-family:var(--font-he);font-size:11px;cursor:pointer;border-top:1px solid var(--border-primary);margin-top:4px;font-weight:600;">יומן מלא (${items.length} אירועים)</div>`;
     }
 
     body.innerHTML = html;
@@ -5128,19 +5135,28 @@ function renderSources() {
     });
 
     const list = document.getElementById('sourcesList');
-    list.innerHTML = מקורות.map(src => {
+    const SOURCES_LIMIT = 5;
+    const showAll = list.dataset.showAll === 'true';
+    const visibleSources = showAll ? מקורות : מקורות.slice(0, SOURCES_LIMIT);
+    const hasMore = מקורות.length > SOURCES_LIMIT && !showAll;
+
+    const typeLabels = { local: 'LOCAL', regional: 'AREA', national: 'NATL', news: 'NEWS', geo: 'GEO' };
+    list.innerHTML = visibleSources.map(src => {
         const count = sourceCounts[src.id] || sourceCounts[src.name] || 0;
         const isActive = count > 0;
-        const typeLabels = { local: 'LOCAL', regional: 'AREA', national: 'NATL', news: 'NEWS' };
         return `
             <div class="source-item" style="cursor:pointer;" onclick="openPublisherProfile('${escapeHtml(src.id)}',event)">
                 <div class="source-dot ${isActive ? 'active' : 'inactive'}"></div>
                 <span class="source-name source-link-clickable">${src.name}</span>
-                <span class="source-type ${src.type}">${typeLabels[src.type]}</span>
+                <span class="source-type ${src.type}">${typeLabels[src.type] || ''}</span>
                 <span class="source-count">${count > 0 ? count : ''}</span>
             </div>
         `;
     }).join('');
+
+    if (hasMore) {
+        list.innerHTML += `<div onclick="this.parentElement.dataset.showAll='true';renderSources();" style="text-align:center;padding:6px;color:var(--purple);font-family:var(--font-he);font-size:10px;cursor:pointer;border-top:1px solid var(--border-primary);margin-top:4px;">הצג עוד ${מקורות.length - SOURCES_LIMIT} מקורות</div>`;
+    }
 }
 
 function renderMeta() {

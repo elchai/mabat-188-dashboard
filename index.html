@@ -8,6 +8,12 @@
 <meta http-equiv="Expires" content="0">
 <title>מבט 188 | פלטפורמת מודיעין גזרתית</title>
 <link rel="icon" type="image/jpeg" href="logo-188.jpg">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00d4ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="מבט 188">
+<link rel="apple-touch-icon" href="logo-188.jpg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -3096,6 +3102,132 @@ body {
     }
 }
 
+/* ═══════ PWA INSTALL BANNER ═══════ */
+.pwa-install-banner {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9000;
+    background: linear-gradient(135deg, rgba(8, 16, 35, 0.97), rgba(12, 22, 45, 0.97));
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    direction: rtl;
+    max-width: 400px;
+    width: calc(100% - 32px);
+    animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.pwa-install-banner.visible {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pwa-install-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    border: 1px solid var(--border-primary);
+}
+
+.pwa-install-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.pwa-install-title {
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.pwa-install-desc {
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.pwa-install-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.pwa-install-btn {
+    padding: 8px 18px;
+    background: linear-gradient(135deg, var(--cyan), #0088cc);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+}
+
+.pwa-install-btn:hover {
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    transform: scale(1.03);
+}
+
+.pwa-install-dismiss {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px;
+}
+
+.pwa-install-dismiss:hover {
+    color: var(--text-secondary);
+}
+
+/* ═══════ PUSH NOTIFICATION BUTTON ═══════ */
+.push-toggle-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.push-toggle-btn .push-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: background 0.3s;
+}
+
+.push-toggle-btn.push-active .push-dot {
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: pushPulse 2s infinite;
+}
+
+@keyframes pushPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
 /* ═══════ CREDIT FOOTER ═══════ */
 .credit-footer {
     position: fixed;
@@ -3254,6 +3386,10 @@ window.addEventListener('load', function() {
                 <div class="date-display" id="dateDisplay"></div>
             </div>
             <div class="header-divider"></div>
+            <button class="header-btn push-toggle-btn" id="pushToggleBtn" onclick="togglePushNotifications()" style="color:var(--green);border-color:var(--green);font-size:10px;padding:4px 10px;" title="התראות Push">
+                <span class="push-dot"></span>
+                <span>&#x1F514; התראות</span>
+            </button>
             <button class="header-btn" onclick="doLogout()" style="color:var(--red);border-color:var(--red);font-size:10px;padding:4px 10px;">
                 <span>יציאה</span>
             </button>
@@ -3671,6 +3807,19 @@ window.addEventListener('load', function() {
 
 <!-- Refresh Bar -->
 <div class="refresh-bar" id="refreshBar"></div>
+
+<!-- PWA Install Banner -->
+<div class="pwa-install-banner" id="pwaInstallBanner">
+    <img src="logo-188.jpg" alt="מבט 188" class="pwa-install-icon">
+    <div class="pwa-install-content">
+        <div class="pwa-install-title">התקן את מבט 188</div>
+        <div class="pwa-install-desc">הוסף לדף הבית לגישה מהירה כמו אפליקציה</div>
+    </div>
+    <div class="pwa-install-actions">
+        <button class="pwa-install-btn" onclick="installPwa()">התקן</button>
+        <button class="pwa-install-dismiss" onclick="dismissPwaInstall()">לא עכשיו</button>
+    </div>
+</div>
 
 <!-- Credit Footer -->
 <div class="credit-footer" id="creditFooter">
@@ -6967,6 +7116,170 @@ function setGraphView(view) {
 }
 
 
+// ═══════ PWA INSTALL ═══════
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+
+    // Don't show if dismissed recently (24h)
+    const dismissed = localStorage.getItem('pwa-install-dismissed');
+    if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return;
+
+    // Show banner after 5 seconds
+    setTimeout(() => {
+        const banner = document.getElementById('pwaInstallBanner');
+        if (banner) banner.classList.add('visible');
+    }, 5000);
+});
+
+function installPwa() {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(result => {
+        if (result.outcome === 'accepted') {
+            console.log('PWA installed');
+        }
+        deferredInstallPrompt = null;
+        document.getElementById('pwaInstallBanner').classList.remove('visible');
+    });
+}
+
+function dismissPwaInstall() {
+    document.getElementById('pwaInstallBanner').classList.remove('visible');
+    localStorage.setItem('pwa-install-dismissed', Date.now().toString());
+}
+
+// Hide banner if already installed as PWA
+window.addEventListener('appinstalled', () => {
+    document.getElementById('pwaInstallBanner').classList.remove('visible');
+    deferredInstallPrompt = null;
+});
+
+
+// ═══════ PUSH NOTIFICATIONS ═══════
+let pushSubscription = null;
+
+async function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        console.warn('Service Worker not supported');
+        return null;
+    }
+    try {
+        const reg = await navigator.serviceWorker.register('./sw.js');
+        console.log('Service Worker registered:', reg.scope);
+        return reg;
+    } catch (e) {
+        console.error('Service Worker registration failed:', e);
+        return null;
+    }
+}
+
+async function togglePushNotifications() {
+    const btn = document.getElementById('pushToggleBtn');
+
+    if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+        alert('הדפדפן לא תומך בהתראות Push');
+        return;
+    }
+
+    const permission = Notification.permission;
+
+    if (permission === 'granted' && pushSubscription) {
+        // Unsubscribe
+        try {
+            await pushSubscription.unsubscribe();
+            pushSubscription = null;
+            await fetch(`${FIREBASE_URL}/push-subscriptions/${getPushDeviceId()}.json`, { method: 'DELETE' });
+            btn.classList.remove('push-active');
+            btn.title = 'התראות Push כבויות';
+        } catch (e) {
+            console.error('Unsubscribe error:', e);
+        }
+    } else {
+        // Subscribe
+        const result = await Notification.requestPermission();
+        if (result === 'granted') {
+            await subscribeToPush();
+        } else if (result === 'denied') {
+            alert('ההתראות נחסמו. יש לאפשר התראות בהגדרות הדפדפן.');
+        }
+    }
+}
+
+async function subscribeToPush() {
+    const btn = document.getElementById('pushToggleBtn');
+    try {
+        const reg = await navigator.serviceWorker.ready;
+        pushSubscription = await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: getVapidKey()
+        });
+
+        // Save subscription to Firebase
+        const deviceId = getPushDeviceId();
+        await fetch(`${FIREBASE_URL}/push-subscriptions/${deviceId}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                subscription: JSON.parse(JSON.stringify(pushSubscription)),
+                timestamp: Date.now(),
+                userAgent: navigator.userAgent
+            })
+        });
+
+        btn.classList.add('push-active');
+        btn.title = 'התראות Push פעילות — לחץ לכיבוי';
+        console.log('Push subscription saved');
+    } catch (e) {
+        console.error('Push subscription error:', e);
+        // If VAPID key not configured yet, show helpful message
+        if (e.name === 'InvalidStateError' || e.message?.includes('applicationServerKey')) {
+            alert('התראות Push יופעלו לאחר הגדרת Firebase Cloud Messaging. השמירה בוצעה ללא push זמני.');
+        }
+    }
+}
+
+function getPushDeviceId() {
+    let id = localStorage.getItem('mabat188-device-id');
+    if (!id) {
+        id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6);
+        localStorage.setItem('mabat188-device-id', id);
+    }
+    return id;
+}
+
+function getVapidKey() {
+    // Placeholder VAPID key — replace with your Firebase Cloud Messaging VAPID key
+    // Generate at: Firebase Console > Project Settings > Cloud Messaging > Web Push certificates
+    const vapidKey = localStorage.getItem('mabat188-vapid-key') || '';
+    if (!vapidKey) return null;
+    const padding = '='.repeat((4 - vapidKey.length % 4) % 4);
+    const base64 = (vapidKey + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+}
+
+async function checkExistingPushSubscription() {
+    const btn = document.getElementById('pushToggleBtn');
+    if (!btn) return;
+
+    try {
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            const reg = await navigator.serviceWorker.ready;
+            pushSubscription = await reg.pushManager.getSubscription();
+            if (pushSubscription) {
+                btn.classList.add('push-active');
+                btn.title = 'התראות Push פעילות — לחץ לכיבוי';
+            }
+        }
+    } catch (e) {
+        console.warn('Push check error:', e);
+    }
+}
+
+
 // ═══════ DEVELOPMENT SUGGESTIONS ═══════
 let suggestionsData = [];
 
@@ -7152,6 +7465,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try { fetchWhatsAppData(); } catch(e) { console.error('WhatsApp init error:', e); }
     try { loadSuggestions(); } catch(e) { console.error('Suggestions init error:', e); }
     try { setTimeout(() => initNetworkGraph(), 500); } catch(e) { console.error('Graph init error:', e); }
+
+    // PWA + Push init
+    try { registerServiceWorker(); } catch(e) { console.error('SW init error:', e); }
+    try { setTimeout(() => checkExistingPushSubscription(), 2000); } catch(e) {}
 });
 </script>
 </body>

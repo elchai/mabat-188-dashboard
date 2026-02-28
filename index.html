@@ -6,6 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.firebasedatabase.app https://*.googleapis.com https://formsubmit.co https://api.green-api.com https://*.tile.openstreetmap.org; frame-src https://accounts.google.com;">
 <title>מבט 188 | פלטפורמת מודיעין גזרתית</title>
 <link rel="icon" type="image/jpeg" href="logo-188.jpg">
 <link rel="manifest" href="manifest.json">
@@ -3759,10 +3760,10 @@ window.addEventListener('load', function() {
             <div class="panel-body" style="padding:0;position:relative;">
                 <div class="network-container" id="networkGraph"></div>
                 <div class="network-controls">
-                    <button class="net-btn active" onclick="setGraphView('all')">הכל</button>
-                    <button class="net-btn" onclick="setGraphView('telegram')">טלגרם</button>
-                    <button class="net-btn" onclick="setGraphView('whatsapp')">WhatsApp</button>
-                    <button class="net-btn" onclick="setGraphView('social')">רשתות</button>
+                    <button class="net-btn active" onclick="setGraphView('all', event)">הכל</button>
+                    <button class="net-btn" onclick="setGraphView('telegram', event)">טלגרם</button>
+                    <button class="net-btn" onclick="setGraphView('whatsapp', event)">WhatsApp</button>
+                    <button class="net-btn" onclick="setGraphView('social', event)">רשתות</button>
                 </div>
                 <div class="net-legend">
                     <div class="net-legend-item"><div class="net-legend-dot" style="background:var(--cyan);"></div> ערוץ טלגרם</div>
@@ -4197,7 +4198,9 @@ let knownIds = new Set();
 let isFirstLoad = true;
 let mapIsFullscreen = false;
 let showAnarchists = true;
-let checkedAlerts = new Set(JSON.parse(localStorage.getItem('mabat188-checked') || '[]'));
+let checkedAlerts;
+try { checkedAlerts = new Set(JSON.parse(localStorage.getItem('mabat188-checked') || '[]')); }
+catch (e) { checkedAlerts = new Set(); }
 let journalNotes = {};
 let alertVotes = {};
 let firmsVisible = false;
@@ -4400,8 +4403,8 @@ function updateClock() {
 // ═══════ LOCATION COORDS LOOKUP ═══════
 function lookupCoords(item) {
     // If item already has coordinates, use them
-    if (item.coordinates && (item.coordinates.lat)) {
-        return { lat: item.coordinates.lat, lng: item.coordinates.lon || item.coordinates.lng };
+    if (item.coordinates && item.coordinates.lat && (item.coordinates.lon || item.coordinates.lng)) {
+        return { lat: Number(item.coordinates.lat), lng: Number(item.coordinates.lon || item.coordinates.lng) };
     }
     // Lookup by locationHe or matchedLocations
     const locName = (item.locationHe || '').toLowerCase();
@@ -4935,7 +4938,7 @@ function triggerRedAlert() {
         osc.start();
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
         osc.stop(ctx.currentTime + 0.5);
-    } catch (e) {}
+    } catch (e) { /* AudioContext may not be available */ }
 }
 
 // ═══════ RENDER ALL ═══════
@@ -4948,8 +4951,8 @@ function renderAll() {
     renderMeta();
     renderTimeline();
     updateMapMarkers(newsData);
-    try { renderWhatsApp(); } catch(e) {}
-    try { renderTgFeed(); } catch(e) {}
+    try { renderWhatsApp(); } catch(e) { console.warn('renderWhatsApp error:', e); }
+    try { renderTgFeed(); } catch(e) { console.warn('renderTgFeed error:', e); }
 }
 
 // ═══════ FILTERS ═══════
@@ -5354,14 +5357,14 @@ function renderMeta() {
 // ═══════ INTEL LAYERS ═══════
 async function fetchWeatherDirect() {
     try {
-        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${SECTOR_CENTER.lat}&lon=${SECTOR_CENTER.lng}&appid=4a4f2b3c8e9d4f6a8b2c1d0e3f5a7b9c&units=metric&lang=he`;
-        const res = await fetch(url);
+        // Read weather from Firebase (populated by backend news-fetcher)
+        const res = await fetch(`${FIREBASE_URL}/weather/current.json`);
         const data = await res.json();
-        if (data.main) {
+        if (data && data.temp !== undefined) {
             const wEl = document.getElementById('weatherVal');
-            if (wEl) wEl.textContent = `${Math.round(data.main.temp)}°C ${data.weather?.[0]?.description || ''}`;
+            if (wEl) wEl.textContent = `${data.temp}°C ${data.description || ''}`;
         }
-    } catch (e) { /* silent */ }
+    } catch (e) { console.warn('Weather fetch error:', e.message); }
 }
 
 function checkCalendarLocal() {
@@ -5521,10 +5524,10 @@ function renderHistory() {
                 const sourceTag = `<a href="javascript:void(0)" onclick="event.stopPropagation();openPublisherProfile('${escapeHtml(hSrcId)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">📡 ${escapeHtml(item.source || '')}</a>`;
                 const locTag = hLocName
                     ? (hCoords
-                        ? `<a href="javascript:void(0)" onclick="toggleHistory();setTimeout(()=>{map.flyTo([${hCoords.lat},${hCoords.lng}],15,{duration:1})},300)" style="color:#00d4ff;font-size:10px;text-decoration:none;cursor:pointer;">📍 ${escapeHtml(hLocName)}</a>`
+                        ? `<a href="javascript:void(0)" onclick="toggleHistory();setTimeout(()=>{map.flyTo([${Number(hCoords.lat)||0},${Number(hCoords.lng)||0}],15,{duration:1})},300)" style="color:#00d4ff;font-size:10px;text-decoration:none;cursor:pointer;">📍 ${escapeHtml(hLocName)}</a>`
                         : `<span style="color:#00d4ff;font-size:10px;">📍 ${escapeHtml(hLocName)}</span>`)
                     : '';
-                const noteId = item.id || item.timestamp || '';
+                const noteId = escapeJsStr(item.id || item.timestamp || '');
                 const note = journalNotes[noteId];
                 const hVote = alertVotes[noteId];
                 const hIsDisliked = hVote && hVote.vote === 'dislike';
@@ -5586,7 +5589,7 @@ function getVillageReportCount(village, hours) {
             if (dlat < 0.02 && dlng < 0.02) { count++; return; }
         }
         // Check by matched location name
-        if (item.matchedLocations) {
+        if (Array.isArray(item.matchedLocations)) {
             const names = item.matchedLocations.join(' ').toLowerCase();
             const heName = village.he.toLowerCase();
             if (names.includes(heName)) { count++; }
@@ -5606,7 +5609,7 @@ function getVillageLastEvent(village) {
             const dlng = Math.abs((item.coordinates.lon || item.coordinates.lng || 0) - village.lng);
             if (dlat < 0.02 && dlng < 0.02) match = true;
         }
-        if (!match && item.matchedLocations) {
+        if (!match && Array.isArray(item.matchedLocations)) {
             const names = item.matchedLocations.join(' ').toLowerCase();
             if (names.includes(village.he.toLowerCase())) match = true;
         }
@@ -5646,6 +5649,9 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+function escapeJsStr(s) {
+    return String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
 // ═══════ PUBLISHER PROFILE ═══════
@@ -5988,12 +5994,14 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ═══════ REFRESH CYCLE ═══════
+let refreshCycleTimer = null;
 function startRefreshCycle() {
+    if (refreshCycleTimer) clearInterval(refreshCycleTimer);
     const bar = document.getElementById('refreshBar');
     const nextEl = document.getElementById('nextRefresh');
     let elapsed = 0;
 
-    setInterval(() => {
+    refreshCycleTimer = setInterval(() => {
         elapsed += 1000;
         const remaining = Math.max(0, Math.ceil((REFRESH_INTERVAL - elapsed) / 1000));
         nextEl.textContent = `${remaining}s`;
@@ -6682,7 +6690,9 @@ function renderShDayDetails(key) {
 
 // ═══════ WHATSAPP GREEN API INTEGRATION ═══════
 const WA_STORAGE_KEY = 'mabat188-wa-config';
-let waConfig = JSON.parse(localStorage.getItem(WA_STORAGE_KEY) || 'null') || { instanceId: '', apiToken: '', monitoredGroups: [], isMonitoring: false };
+let waConfig;
+try { waConfig = JSON.parse(localStorage.getItem(WA_STORAGE_KEY) || 'null') || { instanceId: '', apiToken: '', monitoredGroups: [], isMonitoring: false }; }
+catch (e) { waConfig = { instanceId: '', apiToken: '', monitoredGroups: [], isMonitoring: false }; }
 let waPollingTimer = null;
 let waMessageCount = 0;
 let waLastNotificationId = null;
@@ -6798,8 +6808,8 @@ async function loadWaGroups() {
 
         list.innerHTML = groups.map(g => {
             const isSelected = waConfig.monitoredGroups.includes(g.id);
-            return `<label class="wa-group-item${isSelected ? ' selected' : ''}" data-gid="${g.id}">
-                <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleWaGroup('${g.id}', this)">
+            return `<label class="wa-group-item${isSelected ? ' selected' : ''}" data-gid="${escapeHtml(g.id)}">
+                <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleWaGroup('${escapeJsStr(g.id)}', this)">
                 <span>${escapeHtml(g.name)}</span>
             </label>`;
         }).join('');
@@ -6858,7 +6868,10 @@ function stopWaMonitoring() {
     updateWaButton(false);
 }
 
+let waPolling = false;
 async function pollWaMessages() {
+    if (waPolling) return;
+    waPolling = true;
     try {
         const res = await fetch(`${getWaBaseUrl()}/receiveNotification/${waConfig.apiToken}`);
         const data = await res.json();
@@ -6902,11 +6915,10 @@ async function pollWaMessages() {
         // Delete notification after processing
         await fetch(`${getWaBaseUrl()}/deleteNotification/${waConfig.apiToken}/${receiptId}`, { method: 'DELETE' });
 
-        // Continue polling if there are more notifications
-        pollWaMessages();
-
     } catch (e) {
-        // Silent - will retry on next interval
+        console.warn('WA poll error:', e.message);
+    } finally {
+        waPolling = false;
     }
 }
 
@@ -6933,7 +6945,7 @@ async function processWaMessage(msg) {
     // Auto-detect urgency from keywords
     const urgentKeywords = ['ירי','פיצוץ','פגיעה','רקטה','חדירה','מטען','אזעקה','פצועים','הרוגים','חיסול','תקיפה','הפצצה'];
     const highKeywords = ['חשוד','רחפן','תצפית','תנועה חשודה','כוחות','טנק','שיגור','חילוץ'];
-    const textLower = msg.text;
+    const textLower = (msg.text || '').toLowerCase();
 
     for (const kw of urgentKeywords) {
         if (textLower.includes(kw)) { alertData.urgency = 5; break; }
@@ -7069,6 +7081,7 @@ function clearFirmsMarkers() {
 function toggleFirmsLayer() {
     firmsVisible = !firmsVisible;
     const btn = document.getElementById('firmsToggle');
+    if (!btn || !map) return;
     if (firmsVisible) {
         btn.classList.add('active');
         btn.textContent = 'FIRMS ON';
@@ -7091,7 +7104,7 @@ async function fetchWhatsAppData() {
             renderWhatsApp();
             return;
         }
-    } catch (e) {}
+    } catch (e) { console.warn('WhatsApp fetch error:', e); }
     // Show empty state if Firebase endpoint not yet configured (demo data only via הדגמה button)
     const waContainer = document.getElementById('waFeed');
     if (waContainer) {
@@ -7266,11 +7279,13 @@ function filterTgFeed(filter, btn) {
 
 // ═══════ NETWORK GRAPH (vis.js) ═══════
 function initNetworkGraph() {
+    const container = document.getElementById('networkGraph');
     if (typeof vis === 'undefined') {
         console.log('vis.js not loaded');
-        document.getElementById('networkGraph').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:11px;">טוען ספריית גרף...</div>';
+        if (container) container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-dim);font-size:11px;">טוען ספריית גרף...</div>';
         return;
     }
+    if (!container) return;
 
     networkNodes = new vis.DataSet();
     networkEdges = new vis.DataSet();
@@ -7278,7 +7293,6 @@ function initNetworkGraph() {
     // Build initial graph from sources + known relationships
     buildInitialGraph();
 
-    const container = document.getElementById('networkGraph');
     const data = { nodes: networkNodes, edges: networkEdges };
     const options = {
         nodes: {
@@ -7305,7 +7319,8 @@ function initNetworkGraph() {
     networkGraph.once('stabilizationIterationsDone', function() {
         networkGraph.fit({ animation: { duration: 500, easingFunction: 'easeInOutQuad' } });
     });
-    document.getElementById('graphNodeCount').textContent = `${networkNodes.length} צמתים`;
+    const nodeCountEl = document.getElementById('graphNodeCount');
+    if (nodeCountEl && networkNodes) nodeCountEl.textContent = `${networkNodes.get().length} צמתים`;
 }
 
 function buildInitialGraph() {
@@ -7385,10 +7400,10 @@ function buildInitialGraph() {
     }
 }
 
-function setGraphView(view) {
+function setGraphView(view, evt) {
     currentGraphView = view;
     document.querySelectorAll('.net-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    if (evt && evt.target) evt.target.classList.add('active');
 
     if (!networkNodes) return;
     const allNodes = networkNodes.get();
@@ -7670,7 +7685,7 @@ async function submitSuggestion() {
 // ═══════ INIT ═══════
 document.addEventListener('DOMContentLoaded', () => {
     try { updateClock(); } catch(e) { console.error('Clock init error:', e); }
-    setInterval(() => { try { updateClock(); } catch(e) {} }, 1000);
+    setInterval(() => { try { updateClock(); } catch(e) { /* clock tick */ } }, 1000);
 
     try {
         if (typeof L !== 'undefined') {
@@ -7690,23 +7705,29 @@ document.addEventListener('DOMContentLoaded', () => {
     try { loadAlertVotes(); } catch(e) { console.error('Votes init error:', e); }
     try { loadPublisherProfiles(); } catch(e) { console.error('Profiles init error:', e); }
     try { startRefreshCycle(); } catch(e) { console.error('Refresh init error:', e); }
-    try { fetchWeatherDirect(); } catch(e) {}
-    try { checkCalendarLocal(); } catch(e) {}
+    try { fetchWeatherDirect(); } catch(e) { console.warn('Weather init error:', e); }
+    try { checkCalendarLocal(); } catch(e) { console.warn('Calendar init error:', e); }
 
     // Auto-resume WhatsApp monitoring if was active
     if (waConfig.instanceId && waConfig.apiToken && waConfig.isMonitoring) {
-        setTimeout(() => { try { checkWaStatus(); } catch(e) {} }, 3000);
+        setTimeout(() => { try { checkWaStatus(); } catch(e) { console.warn('WA auto-resume error:', e); } }, 3000);
     }
 
     // OSINT Panels init
     try { initFirmsLayer(); } catch(e) { console.error('FIRMS init error:', e); }
     try { fetchWhatsAppData(); } catch(e) { console.error('WhatsApp init error:', e); }
     // Suggestions: form only, no loading needed
-    try { setTimeout(() => initNetworkGraph(), 500); } catch(e) { console.error('Graph init error:', e); }
+    setTimeout(() => { try { initNetworkGraph(); } catch(e) { console.error('Graph init error:', e); } }, 500);
 
     // PWA + Push init
     try { registerServiceWorker(); } catch(e) { console.error('SW init error:', e); }
-    try { setTimeout(() => checkExistingPushSubscription(), 2000); } catch(e) {}
+    setTimeout(() => { try { checkExistingPushSubscription(); } catch(e) { console.warn('Push init error:', e); } }, 2000);
+
+    // Cleanup timers on page unload
+    window.addEventListener('beforeunload', () => {
+        if (waPollingTimer) { clearInterval(waPollingTimer); waPollingTimer = null; }
+        if (refreshCycleTimer) { clearInterval(refreshCycleTimer); refreshCycleTimer = null; }
+    });
 });
 </script>
 </body>

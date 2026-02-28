@@ -5042,13 +5042,13 @@ function renderAlerts() {
         const coords = lookupCoords(item);
         const locationTag = locationName
             ? (coords
-                ? `<a href="javascript:void(0)" onclick="flyToAlertLocation(${coords.lat},${coords.lng},event)" style="color:#00d4ff;font-size:10px;text-decoration:none;display:inline-flex;align-items:center;gap:3px;margin-top:2px;cursor:pointer;">📍 ${escapeHtml(locationName)}</a>`
+                ? `<a href="javascript:void(0)" onclick="flyToAlertLocation(${Number(coords.lat)||0},${Number(coords.lng)||0},event)" style="color:#00d4ff;font-size:10px;text-decoration:none;display:inline-flex;align-items:center;gap:3px;margin-top:2px;cursor:pointer;">📍 ${escapeHtml(locationName)}</a>`
                 : `<span style="color:#00d4ff;font-size:10px;display:inline-flex;align-items:center;gap:3px;margin-top:2px;">📍 ${escapeHtml(locationName)}</span>`)
             : '';
         const sourceUrl = item.sourceUrl || getSourceUrl(item.source);
         const srcObj = מקורות.find(s => s.id === item.source || s.name === item.source);
         const srcIdForProfile = srcObj ? srcObj.id : (item.source || '');
-        const alertId = item.id || item.timestamp || idx;
+        const alertId = escapeJsStr(item.id || item.timestamp || idx);
         const isChecked = checkedAlerts.has(String(alertId));
         const vote = alertVotes[alertId];
         const isDisliked = vote && vote.vote === 'dislike';
@@ -5079,7 +5079,7 @@ function renderAlerts() {
                 return '<div class="alert-full-text" style="display:none;">' + escapeHtml(deduped) + '</div>';
             })()}
             <div class="alert-meta-row" style="display:none;">
-                <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeHtml(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>
+                <a href="javascript:void(0)" onclick="openPublisherProfile('${escapeJsStr(srcIdForProfile)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">&#128225; ${escapeHtml(item.source || 'N/A')}</a>
                 ${sourceUrl ? '<a href="' + escapeHtml(sourceUrl) + '" target="_blank" onclick="event.stopPropagation();" style="color:var(--text-dim);font-size:10px;text-decoration:none;">&#128279; מקור</a>' : ''}
                 ${item.matchedKeywords ? '<span>KW: ' + escapeHtml(item.matchedKeywords.join(', ')) + '</span>' : ''}
                 <div class="vote-buttons">
@@ -5334,7 +5334,7 @@ function renderSources() {
         const count = sourceCounts[src.id] || sourceCounts[src.name] || 0;
         const isActive = count > 0;
         return `
-            <div class="source-item" style="cursor:pointer;" onclick="openPublisherProfile('${escapeHtml(src.id)}',event)">
+            <div class="source-item" style="cursor:pointer;" onclick="openPublisherProfile('${escapeJsStr(src.id)}',event)">
                 <div class="source-dot ${isActive ? 'active' : 'inactive'}"></div>
                 <span class="source-name source-link-clickable">${src.name}</span>
                 <span class="source-type ${src.type}">${typeLabels[src.type] || ''}</span>
@@ -5521,7 +5521,7 @@ function renderHistory() {
                 const sourceUrl = item.sourceUrl || getSourceUrl(item.source);
                 const hSrcObj = מקורות.find(s => s.id === item.source || s.name === item.source);
                 const hSrcId = hSrcObj ? hSrcObj.id : (item.source || '');
-                const sourceTag = `<a href="javascript:void(0)" onclick="event.stopPropagation();openPublisherProfile('${escapeHtml(hSrcId)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">📡 ${escapeHtml(item.source || '')}</a>`;
+                const sourceTag = `<a href="javascript:void(0)" onclick="event.stopPropagation();openPublisherProfile('${escapeJsStr(hSrcId)}',event)" class="source-link-clickable" style="color:#00d4ff;font-size:10px;text-decoration:none;">📡 ${escapeHtml(item.source || '')}</a>`;
                 const locTag = hLocName
                     ? (hCoords
                         ? `<a href="javascript:void(0)" onclick="toggleHistory();setTimeout(()=>{map.flyTo([${Number(hCoords.lat)||0},${Number(hCoords.lng)||0}],15,{duration:1})},300)" style="color:#00d4ff;font-size:10px;text-decoration:none;cursor:pointer;">📍 ${escapeHtml(hLocName)}</a>`

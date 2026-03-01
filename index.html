@@ -1691,6 +1691,10 @@ body {
     text-decoration: line-through;
     text-decoration-color: var(--text-dim);
 }
+.alert-item.expanded .alert-title {
+    -webkit-line-clamp: unset;
+    display: block;
+}
 
 .alert-full-text {
     font-family: var(--font-he);
@@ -5064,7 +5068,7 @@ function renderAlerts() {
                 <div class="alert-content">
                     <div class="alert-title">${isDisliked ? '<span class="false-badge">שגוי</span>' : ''}${isLiked ? '<span class="verified-badge">אומת</span>' : ''}${escapeHtml(
                         (item.title && (item.title.endsWith(':') || item.title.length < 20) && item.summary)
-                            ? item.summary.substring(0, 120)
+                            ? item.summary
                             : (item.title || item.summary || 'N/A')
                     )}</div>
                     ${locationTag}

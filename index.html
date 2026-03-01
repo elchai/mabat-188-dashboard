@@ -17,7 +17,6 @@
 <link rel="apple-touch-icon" href="logo-188.jpg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* ═══════════════════════════════════════
    MABAT 188 - CYBER DEFENSE DASHBOARD
@@ -7617,13 +7616,8 @@ async function checkExistingPushSubscription() {
 }
 
 
-// ═══════ EMAILJS CONFIG ═══════
-const MABAT_EMAIL = {
-    publicKey: 'ri4OzUJQH1rM8si5t',
-    serviceId: 'service_7ckifq6',
-    templateId: 'template_mabat188',
-};
-try { emailjs.init(MABAT_EMAIL.publicKey); } catch(e) { console.warn('EmailJS init failed:', e); }
+// ═══════ EMAIL WEBHOOK (Google Apps Script) ═══════
+const EMAIL_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzCbjvnBSnrdXFXurBN10AV0BjPLVkmMITus5oD057Pmu1PspAp4x-0n168z6X6wV24kA/exec';
 
 // ═══════ DEVELOPMENT SUGGESTIONS ═══════
 async function submitSuggestion() {
@@ -7659,11 +7653,15 @@ async function submitSuggestion() {
         });
 
         try {
-            await emailjs.send(MABAT_EMAIL.serviceId, MABAT_EMAIL.templateId, {
-                from_name: suggestion.author,
-                message: suggestion.text,
-                time: new Date().toLocaleString('he-IL'),
-                to_email: 'elchaifinn@gmail.com',
+            await fetch(EMAIL_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({
+                    from_name: suggestion.author,
+                    message: suggestion.text,
+                    time: new Date().toLocaleString('he-IL'),
+                }),
+                mode: 'no-cors'
             });
         } catch (emailErr) {
             console.warn('Email notification failed (suggestion saved to Firebase):', emailErr);

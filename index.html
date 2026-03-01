@@ -2052,6 +2052,7 @@ body {
     border-radius: 4px;
     transition: background 0.2s ease;
     direction: rtl;
+    cursor: pointer;
 }
 
 .history-item:hover {
@@ -2083,6 +2084,24 @@ body {
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 4px;
+}
+
+.history-item-full-text {
+    display: none;
+    font-family: var(--font-he);
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-top: 8px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(15, 52, 96, 0.3);
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+.history-item.expanded .history-item-full-text {
+    display: block;
 }
 
 .history-item-text {
@@ -5328,12 +5347,14 @@ function renderHistory() {
                         </div>
                        </div>`
                     : '';
+                const hExpandText = item.fullText || item.snippet || item.summary || '';
                 return `
-                <div class="history-item${hIsDisliked ? ' alert-false' : ''}" style="border-right:3px solid ${urgColor};">
+                <div class="history-item${hIsDisliked ? ' alert-false' : ''}" style="border-right:3px solid ${urgColor};" onclick="toggleHistoryExpand(this)">
                     <span class="history-item-time">${formatTime(item.timestamp)}</span>
                     <div class="history-item-urgency" style="background:${urgColor}; box-shadow: 0 0 6px ${urgColor};"></div>
                     <div class="history-item-content">
                         <div class="history-item-title">${voteBadge}${escapeHtml(item.title || 'N/A')}</div>
+                        ${hExpandText ? '<div class="history-item-full-text">' + escapeHtml(hExpandText) + '</div>' : ''}
                         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px;">
                             <span style="font-size:9px;padding:1px 6px;border-radius:3px;background:${urgColor}22;border:1px solid ${urgColor};color:${urgColor};">${urgLabel}</span>
                             ${locTag}
@@ -5358,6 +5379,10 @@ function renderHistory() {
             `}).join('')}
         </div>
     `).join('');
+}
+
+function toggleHistoryExpand(el) {
+    el.classList.toggle('expanded');
 }
 
 // ═══════ VILLAGE REPORT COUNT ═══════

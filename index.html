@@ -17,6 +17,7 @@
 <link rel="apple-touch-icon" href="logo-188.jpg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* ═══════════════════════════════════════
    MABAT 188 - CYBER DEFENSE DASHBOARD
@@ -7616,6 +7617,14 @@ async function checkExistingPushSubscription() {
 }
 
 
+// ═══════ EMAILJS CONFIG ═══════
+const MABAT_EMAIL = {
+    publicKey: 'ri4OzUJQH1rM8si5t',
+    serviceId: 'service_7ckifq6',
+    templateId: 'template_mabat188',
+};
+try { emailjs.init(MABAT_EMAIL.publicKey); } catch(e) { console.warn('EmailJS init failed:', e); }
+
 // ═══════ DEVELOPMENT SUGGESTIONS ═══════
 async function submitSuggestion() {
     const nameEl = document.getElementById('suggestionName');
@@ -7650,18 +7659,14 @@ async function submitSuggestion() {
         });
 
         try {
-            await fetch('https://formsubmit.co/ajax/elchaifinn@gmail.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                body: JSON.stringify({
-                    _subject: 'הצעה חדשה למבט 188',
-                    name: suggestion.author,
-                    message: suggestion.text,
-                    _template: 'table'
-                })
+            await emailjs.send(MABAT_EMAIL.serviceId, MABAT_EMAIL.templateId, {
+                from_name: suggestion.author,
+                message: suggestion.text,
+                time: new Date().toLocaleString('he-IL'),
+                to_email: 'elchaifinn@gmail.com',
             });
         } catch (emailErr) {
-            console.warn('Email notification failed (suggestion saved):', emailErr);
+            console.warn('Email notification failed (suggestion saved to Firebase):', emailErr);
         }
 
         nameEl.value = '';

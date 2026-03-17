@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.firebasedatabase.app https://*.googleapis.com https://formsubmit.co https://api.green-api.com https://*.tile.openstreetmap.org https://script.google.com https://script.googleusercontent.com; frame-src https://accounts.google.com;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.firebasedatabase.app https://*.googleapis.com https://formsubmit.co https://api.green-api.com https://*.tile.openstreetmap.org https://script.google.com https://script.googleusercontent.com; frame-src https://accounts.google.com https://apis.google.com;">
 <title>מבט 188 | פלטפורמת מודיעין גזרתית</title>
 <link rel="icon" type="image/jpeg" href="logo-188.jpg">
 <link rel="manifest" href="manifest.json">
@@ -17,6 +17,7 @@
 <link rel="apple-touch-icon" href="logo-188.jpg">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
 <style>
 /* ═══════════════════════════════════════
    MABAT 188 - CYBER DEFENSE DASHBOARD
@@ -1474,6 +1475,278 @@ body {
 }
 .wa-msg-item .wa-msg-group { color: #25D366; font-size: 9px; font-weight: 600; }
 .wa-msg-item .wa-msg-time { color: var(--text-dim); font-size: 9px; float: left; direction: ltr; }
+
+/* ═══════ GOOGLE WORKSPACE PANEL ═══════ */
+.gws-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+.gws-overlay.visible { display: flex; }
+.gws-panel {
+    background: var(--bg-secondary);
+    border: 1px solid #4285F4;
+    border-radius: 12px;
+    width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px rgba(66, 133, 244, 0.15);
+}
+.gws-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(66, 133, 244, 0.05);
+}
+.gws-panel-title {
+    flex: 1;
+    font-family: var(--font-he);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.gws-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-primary);
+    background: rgba(0, 0, 0, 0.2);
+}
+.gws-tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+.gws-tab:hover { color: var(--text-secondary); background: rgba(66, 133, 244, 0.05); }
+.gws-tab.active {
+    color: #4285F4;
+    border-bottom-color: #4285F4;
+    background: rgba(66, 133, 244, 0.08);
+}
+.gws-tab-content { display: none; }
+.gws-tab-content.active { display: block; }
+.gws-section {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(15, 52, 96, 0.3);
+}
+.gws-section-title {
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    color: #4285F4;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.gws-status-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.gws-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff0040;
+    box-shadow: 0 0 6px #ff004088;
+}
+.gws-status-dot.connected {
+    background: #34A853;
+    box-shadow: 0 0 6px #34A85388;
+    animation: dotPulse 1.5s ease-in-out infinite;
+}
+.gws-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-family: var(--font-he);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.gws-btn-primary {
+    background: #4285F4;
+    color: #fff;
+}
+.gws-btn-primary:hover { background: #3367d6; }
+.gws-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.gws-btn-secondary {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--border-primary);
+}
+.gws-btn-secondary:hover { border-color: var(--cyan); }
+.gws-btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+}
+.gws-btn-danger:hover { background: rgba(255, 0, 64, 0.1); }
+.gws-list {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.gws-list-item {
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    border-right: 2px solid #4285F4;
+    font-family: var(--font-he);
+    font-size: 11px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.gws-list-item:hover { background: rgba(66, 133, 244, 0.08); }
+.gws-list-item .gws-item-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+.gws-list-item .gws-item-meta {
+    color: var(--text-dim);
+    font-size: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.gws-list-item .gws-item-snippet {
+    color: var(--text-secondary);
+    font-size: 10px;
+    margin-top: 4px;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+}
+.gws-list-item.unread { border-right-color: #EA4335; }
+.gws-list-item.unread .gws-item-title { color: #fff; }
+.gws-calendar-event {
+    border-right-color: #34A853;
+}
+.gws-calendar-event .gws-item-time {
+    color: #34A853;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+}
+.gws-drive-item .gws-item-icon {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    margin-left: 6px;
+}
+.gws-empty-state {
+    text-align: center;
+    padding: 30px 16px;
+    color: var(--text-dim);
+    font-family: var(--font-he);
+    font-size: 12px;
+}
+.gws-loading {
+    text-align: center;
+    padding: 20px;
+    color: #4285F4;
+    font-family: var(--font-he);
+    font-size: 12px;
+}
+.gws-loading::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #4285F466;
+    border-top-color: #4285F4;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.gws-compose-area {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 16px;
+}
+.gws-compose-area input,
+.gws-compose-area textarea {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-he);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.gws-compose-area input:focus,
+.gws-compose-area textarea:focus { border-color: #4285F4; }
+.gws-compose-area textarea { min-height: 80px; resize: vertical; }
+.gws-field {
+    margin-bottom: 8px;
+}
+.gws-field label {
+    display: block;
+    font-family: var(--font-he);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+}
+.gws-field input {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.gws-field input:focus { border-color: #4285F4; }
+.gws-scopes-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+}
+.gws-scope-badge {
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 9px;
+    font-family: var(--font-mono);
+    background: rgba(66, 133, 244, 0.1);
+    border: 1px solid rgba(66, 133, 244, 0.3);
+    color: #4285F4;
+}
+.gws-scope-badge.active {
+    background: rgba(52, 168, 83, 0.15);
+    border-color: rgba(52, 168, 83, 0.4);
+    color: #34A853;
+}
 
 /* ═══════ BOTTOM - ALERT FEED ═══════ */
 .alert-feed { grid-column: 2 / 3; display: flex; flex-direction: column; }
@@ -3558,6 +3831,9 @@ window.addEventListener('load', function() {
                 <button class="header-icon-btn" onclick="toggleSectorHistory()" style="--btn-color:var(--purple);" title="היסטוריה גזרתית" data-mobile-label="היסטוריה">
                     <span class="btn-icon">&#x23F2;</span>
                 </button>
+                <button class="header-icon-btn" onclick="toggleGWorkspace()" id="gwsBtn" style="--btn-color:#4285F4;" title="Google Workspace" data-mobile-label="GWS">
+                    <span class="btn-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></span>
+                </button>
                 <button class="header-icon-btn" onclick="toggleWhatsApp()" id="waBtn" style="--btn-color:#25D366;" title="WhatsApp מוניטור" data-mobile-label="WA">
                     <span class="btn-icon"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span>
                 </button>
@@ -3925,6 +4201,107 @@ window.addEventListener('load', function() {
             <div id="waMonitorStats" class="wa-monitor-stats"></div>
             <div id="waRecentMessages" class="wa-recent-messages"></div>
             <button class="wa-btn wa-btn-stop" onclick="stopWaMonitoring()">עצור ניטור</button>
+        </div>
+    </div>
+</div>
+
+<!-- GOOGLE WORKSPACE OVERLAY -->
+<div class="gws-overlay" id="gwsOverlay" onclick="if(event.target===this)toggleGWorkspace()">
+    <div class="gws-panel">
+        <div class="gws-panel-header">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            <span class="gws-panel-title">Google Workspace - מרכז שליטה</span>
+            <button class="history-close" onclick="toggleGWorkspace()">סגור ESC</button>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="gws-section">
+            <div class="gws-section-title">סטטוס חיבור</div>
+            <div class="gws-status-row">
+                <div class="gws-status-dot" id="gwsStatusDot"></div>
+                <span id="gwsStatusText">לא מחובר</span>
+            </div>
+            <div id="gwsScopes" class="gws-scopes-list" style="display:none;"></div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+                <button class="gws-btn gws-btn-primary" id="gwsAuthBtn" onclick="gwsAuthorize()">התחבר ל-Google Workspace</button>
+                <button class="gws-btn gws-btn-danger" id="gwsDisconnectBtn" onclick="gwsDisconnect()" style="display:none;">התנתק</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="gws-tabs" id="gwsTabs" style="display:none;">
+            <button class="gws-tab active" data-tab="gmail" onclick="gwsSwitchTab('gmail')">Gmail</button>
+            <button class="gws-tab" data-tab="calendar" onclick="gwsSwitchTab('calendar')">לוח שנה</button>
+            <button class="gws-tab" data-tab="drive" onclick="gwsSwitchTab('drive')">Drive</button>
+            <button class="gws-tab" data-tab="sheets" onclick="gwsSwitchTab('sheets')">Sheets</button>
+        </div>
+
+        <!-- Gmail Tab -->
+        <div class="gws-tab-content active" id="gwsTabGmail">
+            <div class="gws-section" style="border-bottom:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="gws-section-title" style="margin-bottom:0;">תיבת דואר נכנס</div>
+                    <div style="display:flex;gap:6px;">
+                        <button class="gws-btn gws-btn-secondary" onclick="gwsComposeToggle()" style="font-size:10px;padding:4px 10px;">חדש +</button>
+                        <button class="gws-btn gws-btn-secondary" onclick="gwsLoadGmail()" style="font-size:10px;padding:4px 10px;">רענן</button>
+                    </div>
+                </div>
+                <div id="gwsComposeArea" class="gws-compose-area" style="display:none;">
+                    <input type="email" id="gwsComposeTo" placeholder="נמען (email)" dir="ltr">
+                    <input type="text" id="gwsComposeSubject" placeholder="נושא">
+                    <textarea id="gwsComposeBody" placeholder="תוכן ההודעה..."></textarea>
+                    <div style="display:flex;gap:8px;">
+                        <button class="gws-btn gws-btn-primary" onclick="gwsSendEmail()">שלח</button>
+                        <button class="gws-btn gws-btn-secondary" onclick="gwsComposeToggle()">ביטול</button>
+                    </div>
+                </div>
+                <div id="gwsGmailList" class="gws-list">
+                    <div class="gws-empty-state">התחבר כדי לצפות בהודעות</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Tab -->
+        <div class="gws-tab-content" id="gwsTabCalendar">
+            <div class="gws-section" style="border-bottom:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="gws-section-title" style="margin-bottom:0;">אירועים קרובים</div>
+                    <button class="gws-btn gws-btn-secondary" onclick="gwsLoadCalendar()" style="font-size:10px;padding:4px 10px;">רענן</button>
+                </div>
+                <div id="gwsCalendarList" class="gws-list">
+                    <div class="gws-empty-state">התחבר כדי לצפות באירועים</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drive Tab -->
+        <div class="gws-tab-content" id="gwsTabDrive">
+            <div class="gws-section" style="border-bottom:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="gws-section-title" style="margin-bottom:0;">קבצים אחרונים</div>
+                    <button class="gws-btn gws-btn-secondary" onclick="gwsLoadDrive()" style="font-size:10px;padding:4px 10px;">רענן</button>
+                </div>
+                <div id="gwsDriveList" class="gws-list">
+                    <div class="gws-empty-state">התחבר כדי לצפות בקבצים</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sheets Tab -->
+        <div class="gws-tab-content" id="gwsTabSheets">
+            <div class="gws-section" style="border-bottom:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <div class="gws-section-title" style="margin-bottom:0;">גיליונות אלקטרוניים</div>
+                    <button class="gws-btn gws-btn-secondary" onclick="gwsLoadSheets()" style="font-size:10px;padding:4px 10px;">רענן</button>
+                </div>
+                <div id="gwsSheetsList" class="gws-list">
+                    <div class="gws-empty-state">התחבר כדי לצפות בגיליונות</div>
+                </div>
+                <div id="gwsSheetPreview" style="display:none;margin-top:10px;">
+                    <div class="gws-section-title" id="gwsSheetPreviewTitle"></div>
+                    <div id="gwsSheetData" style="overflow-x:auto;max-height:200px;font-size:10px;"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -7716,6 +8093,369 @@ async function submitSuggestion() {
     }
 }
 
+// ═══════ GOOGLE WORKSPACE INTEGRATION ═══════
+const GWS_SCOPES = [
+    'https://www.googleapis.com/auth/gmail.readonly',
+    'https://www.googleapis.com/auth/gmail.send',
+    'https://www.googleapis.com/auth/calendar.readonly',
+    'https://www.googleapis.com/auth/drive.readonly',
+    'https://www.googleapis.com/auth/spreadsheets.readonly'
+].join(' ');
+
+let gwsTokenClient = null;
+let gwsAccessToken = null;
+
+function toggleGWorkspace() {
+    const overlay = document.getElementById('gwsOverlay');
+    overlay.classList.toggle('visible');
+    if (overlay.classList.contains('visible') && gwsAccessToken) {
+        updateGwsConnectionUI(true);
+    }
+}
+
+function initGapiClient() {
+    if (typeof gapi === 'undefined') return;
+    gapi.load('client', async () => {
+        await gapi.client.init({});
+        console.log('GAPI client initialized');
+    });
+}
+
+function initGwsTokenClient() {
+    if (typeof google === 'undefined' || !google.accounts || !google.accounts.oauth2) return;
+    gwsTokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: GWS_SCOPES,
+        callback: (tokenResponse) => {
+            if (tokenResponse.error) {
+                console.error('GWS auth error:', tokenResponse);
+                document.getElementById('gwsStatusText').textContent = 'שגיאה באימות';
+                return;
+            }
+            gwsAccessToken = tokenResponse.access_token;
+            localStorage.setItem('mabat188-gws-token', gwsAccessToken);
+            updateGwsConnectionUI(true);
+            gwsLoadGmail();
+        }
+    });
+}
+
+function gwsAuthorize() {
+    if (!gwsTokenClient) {
+        initGwsTokenClient();
+    }
+    if (gwsTokenClient) {
+        gwsTokenClient.requestAccessToken();
+    } else {
+        document.getElementById('gwsStatusText').textContent = 'שגיאה: Google API לא נטען';
+    }
+}
+
+function gwsDisconnect() {
+    if (gwsAccessToken) {
+        google.accounts.oauth2.revoke(gwsAccessToken);
+    }
+    gwsAccessToken = null;
+    localStorage.removeItem('mabat188-gws-token');
+    updateGwsConnectionUI(false);
+    document.getElementById('gwsGmailList').innerHTML = '<div class="gws-empty-state">התחבר כדי לצפות בהודעות</div>';
+    document.getElementById('gwsCalendarList').innerHTML = '<div class="gws-empty-state">התחבר כדי לצפות באירועים</div>';
+    document.getElementById('gwsDriveList').innerHTML = '<div class="gws-empty-state">התחבר כדי לצפות בקבצים</div>';
+    document.getElementById('gwsSheetsList').innerHTML = '<div class="gws-empty-state">התחבר כדי לצפות בגיליונות</div>';
+}
+
+function updateGwsConnectionUI(connected) {
+    const dot = document.getElementById('gwsStatusDot');
+    const text = document.getElementById('gwsStatusText');
+    const authBtn = document.getElementById('gwsAuthBtn');
+    const disconnectBtn = document.getElementById('gwsDisconnectBtn');
+    const tabs = document.getElementById('gwsTabs');
+    const scopesEl = document.getElementById('gwsScopes');
+
+    if (connected) {
+        dot.classList.add('connected');
+        text.textContent = 'מחובר ל-Google Workspace';
+        authBtn.style.display = 'none';
+        disconnectBtn.style.display = '';
+        tabs.style.display = '';
+        scopesEl.style.display = 'flex';
+        scopesEl.innerHTML = ['Gmail', 'Calendar', 'Drive', 'Sheets'].map(s =>
+            `<span class="gws-scope-badge active">${s}</span>`
+        ).join('');
+    } else {
+        dot.classList.remove('connected');
+        text.textContent = 'לא מחובר';
+        authBtn.style.display = '';
+        disconnectBtn.style.display = 'none';
+        tabs.style.display = 'none';
+        scopesEl.style.display = 'none';
+    }
+}
+
+function gwsSwitchTab(tabName) {
+    document.querySelectorAll('.gws-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.gws-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.gws-tab[data-tab="${tabName}"]`).classList.add('active');
+    document.getElementById('gwsTab' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).classList.add('active');
+}
+
+// ── Gmail ──
+async function gwsLoadGmail() {
+    if (!gwsAccessToken) return;
+    const list = document.getElementById('gwsGmailList');
+    list.innerHTML = '<div class="gws-loading">טוען הודעות...</div>';
+    try {
+        const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=15&labelIds=INBOX', {
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        const data = await res.json();
+        if (!data.messages || data.messages.length === 0) {
+            list.innerHTML = '<div class="gws-empty-state">אין הודעות בתיבה</div>';
+            return;
+        }
+        // Fetch message details in parallel
+        const details = await Promise.all(data.messages.map(m =>
+            fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${m.id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`, {
+                headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+            }).then(r => r.json())
+        ));
+        list.innerHTML = details.map(msg => {
+            const headers = msg.payload?.headers || [];
+            const from = headers.find(h => h.name === 'From')?.value || '';
+            const subject = headers.find(h => h.name === 'Subject')?.value || '(ללא נושא)';
+            const date = headers.find(h => h.name === 'Date')?.value || '';
+            const isUnread = (msg.labelIds || []).includes('UNREAD');
+            const snippet = msg.snippet || '';
+            const fromName = from.replace(/<[^>]+>/g, '').trim();
+            const timeStr = date ? new Date(date).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+            return `<div class="gws-list-item ${isUnread ? 'unread' : ''}" onclick="window.open('https://mail.google.com/mail/u/0/#inbox/${msg.id}','_blank')">
+                <div class="gws-item-title">${escapeHtml(subject)}</div>
+                <div class="gws-item-meta"><span>${escapeHtml(fromName)}</span><span>${timeStr}</span></div>
+                <div class="gws-item-snippet">${escapeHtml(snippet)}</div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('Gmail load error:', e);
+        list.innerHTML = '<div class="gws-empty-state" style="color:var(--red);">שגיאה בטעינת הודעות</div>';
+    }
+}
+
+function gwsComposeToggle() {
+    const area = document.getElementById('gwsComposeArea');
+    area.style.display = area.style.display === 'none' ? '' : 'none';
+}
+
+async function gwsSendEmail() {
+    if (!gwsAccessToken) return;
+    const to = document.getElementById('gwsComposeTo').value.trim();
+    const subject = document.getElementById('gwsComposeSubject').value.trim();
+    const body = document.getElementById('gwsComposeBody').value.trim();
+    if (!to || !body) { alert('יש למלא נמען ותוכן'); return; }
+
+    const email = [
+        `To: ${to}`,
+        `Subject: ${subject}`,
+        'Content-Type: text/plain; charset=utf-8',
+        '',
+        body
+    ].join('\r\n');
+    const raw = btoa(unescape(encodeURIComponent(email))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    try {
+        const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ raw })
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        if (res.ok) {
+            document.getElementById('gwsComposeTo').value = '';
+            document.getElementById('gwsComposeSubject').value = '';
+            document.getElementById('gwsComposeBody').value = '';
+            document.getElementById('gwsComposeArea').style.display = 'none';
+            gwsLoadGmail();
+        } else {
+            const err = await res.json();
+            alert('שגיאה בשליחה: ' + (err.error?.message || 'unknown'));
+        }
+    } catch (e) {
+        console.error('Send email error:', e);
+        alert('שגיאה בשליחת הודעה');
+    }
+}
+
+// ── Calendar ──
+async function gwsLoadCalendar() {
+    if (!gwsAccessToken) return;
+    const list = document.getElementById('gwsCalendarList');
+    list.innerHTML = '<div class="gws-loading">טוען אירועים...</div>';
+    try {
+        const now = new Date().toISOString();
+        const maxDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${encodeURIComponent(now)}&timeMax=${encodeURIComponent(maxDate)}&maxResults=20&singleEvents=true&orderBy=startTime`, {
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        const data = await res.json();
+        if (!data.items || data.items.length === 0) {
+            list.innerHTML = '<div class="gws-empty-state">אין אירועים קרובים (7 ימים)</div>';
+            return;
+        }
+        list.innerHTML = data.items.map(ev => {
+            const start = ev.start?.dateTime || ev.start?.date || '';
+            const end = ev.end?.dateTime || ev.end?.date || '';
+            const isAllDay = !ev.start?.dateTime;
+            let timeStr = '';
+            if (isAllDay) {
+                timeStr = 'כל היום';
+            } else {
+                const s = new Date(start);
+                const e = new Date(end);
+                timeStr = s.toLocaleString('he-IL', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) +
+                    ' - ' + e.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+            }
+            return `<div class="gws-list-item gws-calendar-event" onclick="window.open('${ev.htmlLink || ''}','_blank')">
+                <div class="gws-item-time">${timeStr}</div>
+                <div class="gws-item-title">${escapeHtml(ev.summary || '(ללא כותרת)')}</div>
+                ${ev.location ? `<div class="gws-item-meta"><span>${escapeHtml(ev.location)}</span></div>` : ''}
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('Calendar load error:', e);
+        list.innerHTML = '<div class="gws-empty-state" style="color:var(--red);">שגיאה בטעינת אירועים</div>';
+    }
+}
+
+// ── Drive ──
+async function gwsLoadDrive() {
+    if (!gwsAccessToken) return;
+    const list = document.getElementById('gwsDriveList');
+    list.innerHTML = '<div class="gws-loading">טוען קבצים...</div>';
+    try {
+        const res = await fetch('https://www.googleapis.com/drive/v3/files?pageSize=20&orderBy=modifiedTime%20desc&fields=files(id,name,mimeType,modifiedTime,webViewLink,iconLink)', {
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        const data = await res.json();
+        if (!data.files || data.files.length === 0) {
+            list.innerHTML = '<div class="gws-empty-state">אין קבצים</div>';
+            return;
+        }
+        const mimeIcons = {
+            'application/vnd.google-apps.document': '\u{1F4DD}',
+            'application/vnd.google-apps.spreadsheet': '\u{1F4CA}',
+            'application/vnd.google-apps.presentation': '\u{1F4CA}',
+            'application/vnd.google-apps.folder': '\u{1F4C1}',
+            'application/pdf': '\u{1F4C4}',
+            'image/': '\u{1F5BC}'
+        };
+        list.innerHTML = data.files.map(f => {
+            let icon = '\u{1F4CE}';
+            for (const [mime, ic] of Object.entries(mimeIcons)) {
+                if (f.mimeType.startsWith(mime)) { icon = ic; break; }
+            }
+            const modified = f.modifiedTime ? new Date(f.modifiedTime).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+            return `<div class="gws-list-item gws-drive-item" onclick="window.open('${f.webViewLink || ''}','_blank')">
+                <div class="gws-item-title"><span class="gws-item-icon">${icon}</span>${escapeHtml(f.name)}</div>
+                <div class="gws-item-meta"><span>${escapeHtml(f.mimeType.replace('application/vnd.google-apps.', 'Google '))}</span><span>${modified}</span></div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('Drive load error:', e);
+        list.innerHTML = '<div class="gws-empty-state" style="color:var(--red);">שגיאה בטעינת קבצים</div>';
+    }
+}
+
+// ── Sheets ──
+async function gwsLoadSheets() {
+    if (!gwsAccessToken) return;
+    const list = document.getElementById('gwsSheetsList');
+    list.innerHTML = '<div class="gws-loading">טוען גיליונות...</div>';
+    try {
+        const res = await fetch("https://www.googleapis.com/drive/v3/files?pageSize=15&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'&orderBy=modifiedTime%20desc&fields=files(id,name,modifiedTime,webViewLink)", {
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        const data = await res.json();
+        if (!data.files || data.files.length === 0) {
+            list.innerHTML = '<div class="gws-empty-state">אין גיליונות</div>';
+            return;
+        }
+        list.innerHTML = data.files.map(f => {
+            const modified = f.modifiedTime ? new Date(f.modifiedTime).toLocaleString('he-IL', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+            return `<div class="gws-list-item" onclick="gwsPreviewSheet('${f.id}', '${escapeHtml(f.name)}')" ondblclick="window.open('${f.webViewLink || ''}','_blank')">
+                <div class="gws-item-title">\u{1F4CA} ${escapeHtml(f.name)}</div>
+                <div class="gws-item-meta"><span>Google Sheets</span><span>${modified}</span></div>
+                <div class="gws-item-snippet" style="color:var(--text-dim);font-size:9px;">לחץ לתצוגה מקדימה | לחיצה כפולה לפתיחה</div>
+            </div>`;
+        }).join('');
+    } catch (e) {
+        console.error('Sheets load error:', e);
+        list.innerHTML = '<div class="gws-empty-state" style="color:var(--red);">שגיאה בטעינת גיליונות</div>';
+    }
+}
+
+async function gwsPreviewSheet(sheetId, sheetName) {
+    if (!gwsAccessToken) return;
+    const previewEl = document.getElementById('gwsSheetPreview');
+    const titleEl = document.getElementById('gwsSheetPreviewTitle');
+    const dataEl = document.getElementById('gwsSheetData');
+    previewEl.style.display = 'block';
+    titleEl.textContent = sheetName;
+    dataEl.innerHTML = '<div class="gws-loading">טוען נתונים...</div>';
+    try {
+        const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A1:J20`, {
+            headers: { 'Authorization': 'Bearer ' + gwsAccessToken }
+        });
+        if (res.status === 401) { gwsHandleExpired(); return; }
+        const data = await res.json();
+        if (!data.values || data.values.length === 0) {
+            dataEl.innerHTML = '<div class="gws-empty-state">גיליון ריק</div>';
+            return;
+        }
+        let html = '<table style="width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:10px;">';
+        data.values.forEach((row, i) => {
+            const tag = i === 0 ? 'th' : 'td';
+            html += '<tr>' + row.map(cell =>
+                `<${tag} style="border:1px solid var(--border-primary);padding:4px 6px;color:${i === 0 ? '#4285F4' : 'var(--text-secondary)'};white-space:nowrap;">${escapeHtml(String(cell))}</${tag}>`
+            ).join('') + '</tr>';
+        });
+        html += '</table>';
+        dataEl.innerHTML = html;
+    } catch (e) {
+        console.error('Sheet preview error:', e);
+        dataEl.innerHTML = '<div class="gws-empty-state" style="color:var(--red);">שגיאה בטעינת נתונים</div>';
+    }
+}
+
+function gwsHandleExpired() {
+    gwsAccessToken = null;
+    localStorage.removeItem('mabat188-gws-token');
+    updateGwsConnectionUI(false);
+    document.getElementById('gwsStatusText').textContent = 'פג תוקף — יש להתחבר מחדש';
+}
+
+function gwsInitOnLoad() {
+    // Init GAPI client
+    if (typeof gapi !== 'undefined') {
+        initGapiClient();
+    }
+    // Init token client
+    setTimeout(() => { initGwsTokenClient(); }, 1000);
+}
+
+// ESC key to close GWS panel
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('gwsOverlay');
+        if (overlay && overlay.classList.contains('visible')) {
+            toggleGWorkspace();
+        }
+    }
+});
+
+
 // ═══════ INIT ═══════
 document.addEventListener('DOMContentLoaded', () => {
     try { updateClock(); } catch(e) { console.error('Clock init error:', e); }
@@ -7756,6 +8496,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // PWA + Push init
     try { registerServiceWorker(); } catch(e) { console.error('SW init error:', e); }
     setTimeout(() => { try { checkExistingPushSubscription(); } catch(e) { console.warn('Push init error:', e); } }, 2000);
+
+    // Google Workspace init
+    try { gwsInitOnLoad(); } catch(e) { console.warn('GWS init error:', e); }
 
     // Cleanup timers on page unload
     window.addEventListener('beforeunload', () => {

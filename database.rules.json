@@ -1,0 +1,64 @@
+{
+  "rules": {
+    "alert-votes": {
+      ".read": true,
+      ".write": true
+    },
+    "journal-notes": {
+      ".read": true,
+      ".write": true
+    },
+    "push-subscriptions": {
+      ".read": true,
+      ".write": true
+    },
+    "dev-suggestions": {
+      ".read": true,
+      ".write": true
+    },
+    "auto-news": {
+      ".read": true,
+      ".write": false
+    },
+    "calendar": {
+      ".read": true,
+      ".write": false
+    },
+    "firms": {
+      ".read": true,
+      ".write": false
+    },
+    "metadata": {
+      ".read": true,
+      ".write": false
+    },
+    "publisher-profiles": {
+      ".read": true,
+      ".write": false
+    },
+    "sentiment": {
+      ".read": true,
+      ".write": false
+    },
+    "system-keywords": {
+      ".read": true,
+      ".write": false
+    },
+    "trends": {
+      ".read": true,
+      ".write": false
+    },
+    "weather": {
+      ".read": true,
+      ".write": false
+    },
+    "whatsapp-intel": {
+      ".read": true,
+      ".write": false
+    },
+    "$other": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}
